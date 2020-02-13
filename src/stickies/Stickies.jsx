@@ -1,0 +1,451 @@
+import React, { Component } from "react";
+import { Editor, EditorState, ContentState } from "draft-js";
+import moment from "moment";
+import ContentEditable from "./ContentEditable";
+//import { RichEditorExample } from "./popupeditor";
+import "./styles.css";
+import Popup from "reactjs-popup";
+import FontPicker from "font-picker-react";
+import { Link } from 'react-router-dom';
+import Modal from 'react-responsive-modal';
+
+const WidthProvider = require("react-grid-layout").WidthProvider;
+let ResponsiveReactGridLayout = require("react-grid-layout").Responsive;
+
+ResponsiveReactGridLayout = WidthProvider(ResponsiveReactGridLayout);
+
+/**
+ * @method: guid
+ * @desc: Generates unique guid
+ **/
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return (
+    s4() +
+    s4() +
+    "-" +
+    s4() +
+    "-" +
+    s4() +
+    "-" +
+    s4() +
+    "-" +
+    s4() +
+    s4() +
+    s4()
+  );
+}
+
+/**
+ * @method: tranformEditorState
+ * @desc: Tranforms the text to editor state
+ **/
+
+function tranformEditorState(notes) {
+  const notesData = notes.default || notes;
+  const data = notesData.map(note => {
+    const text = note.default ? note.default.text : note.text || "";
+    note.editorState =
+      note.editorState ||
+      EditorState.createWithContent(ContentState.createFromText(text));
+    return note;
+  });
+  return data;
+}
+
+/**
+ * @method: transformContentState
+ * @desc: Tranforms editor state to text content
+ **/
+function transformContentState(notes) {
+  const clonedNotes = Object.assign([], notes);
+  const data = clonedNotes.map(note => {
+    note.text = note.editorState.getCurrentContent().getPlainText();
+    return note;
+  });
+  return data;
+}
+
+export default class Stickies extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      activeFontFamily: "Open Sans",
+      newCounter: 0,
+      notes: props.notes ? tranformEditorState(props.notes) : [],
+      colors: props.colors || ["#FBE4BE", "#F7D1D1", "#E4FABC", "#CAE0FA"],
+      dateFormat: props.dateFormat || "lll"
+    };
+    this.createBlankNote = this.createBlankNote.bind(this);
+    this.renderNote = this.renderNote.bind(this);
+    this.onLayoutChange = this.onLayoutChange.bind(this);
+    this.onBreakpointChange = this.onBreakpointChange.bind(this);
+  }
+  openModal() {
+    this.setState({ open: true });
+  }
+  closeModal() {
+    this.setState({ open: false });
+  }
+  
+  componentDidMount() {
+    if (this.props.notes && !this.props.notes.length) {
+      this.createBlankNote();
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.notes && nextProps.notes.length) {
+      this.setState({
+        notes: tranformEditorState(nextProps.notes)
+      });
+    }
+    this.setState({
+      colors: nextProps.colors || ["#FBE4BE", "#F7D1D1", "#E4FABC", "#CAE0FA"],
+      dateFormat: nextProps.dateFormat || "lll"
+    });
+  }
+
+  generateRandomColors() {
+    const colors = this.state.colors;
+    return colors[Math.floor(Math.random() * (colors.length - 1))];
+  }
+
+  generateRandomDegree(max, min) {
+    return `${Math.floor(Math.random() * (max - min + 1)) + min}deg`;
+  }
+
+  handleTitleChange(html, currentNote) {
+    const notes = this.state.notes;
+    notes.forEach(note => {
+      if (currentNote.id === note.id) {
+        note.title = html.target.value;
+      }
+    });
+    this.setState(
+      {
+        notes
+      },
+      () => {
+        if (this.props.onTitleChange) {
+          this.props.onTitleChange(html, currentNote);
+        }
+      }
+    );
+  }
+
+  onChange(editorState, currentNote) {
+    const notes = this.state.notes;
+    const dateFormat = this.state.dateFormat;
+    notes.forEach(note => {
+      if (currentNote.id === note.id) {
+        note.editorState = editorState;
+        note.timeStamp = moment().format(dateFormat);
+      }
+    });
+    if (typeof this.props.onChange === "function") {
+      this.props.onChange(transformContentState(this.state.notes), "update");
+    }
+  }
+
+  deleteNote(currentNote) {
+    const notes = this.state.notes;
+    notes.forEach((note, index) => {
+      if (currentNote.id === note.id) {
+        notes.splice(index, 1);
+      }
+    });
+    this.setState(
+      {
+        notes
+      },
+      () => {
+        if (typeof this.props.onChange === "function") {
+          this.props.onChange(this.state.notes, "delete");
+          if (typeof this.props.onDelete === "function") {
+            this.props.onDelete(currentNote);
+          }
+        }
+      }
+    );
+  }
+  createBlankNote() {
+    const dateFormat = this.state.dateFormat;
+    const grid = this.props.grid || {};
+    const uid = guid();
+    const note = {
+      grid: {
+        i: `${uid}`,
+        x: (this.state.notes.length * 2) % (this.state.cols || 24),
+        y: 0, // puts it at the bottom
+        w: grid.w || 2,
+        h: grid.h || 2
+      },
+      id: uid,
+      editorState: EditorState.createEmpty(),
+      title: "Title",
+      color: this.generateRandomColors(),
+      degree: this.generateRandomDegree(-2, 2),
+      timeStamp: moment().format(dateFormat),
+      contentEditable: true
+    };
+    this.setState({
+      // Add a new item. It must have a unique key!
+      notes: this.state.notes.concat(note),
+      // Increment the counter to ensure key is always unique.
+      newCounter: this.state.newCounter + 1
+    });
+    if (typeof this.props.onAdd === "function") {
+      this.props.onAdd(note);
+    }
+    console.log("notes", note);
+  }
+  onLayoutChange(layout) {
+    const notes = this.state.notes;
+    notes.forEach(note => {
+      layout.forEach(grid => {
+        if (grid.i === note.id) {
+          note.grid = grid;
+        }
+      });
+    });
+    this.setState(
+      {
+        notes
+      },
+      () => {
+        if (typeof this.props.onChange === "function") {
+          this.props.onChange(this.state.notes, "layout");
+          if (typeof this.props.onLayoutChange === "function") {
+            this.props.onLayoutChange(layout);
+          }
+        }
+      }
+    );
+  }
+  onBreakpointChange(breakpoint, cols) {
+    this.setState({
+      breakpoint,
+      cols
+    });
+  }
+
+  renderNote(note) {
+    const { open } = this.state;
+    const closeStyle = Object.assign(
+      {},
+      {
+        display: this.state.notes.length === 1 ? "none" : "block"
+      },
+      this.props.closeStyle || {}
+    );
+    const addStyle = this.props.addStyle || {};
+    const closeIcon = this.props.closeIcon || "";
+    const addIcon = this.props.addIcon || "";
+    const noteStyle = Object.assign(
+      {},
+      {
+        background: note.color,
+        transform: note.degree
+      },
+      this.props.noteStyle || {}
+    );
+    const noteHeaderStyle = Object.assign(
+      {},
+      {
+        display: this.props.header === false ? "none" : "block"
+      },
+      this.props.noteHeaderStyle || {}
+    );
+    const noteBodyStyle = this.props.noteBodyStyle || {};
+    const noteTitleStyle = Object.assign(
+      {},
+      {
+        display: this.props.title === false ? "none" : "block"
+      },
+      this.props.noteTitleStyle || {}
+    );
+    const noteFooterStyle = Object.assign(
+      {},
+      {
+        display: this.props.footer === false ? "none" : "block"
+      },
+      this.props.noteFooterStyle || {}
+    );
+    const i = note.grid.add ? "+" : note.grid.i;
+    const grid = note.grid;
+    grid.y = grid.y || 0;
+    return (
+      <div key={i} data-grid={grid}>
+        <aside
+          className={`note-wrap note ${this.props.tape ? "tape" : ""}`}
+          style={noteStyle}
+        >
+          <div className="note-header" style={noteHeaderStyle}>
+            <div
+              className={`${addIcon ? "" : "add"}`}
+              onClick={this.createBlankNote}
+              style={addStyle}
+            >
+              {addIcon}
+            </div>
+            
+            <div className="title" style={noteTitleStyle}>
+              <ContentEditable
+                html={note.title}
+                onChange={html => this.handleTitleChange(html, note)}
+              />
+            </div>
+            
+            <div
+              className={`${closeIcon ? "" : "close"}`}
+              style={closeStyle}
+              onClick={() => this.deleteNote(note)}
+            >
+             
+              {closeIcon}
+            </div>
+            
+          </div>
+          
+          <div
+            className="note-body"
+            style={noteBodyStyle}
+            className="apply-font"
+            
+            /*onClick="{(e) => this.setState({isOpen : true})}"*/
+          >
+            {/*<FontPicker
+              apiKey="AIzaSyCt00pfQlqxqznw6SRMhAZ_zReJBeSpThw"
+              activeFontFamily={this.state.activeFontFamily}
+              onChange={nextFont =>
+                this.setState({
+                  activeFontFamily: nextFont.family
+                })
+              }
+            />*/}
+            <Editor
+              editorState={note.editorState}
+              onChange={editorState => this.onChange(editorState, note)}
+              placeholder="Add your notes..."
+            />
+          </div>
+          {/* <button onClick={this.onOpenModal} >Write</button>
+          <Modal open={open} onClose={this.onCloseModal} center>
+           <div className="textlane">
+             <div className="textlanenavbar"><div className="textsize2 " style={{padding:10}}>Text Lane</div></div>
+             <div className="navbar">
+
+             <FontPicker
+            apiKey="AIzaSyBjbypy3oo5oo_xPba71Dnb6836mBwoWVQ"
+            activeFontFamily={this.state.activeFontFamily}
+            onChange={nextFont =>
+              this.setState({
+                activeFontFamily: nextFont.family
+              })
+            }
+          />
+           <div><button className="Italic" onClick={this.addItalic}>I</button>
+          {this.state.Italic}
+                </div>
+                <div>
+                  <button className="Underline" onClick={this.addUnderline}>U</button>
+                {this.state.Underline}
+                </div>
+                <div><button className="Bold" onClick={this.addBold}>B</button>
+                {this.state.Bold}</div> 
+                
+               
+                <FontSizeChanger
+          targets={['#target .content']}
+          onChange={(element, newValue, oldValue) => {
+            console.log(element, newValue, oldValue);
+          }}
+          options={{
+            stepSize: 2,
+            range: 3
+          }}
+          customButtons={{
+            up: <span style={{'fontSize': '36px'}}>A</span>,
+            down: <span style={{'fontSize': '20px'}}>A</span>,
+            style: {
+              backgroundColor: 'red',
+              color: 'white',
+              WebkitBoxSizing: 'border-box',
+              WebkitBorderRadius: '5px',
+              width: '60px'
+            },
+            buttonsMargin: 10
+          }}         
+             
+            
+               
+        /> 
+              </div>
+             <textarea  className="apply-font Italic Bold Underline " style={{width:500,height:350,marginTop:10}} onChange={e=>this.handleChange(e)}></textarea><br></br>
+              <button type="button" style={{fontSize:20,marginLeft:80}}  >Save</button>
+              
+              </div>
+              
+        </Modal> */}
+          {/*<button className="button" onClick={this.openModal}>
+            Controlled Popup
+          </button>
+          <Popup
+            open={this.state.open}
+            closeOnDocumentClick
+            onClose={this.closeModal}
+          >
+            <div className="modal">
+              <a className="close" onClick={this.closeModal}>
+                &times;
+              </a>
+              {RichEditorExample}
+            </div>
+    </Popup>*/}
+          <div className="note-footer" style={noteFooterStyle}>
+            
+            {note.timeStamp}
+          </div>
+        </aside>
+      </div>
+    );
+  }
+  render() {
+    const gridProps = this.props.grid || {};
+    const grid = {
+      className: "layout",
+      cols: gridProps.cols || { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 },
+      rowHeight: gridProps.rowHeight || 100,
+      isDraggable:
+        gridProps.isDraggable === undefined ? true : gridProps.isDraggable,
+      isResizable:
+        gridProps.isResizable === undefined ? true : gridProps.isResizable,
+      useCSSTransforms:
+        gridProps.useCSSTransforms === undefined
+          ? true
+          : gridProps.useCSSTransforms,
+      margin: gridProps.margin
+    };
+    const wrapperStyle = this.props.wrapperStyle || {};
+    return (
+      
+      <div className="react-stickies-wrapper clearfix " style={wrapperStyle}>
+        <ResponsiveReactGridLayout
+          onLayoutChange={this.onLayoutChange}
+          onBreakpointChange={this.onBreakpointChange}
+          {...grid}
+        >
+          {this.state.notes.map(this.renderNote)}
+        </ResponsiveReactGridLayout>
+         
+       
+      </div>
+    );
+  }
+}

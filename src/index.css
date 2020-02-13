@@ -1,0 +1,392 @@
+@import url(http://fonts.googleapis.com/css?family=Shadows+Into+Light);
+@import url(https://fonts.googleapis.com/css?family=Bangers&display=swap);
+@import url(https://fonts.googleapis.com/css?family=Italianno&display=swap);
+
+body,
+html,
+div.board,
+div#react-container {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+ 
+}
+
+div.board {
+  background-color: "brown";
+  width: 100%;
+  display: inline-block;
+  height: 100%;
+  overflow: default;
+  position: fixed;
+
+  background-image: linear-gradient(135deg, #aeafe8 0%, #e68ca7 100%);
+}
+
+div.note {
+  height: 185px;
+  width: 170px;
+  background-color: lightsalmon;
+  z-index: auto;
+
+  resize: horizontal;
+  overflow: auto;
+  border-radius: 10px 20px 0px;
+  border-style: solid;
+  border-color: #10b910;
+
+  cursor: move;
+
+  margin: 12px 60px;
+  position: relative;
+  display: inline-block;
+
+  box-shadow: 5px 5px 15px 0 rgba(0, 0, 0, 0.2);
+}
+
+div.note:active {
+  cursor: -webkit-grabbing;
+}
+
+div.note p {
+  margin: 0;
+  font-size: 20px;
+  padding: 5px;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+div.note:hover > span {
+  opacity: 1;
+}
+
+div.note > span {
+  position: absolute;
+  bottom: 10px;
+  right: 35px;
+  background: lightseagreen;
+
+  opacity: 0;
+  transition: opacity 0.25s linear;
+}
+
+div.note button {
+  margin: 10px;
+  right: 10px;
+  background: lightblue;
+}
+
+div.note > textarea {
+  height: 75%;
+  width: 100%;
+  resize: both;
+  overflow: auto;
+  background: lightgray;
+}
+
+.board > button {
+  position: fixed;
+  margin: 10px;
+  top: 90px;
+  left: 10px;
+  font-size: 1.5em;
+}
+.button1 {
+  font-size: 1.5em;
+  position: absolute;
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  white-space: nowrap;
+}
+.container1 {
+  height: 280px;
+  min-width: 100%;
+  position: relative;
+  overflow: auto;
+  white-space: nowrap;
+
+  background: lightgoldenrodyellow;
+}
+.container2 {
+  height: 280px;
+  min-width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  background: lightgoldenrodyellow;
+}
+.container3 {
+  height: 280px;
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  background: lightgoldenrodyellow;
+  
+}
+.container4 {
+  height: 280px;
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  background: lightgoldenrodyellow;
+  margin-right: 50px;
+}
+.navbar {
+  display: flex;
+  padding-left: 500px;
+  padding-right: 500px;
+  font-size: 1.5em;
+  background: blueviolet;
+}
+.layer {
+  width: 1000%;
+  display: flex;
+  font-family: "Arial Narrow Bold";
+  background: lightseagreen;
+}
+.layer1 {
+  width: 1000%;
+  display: flex;
+  font-family: "Arial Narrow Bold";
+  background: lightseagreen;
+}
+.layer2 {
+  width: 1000%;
+  display: flex;
+  font-family: "Arial Narrow Bold";
+  background: lightseagreen;
+}
+.layer3 {
+  width: 1000%;
+  display: flex;
+  font-family: "Arial Narrow Bold";
+  background: lightseagreen;
+}
+.layer4 {
+  width: 1000%;
+  display: flex;
+  font-family: "Arial Narrow Bold";
+  background: lightseagreen;
+}
+.layer5 {
+  width: 1000%;
+  display: flex;
+  font-family: "Arial Narrow Bold";
+  background: lightseagreen;
+}
+.layer6 {
+  width: 1000%;
+  display: flex;
+  font-family: "Arial Narrow Bold";
+  background: lightseagreen;
+}
+.layer7 {
+  width: 1000%;
+  display: flex;
+  font-family: "Arial Narrow Bold";
+  background: lightseagreen;
+}
+.addlayer {
+  background: mediumaquamarine;
+  font-size: 1em;
+}
+.Italic {
+  font-style: italic;
+}
+.Underline {
+  text-decoration-line: underline;
+}
+.Bold {
+  font-weight: bold;
+}
+.map {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background: grey;
+}
+.projectnamenavbar {
+  width: 100%;
+  height: 40px;
+  background: lightslategrey;
+  font-size: 1.5em;
+  padding-left: 10px;
+}
+
+.circle{
+  height: 35px;
+  width: 35px;
+  background-color:lightseagreen;
+  border-radius: 75%;
+  display: inline-block;
+  margin:100px;
+  
+}
+
+.linelayer{
+  width: 50%; 
+  text-align: center; 
+  border-bottom: 2px solid #000; 
+  line-height: 1.5em;
+  margin: 10px 0 20px; 
+}
+.footer{
+  height: 40px;
+  width: 100%;
+  background-color: lightslategray;
+  position: fixed;
+  bottom: 0;
+}
+.file{
+  height: 100px;
+  width: 300px;
+ 
+  margin: 20px;
+}
+.image{
+  height: 100px;
+  width: 300px;
+  
+  margin: 20px;
+}
+.dropdownbutton{
+
+  height: 40px;
+  font-size: 1.7em;
+  width: 5%;
+ 
+ background-color: lightgrey;
+  
+}
+.dropdownlist{
+  background-color:white;
+  
+  
+  width: 15%;
+}
+.lanenavbar{
+  height: 40px;
+  background-color: lightseagreen;
+  
+  
+  
+}
+.textmodallane{
+  height: 100px;
+  width: 100px;
+  border: 20px;
+  border-color: black;
+}
+.circle1{
+  height: 150px;
+  width: 150px;
+  background-color:lightseagreen;
+  border-radius: 75%;
+  display: inline-block;
+  margin:100px;
+  resize: horizontal;
+  overflow: auto;
+}
+.square{
+  height: 150px;
+  width: 150px;
+  background-color:lightseagreen;
+  resize: horizontal;
+  overflow: auto;
+  
+  margin:50px;
+  
+}
+.square1{
+  height: 150px;
+  width: 150px;
+  background-color:lightseagreen;
+  resize: horizontal;
+  overflow: auto;
+  
+  margin: 50px;
+  
+  
+}
+.rectangle{
+  height: 150px;
+  width: 250px;
+  background-color:lightseagreen;
+  resize: horizontal;
+  overflow: auto;
+  display: inline-block;
+  margin:50px;
+  
+}
+.line{
+  width: 300px;
+  border: 2px solid black;
+  border-radius: 5px;
+  margin:50px;
+  resize: horizontal;
+  overflow: auto;
+  display: inline-block;
+}
+.bubble{
+  border-radius: 25px;
+  background:lightseagreen;
+  resize: horizontal;
+  overflow: auto;
+  width: 200px;
+  height: 150px;  
+  margin: 50px;
+  display: inline-block;
+}
+.phase{
+  border-radius: 0px 70px 70px 0px;
+  background:lightseagreen;
+  resize: horizontal;
+  overflow: auto;
+  width: 200px;
+  height: 150px;  
+  margin: 50px;
+  display: inline-block;
+  border-left: 55px;
+  position: relative;
+}
+a:hover {
+  
+  cursor: pointer;
+}
+.textlane{
+  height: 500px;
+  width: 700px;
+
+}
+.textlanenavbar{
+  height: 50px;
+  width: 700px;
+  background: lightskyblue;
+}
+.textlanetools{
+  height: 50px;
+  width: 100%;
+  border: black;
+  background-color: rgb(250, 208, 208);
+}
+.sidebar{
+  height: 300px;
+  width: 150px;
+  background-color: white;
+  
+ 
+}
+
