@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import "../index.css"; //
 // import Stickies from "./stickies/Stickies";
-class Bubblelane extends Component {
+class Textlane extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -14,7 +14,7 @@ class Bubblelane extends Component {
           return (
           <div>
           <div className="layer1" >
-                  <p style={{fontSize:"1.25em",marginTop:"1%"}}>Bubble Lane</p>
+                  <p style={{fontSize:"1.25em",marginTop:"1%"}}>Text Lane</p>
                 </div>
               <div className="container2" >
              
@@ -36,4 +36,4 @@ class Bubblelane extends Component {
         
     
 
-export default Bubblelane;
+export default Textlane;

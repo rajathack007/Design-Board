@@ -40,6 +40,11 @@ import Lines from './Lanetype/Lines'
 
 import Cardlane from './Lanetype/Cardlane'
 import Bubblelane from './Lanetype/Bubblelane'
+import Phaselane from './Lanetype/Phaselane'
+import Textlane from './Lanetype/Textlane'
+import Imagelane from './Lanetype/Imagelane'
+import Filelane from './Lanetype/Filelane'
+import Linelane from './Lanetype/Linelane'
 import {Rnd} from 'react-rnd';
 
 
@@ -89,20 +94,14 @@ class Board extends Component {
       totallayer:[],
       totalcard:[],
       totalbubble:[],
+      totalphase:[],
+      totaltext:[],
       text1:"",
-      type:""
+      type:"",
       
     };
     //close this.state
 
-    // this.addLaneLayer = this.addLaneLayer.bind(this);
-    // this.addCardLayer = this.addCardLayer.bind(this);
-    this.addBubbleLayer = this.addBubbleLayer.bind(this);
-    this.addLineLayer=this.addLineLayer.bind(this);
-    this.addImageLayer=this.addImageLayer.bind(this);
-    this.addFileLayer=this.addFileLayer.bind(this);
-    this.addPhaseLayer=this.addPhaseLayer.bind(this);
-    this.addTextLayer=this.addTextLayer.bind(this);
     this.addCircle=this.addCircle.bind(this);
     
     this.addSquare=this.addSquare.bind(this);
@@ -120,16 +119,17 @@ class Board extends Component {
   onOpenModal = type => {
     this.setState({ open: true,type });
   };
-  onOpenModal1 = () => {
-    this.setState({ open1: true });
+  onOpenModal1 = type => {
+    this.setState({ open1: true,type });
   };
   
  
   onCloseModal = () => {
     this.setState({ open: false });
     this.state.totallayer.push({
-      text:this.state.text,
-      type:this.state.type});
+      text: this.state.text,
+      type: this.state.type
+    });
     
     
   };
@@ -141,6 +141,12 @@ class Board extends Component {
     else if (this.state.type =="Bubblelane"){
       this.state.totalbubble.push(this.state.text1);
       this.addBubble();}
+      else if (this.state.type =="Phaselane"){
+        this.state.totalphase.push(this.state.text1);
+        this.addPhase();}
+        else if (this.state.type =="Textlane"){
+          this.state.totaltext.push(this.state.text1);
+          this.addSquare();}
 
     
     
@@ -174,272 +180,6 @@ class Board extends Component {
       [e.target.name]: e.target.value});
     };
   
-
-  // addLaneLayer = () => {
-  //   let wrapperStyle = {};
-  //   if (this.state.showBound) {
-  //     wrapperStyle = {
-  //       height: "700px",
-  //       width: "700px",
-  //       background: "rgba(0, 0, 0, 0.2)",
-  //       border: "2px solid #fff",
-  //       overflow: "auto",
-        
-  //       padding: "10px"
-  //     };
-  //   }
-  //   const Layerlane = () => {
-  //     return (
-  //       <div>
-  //         <div className="container1">
-  //           <div className="layer">
-  //             <p>Layer Lane</p>
-  //           </div>
-  //           <div style={{display:"inline-flex"}}>
-  //           <div className="sidebar" ><p style={{textAlign:"center",marginTop:"70%"}}onClick={this.onOpenModal}> NEW LANE</p></div>
-  //             {/*<button className="button1" onClick={() => this.add("Note")}>
-  //               +
-  //             </button>
-
-  //     {this.state.notes.map(this.eachNote)}*/}
-  //             <Stickies
-  //               notes={this.state.notes}
-  //               tape={this.state.showTape}
-  //               style={{ float: "left"}}
-  //               colors={
-  //                 this.state.showCustomColors ? this.state.colors : undefined
-  //               }
-  //               title={this.state.showTitle}
-  //               footer={this.state.showFooter}
-  //               onChange={this.onChange}
-  //               wrapperStyle={wrapperStyle}
-  //             />
-              
-  //           </div>
-  //         </div>
-  //       </div>
-  //     );
-  //   };
-  //   this.setState({
-  //     layer: [...this.state.layer, <Layerlane />]
-  //   });
-  // };
-
-  // addCardLayer = () => {
-    
-  //   const Cardlane = () => {
-  //     return (
-  //       <ReactDraggable>
-  //       <div>
-          
-  //         <div className="container2">
-         
-  //          <div className="layer1">
-  //             <p>Card Lane</p>
-  //           </div>
-  //           <div style={{display:"inline-flex"}}>
-  //           <div className="sidebar" >
-  //           <button className="button1" onClick={this.addRectangle}> +</button>
-  //             <p style={{textAlign:"center",marginTop:"70%"}} onClick={this.onOpenModal}> NEW LANE</p></div>
-  //           <div className="rectangle" onClick={this.onOpenModal}>{this.state.text}</div>
-  //             {this.state.Rectangle}
-           
-  //           </div>
-            
-  //         </div>
-  //       </div></ReactDraggable>
-  //     );
-  //   };
-  //   this.setState({
-  //     layer1: [...this.state.layer1, <Cardlane />]
-  //   });
-  // };
-  addBubbleLayer = () => {
-    
-    const Bubblelane = () => {
-      return (
-        <div>
-          <div className="layer2">
-              <p style={{fontSize:"1.5em",marginTop:"1%"}}>Bubble Lane</p>
-            </div>
-        
-        
-        <div className="Bubblelane">
-          <div className="container3">
-            
-            <div style={{display:"inline-flex"}}>
-            <div className="sidebar" style={{overflow:"hidden",whiteSpace:"normal"}}>
-            <button className="button1" onClick={this.addBubble}> +</button>
-              <p style={{textAlign:"center",marginTop:"70%"}} onClick={this.onOpenModal}> NEW LANE</p></div>
-            <div className="bubble" style={{overflow:"hidden",whiteSpace:"normal"}} >{this.state.text}</div>
-              {this.state.Bubble}
-             
-            </div>
-          </div>
-        </div>
-        </div>
-      );
-    };
-    this.setState({
-      layer2: [...this.state.layer2, <Bubblelane />]
-    });
-  };
-  
-  addLineLayer = () => {
-
-    const Linelane = () => {
-      return (
-<div>
-        <div className="layer3">
-              <p style={{fontSize:"1.5em",marginTop:"1%"}}>Line Lane</p>
-          
-            </div>
-        <div className="linelane">
-          <div className="container3">
-            
-            <div style={{display:"inline-flex"}}>
-            <div className="sidebar" style={{overflow:"hidden",whiteSpace:"normal"}}><p style={{textAlign:"center",marginTop:"70%"}} onClick={this.onOpenModal}> NEW LANE</p></div>
-            <div style={{marginTop:-80}}>
-              
-      
-             <Lines/> 
-             </div>
-            
-           </div>
-          </div>
-        </div></div>
-      );
-    };
-    this.setState({
-      layer3: [...this.state.layer3, <Linelane />]
-    });
-  };
-  addImageLayer = () => {
-   
-    const Imagelane = () => {
-      console.log()
-      return (
-<div>
-        <div className="layer4">
-              <p style={{fontSize:"1.5em",marginTop:"1%"}}>Image Lane</p>
-          </div>
-        <div className="Imagelane">
-          <div className="container3">
-            
-          <div style={{display:"inline-flex"}}>
-          <div className="sidebar" style={{overflow:"hidden",whiteSpace:"normal"}} ><p style={{textAlign:"center",marginTop:"70%"}} onClick={this.onOpenModal}> NEW LANE</p></div>
-          {/* <div className="image"><ImageUploader  /></div>   */}
-          <UploadImages  multiple  onChange={this.onChange}  />
-  
-        
-            </div>
-        </div>
-        </div></div>
-      );
-    };
-    this.setState({
-      layer4: [...this.state.layer4, <Imagelane />]
-    });
-  };
-  addFileLayer = () => {
-    
-    const Filelane = () => {
-      return (
-        <div>
-<div className="layer5">
-              <p style={{fontSize:"1.5em",marginTop:"1%"}}>File Lane</p>
-          </div>
-
-        <div className="Filelane">
-          <div className="container3">
-            
-          <div style={{display:"inline-flex"}}>
-          <div className="sidebar" style={{overflow:"hidden",whiteSpace:"normal"}}><p style={{textAlign:"center",marginTop:"70%"}} onClick={this.onOpenModal}> NEW LANE</p></div>
-        <div className="file"><FilePond/></div>  
-       </div>
-        
-        </div>
-        
-        </div></div>
-      );
-    };
-    this.setState({
-      layer5: [...this.state.layer5, <Filelane />]
-    });
-  };
-  addPhaseLayer = () => {
-
-    
-
-    const Phaselane = () => {
-      return (
-        // <ReactDraggable>
-        <div>
-           <div className="layer6">
-              <p style={{fontSize:"1.5em",marginTop:"1%"}}>Phase Lane</p>
-            </div>
-          <div className="container2">
-           
-            <div style={{display:"inline-flex"}}>
-              <div className="sidebar" style={{overflow:"hidden",whiteSpace:"normal"}}><button className="button1" onClick={this.addPhase}> +</button>
-              
-             <p style={{textAlign:"center",marginTop:"70%"}} onClick={this.onOpenModal}> NEW LANE</p> 
-              
-              </div>
-              
-            
-            <div className="phase" style={{overflow:"hidden",whiteSpace:"normal"}}>{this.state.text}
-            </div>
-              {this.state.Phase}
-            </div>
-          </div>
-        </div>
-        // </ReactDraggable>
-      );
-    };
-    this.setState({
-      layer6: [...this.state.layer6, <Phaselane />]
-    });
-  };
-  addTextLayer = () => {
-    
-   
-    
-    const Textlane = () => {
-      const { open } = this.state;
-      
-      return (
-        <div>
-        <div className="layer7">
-              <p style={{fontSize:"1.5em",marginTop:"1%"}}>Text Lane</p>
-              
-            </div>
-        <div className="linelane">
-          <div className="container3">
-            
-            <div style={{display:"inline-flex"}} >
-          <div className="sidebar" style={{overflow:"hidden",whiteSpace:"normal"}} >
-          <button className="button1" onClick={this.addSquare}> +</button>
-            <p style={{textAlign:"center",marginTop:"70%"}} onClick={this.onOpenModal}> NEW LANE</p></div>
-            
-          
-          
-          
-            <div className="square1" style={{overflow:"hidden",whiteSpace:"normal"}}>{this.state.text} </div>{this.state.Square}
-          </div>
-  
-</div>
-         
-          
-        </div></div>
-        
-      );
-    };
-    this.setState({
-      layer7: [...this.state.layer7, <Textlane />]
-    });
-  
-  };
   addCircle = () =>{
     const Circlelane =()=>{
       return(
@@ -456,24 +196,7 @@ class Board extends Component {
     });
   };
   
-  addSquare = () =>{
-    const Squarelane =()=>{
-      const { data } = this.props.location;
-      return(
-        <ReactDraggable>
-      <div className="square"  onClick={this.onOpenModal} style={{overflow:"hidden",whiteSpace:"normal",wordBreak:"break-word"}}>  
-         
-             </div>
-    </ReactDraggable>
-      );
-    };
-    this.setState({
-      Square:[...this.state.Square,<Squarelane/>],
-     
-    
-     
-    });
-  };
+  
   addRectangle = () =>{
     const Rectanglelane =()=>{
       return this.state.totalcard.map(item=>{
@@ -514,6 +237,46 @@ class Board extends Component {
      
     });
   };
+  addPhase = () =>{
+    const Phaselane =()=>{
+      return this.state.totalphase.map(item=>{
+        return(
+          
+      <div className="phase" style={{overflow:"hidden",whiteSpace:"normal",wordBreak:"break-word"}} >  
+                  {item}
+             </div>
+    
+      );})
+      
+      
+    };
+    this.setState({
+      Phase:<Phaselane/>,
+     
+    
+     
+    });
+  };
+  addSquare = () =>{
+    const Textlane =()=>{
+      return this.state.totaltext.map(item=>{
+        return(
+          
+      <div className="square" style={{overflow:"hidden",whiteSpace:"normal",wordBreak:"break-word"}} >  
+                  {item}
+             </div>
+    
+      );})
+      
+      
+    };
+    this.setState({
+      Square:<Textlane/>,
+     
+    
+     
+    });
+  };
   addLine = () =>{
     const Linelane =()=>{
       return(
@@ -529,40 +292,7 @@ class Board extends Component {
      
     });
   };
-  // addBubble = () =>{
-  //   const Bubblelane =()=>{
-  //     return(
-        
-  //     <div className="bubble" style={{overflow:"hidden",whiteSpace:"normal",wordBreak:"break-word"}}  onClick={this.onOpenModal} > 
-       
-  //            </div>
-      
-    
-  //     );
-  //   };
-  //   this.setState({
-  //     Bubble:[...this.state.Bubble,<Bubblelane/>],
-     
-    
-     
-  //   });
-  // };
-  addPhase = () =>{
-    const Phaselane =()=>{
-      return(
-      <div className="phase" onClick={this.onOpenModal} style={{overflow:"hidden",whiteSpace:"normal",wordBreak:"break-word"}}  >  {this.state.text}
-      
-             </div>
-    
-      );
-    };
-    this.setState({
-      Phase:[...this.state.Phase,<Phaselane/>],
-     
-    
-     
-    });
-  };
+  
   addItalic = () =>{
     const Italicfont =()=>{
       return(
@@ -649,28 +379,60 @@ class Board extends Component {
           if (item.type=="Cardlane"){
           return(
             <Cardlane>
-              {item}
-              <button className="button1" onClick={this.onOpenModal1}>+</button>
+              {item.text}
+              <button className="button1" onClick={() =>this.onOpenModal1("Cardlane")}>+</button>
               {this.state.Rectangle}
             </Cardlane>
           )}
          else if (item.type=="Bubblelane"){
             return(
               <Bubblelane>
-                {item}
-                <button className="button1" onClick={this.onOpenModal1}>+</button>
+                {item.text}
+                <button className="button1" onClick={()=>this.onOpenModal1("Bubblelane")}>+</button>
                 {this.state.Bubble}
               </Bubblelane>
             )}
+            else if (item.type=="Phaselane"){
+              return(
+                <Phaselane>
+                  {item.text}
+                  <button className="button1" onClick={()=>this.onOpenModal1("Phaselane")}>+</button>
+                  {this.state.Phase}
+                </Phaselane>
+              )}
+              else if (item.type=="Textlane"){
+                return(
+                  <Textlane>
+                    {item.text}
+                    <button className="button1" onClick={()=>this.onOpenModal1("Textlane")}>+</button>
+                    {this.state.Square}
+                  </Textlane>
+                )}
+                else if (item.type=="Imagelane"){
+                  return(
+                    <Imagelane>
+                      {item.text}
+                      <UploadImages  multiple  onChange={this.onChange} style={{height:100}}  />
+                    </Imagelane>
+                  )}
+                  else if (item.type=="Filelane"){
+                    return(
+                      <Filelane>
+                        {item.text}
+                        <div className="file"><FilePond/></div>
+                      </Filelane>
+                    )}
+                    else if (item.type=="Linelane"){
+                      return(
+                        <Linelane>
+                          {item.text}
+                          <div style={{marginTop:-80}}>
+                           <Lines/> 
+                          </div>
+                        </Linelane>
+                      )}
         })}
 
-        
-       {/* {this.state.layer3}
-{this.state.layer4}
-{this.state.layer5}
-{this.state.layer6}
-{this.state.layer7} */}
- 
            
       <UncontrolledButtonDropdown style={{marginLeft:20,marginTop:10}}>
       <DropdownToggle caret>
@@ -687,19 +449,19 @@ class Board extends Component {
            <DropdownItem> <a  onClick={()=>this.onOpenModal("Bubblelane")}>
            &#128172; Add Bubble Lane</a>
            </DropdownItem>
-           <DropdownItem><a  onClick={this.addPhaseLayer}>
+           <DropdownItem><a  onClick={()=>this.onOpenModal("Phaselane")}>
            &#8680; Add Phase Lane</a>
            </DropdownItem>
-           <DropdownItem><a onClick={this.addLineLayer}>
+           <DropdownItem><a onClick={()=>this.onOpenModal("Linelane")}>
            📈 Add Line Lane</a>
            </DropdownItem>
-           <DropdownItem><a onClick={this.addImageLayer}>
+           <DropdownItem><a onClick={()=>this.onOpenModal("Imagelane")}>
            &#128190; Add Image Lane</a>
            </DropdownItem>
-           <DropdownItem><a onClick={this.addFileLayer}>
+           <DropdownItem><a onClick={()=>this.onOpenModal("Filelane")}>
            &#128194; Add File Lane</a>
            </DropdownItem>
-           <DropdownItem><a onClick={this.addTextLayer}>
+           <DropdownItem><a onClick={()=>this.onOpenModal("Textlane")}>
            &#128221; Add Text Lane</a>
            </DropdownItem>
  
@@ -838,16 +600,6 @@ class Board extends Component {
       
       {data1}
       
-         
-          
-        
-
-        
-        <div className="container">
-          
-          
-         
-        </div>
         <div className="footer">
         <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({ tabIndex })}>
         <TabList>

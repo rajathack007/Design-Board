@@ -423,9 +423,13 @@ a:hover {
 }
 .sidebar{
   height: 300px;
-  width: 150px;
+  width: 250px;
   background-color: white;
   overflow-wrap: break-word;
+  border-right-style: solid ;
+  border-width: 0.5em;
+  border-right-color: lightslategray;
+  
   
  
 }
