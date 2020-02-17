@@ -16,8 +16,8 @@ body {
   height: 40px;
   background-color: blueviolet;
   text-align: center;
-  padding: 10px;
-  font-size: large;
+  
+  font-size: 1.5em;
   display: flex;
 }
 .mapbutton1 {
@@ -36,7 +36,7 @@ body {
   background-color:white;
   border-radius: 20px;
 border: black;
-  margin: 100px 0px 400px 400px;
+  margin: 100px 0px 400px 500px;
 }
 .rowcontainer {
   width: 700px;

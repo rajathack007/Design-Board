@@ -111,7 +111,7 @@ div.note > textarea {
 }
 .container1 {
   height: 280px;
-  min-width: 100%;
+  width: 100%;
   position: relative;
   overflow: auto;
   white-space: nowrap;
@@ -120,7 +120,7 @@ div.note > textarea {
 }
 .container2 {
   height: 280px;
-  min-width: 100%;
+  width: 100%;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
@@ -146,55 +146,64 @@ div.note > textarea {
 }
 .navbar {
   display: flex;
-  padding-left: 500px;
-  padding-right: 500px;
+  /* padding-left: 500px;
+  padding-right: 500px; */
+  font-size: 1.5em;
+  background: blueviolet;
+}
+.editornavbar {
+  display:inline-flex;
+  height: 50px;
+  width: 700px;
+  
   font-size: 1.5em;
   background: blueviolet;
 }
 .layer {
-  width: 1000%;
+  
   display: flex;
   font-family: "Arial Narrow Bold";
   background: lightseagreen;
 }
 .layer1 {
-  width: 1000%;
+    width: 100%;
   display: flex;
+  
   font-family: "Arial Narrow Bold";
   background: lightseagreen;
 }
 .layer2 {
-  width: 1000%;
+  
   display: flex;
   font-family: "Arial Narrow Bold";
   background: lightseagreen;
 }
 .layer3 {
-  width: 1000%;
+  width: 100%;
   display: flex;
   font-family: "Arial Narrow Bold";
   background: lightseagreen;
 }
 .layer4 {
-  width: 1000%;
+  width: 100%;
   display: flex;
   font-family: "Arial Narrow Bold";
   background: lightseagreen;
 }
 .layer5 {
-  width: 1000%;
+  width: 100%;
   display: flex;
   font-family: "Arial Narrow Bold";
   background: lightseagreen;
 }
 .layer6 {
-  width: 1000%;
+  width: 100%;
   display: flex;
   font-family: "Arial Narrow Bold";
   background: lightseagreen;
 }
 .layer7 {
-  width: 1000%;
+  width: 100%;
   display: flex;
   font-family: "Arial Narrow Bold";
   background: lightseagreen;
@@ -227,8 +236,8 @@ div.note > textarea {
 }
 
 .circle{
-  height: 35px;
-  width: 35px;
+  height: 30px;
+  width: 30px;
   background-color:lightseagreen;
   border-radius: 75%;
   display: inline-block;
@@ -295,17 +304,19 @@ div.note > textarea {
   width: 150px;
   background-color:lightseagreen;
   border-radius: 75%;
-  display: inline-block;
+  display: inline-flex;
+  overflow: hidden;
+  white-space: normal;
   margin:100px;
-  resize: horizontal;
-  overflow: auto;
+  
 }
 .square{
   height: 150px;
   width: 150px;
   background-color:lightseagreen;
-  resize: horizontal;
-  overflow: auto;
+  overflow: hidden;
+  white-space: normal;
+  display: inline-flex;
   
   margin:50px;
   
@@ -314,8 +325,9 @@ div.note > textarea {
   height: 150px;
   width: 150px;
   background-color:lightseagreen;
-  resize: horizontal;
-  overflow: auto;
+  overflow: hidden;
+  white-space: normal;
+  display: inline-flex;
   
   margin: 50px;
   
@@ -325,9 +337,11 @@ div.note > textarea {
   height: 150px;
   width: 250px;
   background-color:lightseagreen;
-  resize: horizontal;
-  overflow: auto;
-  display: inline-block;
+  overflow: hidden;
+  white-space: normal;
+  
+  
+   display: inline-flex; 
   margin:50px;
   
 }
@@ -336,29 +350,54 @@ div.note > textarea {
   border: 2px solid black;
   border-radius: 5px;
   margin:50px;
-  resize: horizontal;
   overflow: auto;
-  display: inline-block;
+  display: inline-flex;
 }
 .bubble{
-  border-radius: 25px;
+  border-radius: 15px;
   background:lightseagreen;
-  resize: horizontal;
-  overflow: auto;
+  overflow: hidden;
+  white-space: normal;
   width: 200px;
   height: 150px;  
   margin: 50px;
-  display: inline-block;
+  display: inline-flex;
 }
+/* .bubble:after {
+  content:"";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-top: 13px solid transparent;
+  border-left: 26px solid lightseagreen;
+  border-bottom: 13px solid transparent;
+  margin: 93px 13px 13px 200px;
+} */
+/* .bubble:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 41px solid transparent;
+	border-top-color: #00aabb;
+	border-bottom: 0;
+	border-left: 0;
+	margin-left: -20.5px;
+	margin-bottom: -41px;
+} */
 .phase{
   border-radius: 0px 70px 70px 0px;
   background:lightseagreen;
   resize: horizontal;
-  overflow: auto;
+  /* overflow: auto; */
+  overflow: hidden;
+  white-space: normal;
   width: 200px;
   height: 150px;  
   margin: 50px;
-  display: inline-block;
+  display: inline-flex;
   border-left: 55px;
   position: relative;
 }
@@ -386,7 +425,20 @@ a:hover {
   height: 300px;
   width: 150px;
   background-color: white;
+  overflow-wrap: break-word;
   
  
 }
+/* .svg1 { 
+  position: relative; 
+  width: 100%; 
+}
+
+h2 { 
+ position: absolute; 
+ top: 50px; 
+ left:100px; 
+ 
+ width: 100%; 
+}  */
 

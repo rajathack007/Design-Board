@@ -9,4 +9,6 @@ footer {
     padding: 20px;
     position: relative;
  }
- 
+ .page-wrapper {
+    min-height: calc(100vh - 10px);
+  }

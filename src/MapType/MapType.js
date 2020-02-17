@@ -27,9 +27,9 @@ class MapType extends Component {
       console.log(data);
       return(
         <div className="container5">
-          <div className="containernavbar1">
-           <p style={{color:"white"}}>ETU LOGO</p> 
-          </div>
+           <div className="containernavbar1">
+           <p style={{color:"white",marginLeft:"1%"}}>ETU LOGO</p> 
+          </div> 
           <div className="projectnamenavbar">{data}</div>
           
           <div className="newmapcontainer1">

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import "../index.css"; //
 // import Stickies from "./stickies/Stickies";
-class Cardlane extends Component {
+class Bubblelane extends Component {
     constructor(props) {
       super(props);
       this.state = {
@@ -14,7 +14,7 @@ class Cardlane extends Component {
           return (
           <div>
           <div className="layer1" >
-                  <p style={{fontSize:"1.5em",marginTop:"1%"}}>Card Lane</p>
+                  <p style={{fontSize:"1.5em",marginTop:"1%"}}>Bubblelane Lane</p>
                 </div>
               <div className="container2" >
              
@@ -36,4 +36,4 @@ class Cardlane extends Component {
         
     
 
-export default Cardlane;
+export default Bubblelane;

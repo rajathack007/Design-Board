@@ -28,11 +28,11 @@ class UserMap extends Component {
     const { open } = this.state;
     return(
       <div className="body" style={{width:"100%"}} >
-      <div className="bodynavbar"> 
+       <div className="bodynavbar"> 
       <p style={{color:"white"}}>ETU LOGO</p>
      <p style={{color:"white",marginLeft:"60%"}}>Help</p>
      <p style={{color:"white",marginLeft:"2%"}}>Profile</p>
-      </div>
+      </div> 
       
       <div className="mapcontainer">
       
@@ -47,8 +47,8 @@ class UserMap extends Component {
          
          <Modal open={open} onClose={this.onCloseModal} center>
            <div className="namemodal" style={{borderRadius:20}}>
-             <div className="namemodalnavbar" ><div className="textsize2 " style={{padding:10}}>Project Name</div></div>
-             <div className="inputcontainer" style={{padding:10}}>
+             <div className="namemodalnavbar" ><div className="textsize2 " style={{paddingTop:5}}>Project Name</div></div>
+             <div className="inputcontainer" >
              <input type="text" style={{fontSize:25}} name="ProjectName" placeholder="Project Name" onChange={e=>this.handleChange(e)} /><br></br><br></br>
              <Link to={{pathname:"/MapType",data:this.state.ProjectName}}> <button type="button" style={{fontSize:35,marginLeft:"20%",background:"blueviolet",borderRadius:30,paddingLeft:30,paddingRight:30}}  >Submit</button></Link> 
               </div>

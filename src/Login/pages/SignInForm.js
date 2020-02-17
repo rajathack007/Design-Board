@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import "./signin.css";
 
 class SignInForm extends Component {
     constructor() {
@@ -32,8 +33,9 @@ class SignInForm extends Component {
     }
 
     render() {
-        return (<div><div className="Appnavbar"><p style={{color:"white",fontSize:20,textAlign:"center"}}>ETU LOGO</p></div>
-        <div className="FormCenter" style={{marginLeft:550,marginTop:100,backgroundColor:'white',padding:50}}>
+         return (<div>
+           <div className="Appnavbar"><p style={{color:"white",fontSize:20,textAlign:"center"}}>ETU LOGO</p></div> 
+        <div className="FormCenter" style={{marginLeft:650,marginTop:150,backgroundColor:'white',padding:50}}>
             <form onSubmit={this.handleSubmit} className="FormFields" onSubmit={this.handleSubmit}>
             <div className="FormField">
                 <label className="FormField__Label" htmlFor="email" >E-Mail Address</label>
@@ -46,7 +48,7 @@ class SignInForm extends Component {
               </div>
 
               <div className="FormField">
-              <Link to="/UserMap"> <button className="FormField__Button mr-20">Sign In</button></Link> <Link to="/sign-up" className="FormField__Link">Create an account</Link>
+              <Link to="/UserMap"> <button className="FormField__Button mr-20">Sign In</button></Link> <Link to="/" className="FormField__Link">Create an account</Link>
               </div>
             </form>
           </div>

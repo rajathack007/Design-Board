@@ -1,0 +1,20 @@
+.graph {
+    width: 100vw;
+    overflow: auto;
+    min-height: 100vh;
+    position: relative;
+  }
+  .node {
+    z-index: 2;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    border-radius: 50%;
+    background-color: lightseagreen;
+  }
+  svg {
+    position: absolute;
+    z-index: 1;
+  }
+  
+  

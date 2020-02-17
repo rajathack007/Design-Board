@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import "./signin.css";
 
 class SignUpForm extends Component {
     constructor() {
@@ -34,8 +35,9 @@ class SignUpForm extends Component {
     }
 
     render() {
-        return (<div><div className="Appnavbar"><p style={{color:"white",fontSize:20,textAlign:"center"}}>ETU LOGO</p></div>
-        <div className="FormCenter" style={{marginLeft:550,marginTop:50,backgroundColor:'white',padding:50}}>
+        return (<div>
+           <div className="Appnavbar"><p style={{color:"white",fontSize:20,textAlign:"center"}}>ETU LOGO</p></div> 
+        <div className="FormCenter" style={{marginLeft:650,marginTop:60,backgroundColor:'white',padding:50}}>
             <form onSubmit={this.handleSubmit} className="FormFields">
               <div className="FormField">
                 <label className="FormField__Label" htmlFor="name">Full Name</label>

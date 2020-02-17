@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 // import './index.css'//
-// import './App.css'//
-// import './App.css';
+
 import { HashRouter as Router, Route, Link, NavLink } from 'react-router-dom';
 import SignUpForm from './Login/pages/SignUpForm';
 import SignInForm from './Login/pages/SignInForm';
@@ -11,6 +10,7 @@ import UserMap from './Map/UserMap'
 import MapType from './MapType/MapType'
 import Home from './Home/Home'
 import Footer from './Footer/Footer'
+import Header from './Header/Header'
 
 
 
@@ -20,13 +20,13 @@ class App extends Component {
       
         <Router>
         <div className="App">
-        
-        {/* <Route path="/" component={Home}>
-              </Route> */}
+         
+         <Route path="/Home" component={Home}>
+              </Route> 
               <Route path="/sign-in" component={SignInForm}>
               </Route> 
 
-              <Route exact path="/sign-up" component={SignUpForm}>
+              <Route exact path="/" component={SignUpForm}>
               </Route>
              
               <Route path="/UserMap" component={UserMap}>
