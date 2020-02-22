@@ -366,7 +366,7 @@ padding-left: 1%;
 }
 
 .phase{
-  border-radius: 0px 60px 60px 0px;
+  border-radius: 0px 30px 30px 0px;
   background:lightseagreen;
   resize: horizontal;
   
@@ -378,6 +378,7 @@ padding-left: 1%;
   display: inline-flex;
   border-left: 55px;
   position: relative;
+  
 }
 
 .textlane{

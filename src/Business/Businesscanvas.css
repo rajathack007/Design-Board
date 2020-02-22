@@ -125,7 +125,7 @@ display: block;
 .centerline{
     width: 100%;
   border: 1px solid black;
-  margin-top: 39%;
+  margin-top: 32%;
   display: inline-flex;
   
   text-align: center;
@@ -136,6 +136,25 @@ display: block;
     height: 200px;
     background: lightseagreen;
     position:absolute;
-    margin:1%;
+    margin:2%;
+}
+.businessrect{
+  width:550px;
+  height: 150px;
+  background: lightseagreen;
+  position:absolute;
+  flex-wrap: nowrap;
+  margin:1%;
+  margin-top: -40px;
+  margin-left: 200px;
+}
+.businessscard{
+  width:270px;
+  height: 130px;
+  background: lightseagreen;
+  position:absolute;
+  margin:1%;
+  margin-top: -60px;
+  margin-left: 30px;
 }
 

@@ -23,6 +23,7 @@ class Help extends Component {
      </div></a>
       </div> 
       <div style={{marginLeft:"45%",fontSize:"2em"}}>Help</div>
+      <center><img src="https://dsctal.space/wp-content/uploads/2018/10/Canvas_Help_Flowchart.jpg"/></center>
                    <div className="helpfooter" style={{marginBottom:10}}>
       <footer>
                     Powered By <a href="http://www.edunomics.in" target="_blank"> <strong>Edunomics</strong></a>

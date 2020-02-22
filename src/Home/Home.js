@@ -19,6 +19,8 @@ class Home extends Component {
                    
                    <Link to="/sign-in" style={{marginLeft:"50%",color:"white",textDecoration:"none"}}> <a style={{fontSize:20,paddingTop:".75%"}}>Login</a></Link></div> 
 <div style={{marginLeft:"45%",fontSize:"2em"}}>HOME</div>
+<center><img src="https://d2slcw3kip6qmk.cloudfront.net/marketing/blog/updates/customer-journey-map-example.png" /></center>
+
                    <div className="homefooter" style={{marginBottom:10}}>
       <footer>
                     Powered By <a href="http://www.edunomics.in" target="_blank"> <strong>Edunomics</strong></a>
