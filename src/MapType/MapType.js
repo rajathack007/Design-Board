@@ -28,7 +28,17 @@ class MapType extends Component {
       return(
         <div className="container5">
            <div className="containernavbar1">
-           <p style={{color:"white",marginLeft:"1%"}}>ETU LOGO</p> 
+           <Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"white",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
+        <Link to="/UserMap" style={{marginLeft:"3%",fontSize:"1.5em",paddingTop:"0.65%",color:"white",textDecoration:"none"}}>Dashboard</Link>
+        <Link to="/Help" style={{marginLeft:"65%",fontSize:"1.5em",paddingTop:"0.65%",color:"white",textDecoration:"none"}}>Help</Link> 
+       <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
+    
+    <a  class="dropbtn" style={{color:"white",fontSize:"1.5em",textDecoration:"none"}}>Profile</a>
+    <div class="dropdown-content">
+    <Link to="/Profile"  style={{color:"black",textDecoration:"none"}}>My Profile</Link> 
+    <Link to="/"  style={{color:"black",textDecoration:"none"}}>Logout</Link>
+      
+     </div></a>
           </div> 
           <div className="projectnamenavbar">{data}</div>
           
@@ -44,7 +54,7 @@ class MapType extends Component {
             </div>
             <div className="businessmodelcanvas1">
               <p className="textsize1" align="center">Business Model Canvas</p>
-              <div className="mapbutton1">+</div>
+            <Link to="/Businesscanvas"style={{textDecoration:"none",color:"black"}} > <div className="mapbutton1">+</div></Link>
             </div>
             <div className="designthinking1">
       <p className="textsize1" align="center" style={{paddingBottom:30}}>Design Thinking </p>

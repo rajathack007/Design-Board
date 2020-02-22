@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import "./signin.css";
+import "./logout.css";
 
 class SignUpForm extends Component {
     constructor() {
@@ -35,35 +35,41 @@ class SignUpForm extends Component {
     }
 
     render() {
-        return (<div>
-           <div className="Appnavbar"><p style={{color:"white",fontSize:20,textAlign:"center"}}>ETU LOGO</p></div> 
-        <div className="FormCenter" style={{marginLeft:650,marginTop:60,backgroundColor:'white',padding:50}}>
-            <form onSubmit={this.handleSubmit} className="FormFields">
+        return (<div classname="body">
+           <div className="logoutnavbar1"><Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"white",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
+           <Link to="/Home" style={{marginLeft:"2%",marginTop:"-0.5%",fontSize:"1.5em",paddingTop:".75%",color:"white",textDecoration:"none"}}>Home</Link>
+           </div> 
+       <div className="logout" >
+         
+       <form onSubmit={this.handleSubmit} className="FormFields">
               <div className="FormField">
-                <label className="FormField__Label" htmlFor="name">Full Name</label>
-                <input type="text" id="name" className="FormField__Input" placeholder="Enter your full name" name="name" value={this.state.name} onChange={this.handleChange} />
+                <label className="FormField__Label" htmlFor="name" style={{marginBottom:"5%"}}><h4>Username</h4></label>
+                <input type="text" id="name" className="FormField__Input" placeholder="Enter Username" name="name" value={this.state.name} onChange={this.handleChange} />
               </div>
               <div className="FormField">
-                <label className="FormField__Label" htmlFor="password">Password</label>
+                <label className="FormField__Label" htmlFor="password" style={{marginBottom:"5%"}}><h4>&#128274;Password</h4></label>
                 <input type="password" id="password" className="FormField__Input" placeholder="Enter your password" name="password" value={this.state.password} onChange={this.handleChange} />
               </div>
               <div className="FormField">
-                <label className="FormField__Label" htmlFor="email">E-Mail Address</label>
-                <input type="email" id="email" className="FormField__Input" placeholder="Enter your email" name="email" value={this.state.email} onChange={this.handleChange} />
+                <label className="FormField__Label" htmlFor="email"style={{marginBottom:"5%"}}><h4>&#128231; Email Address</h4></label>
+                <input type="email" id="email" className="FormField__Input" placeholder="Enter your Email Address" name="email" value={this.state.email} onChange={this.handleChange} />
               </div>
 
               <div className="FormField">
                 <label className="FormField__CheckboxLabel">
-                    <input className="FormField__Checkbox" type="checkbox" name="hasAgreed" value={this.state.hasAgreed} onChange={this.handleChange} /> I agree all statements in <a href="" className="FormField__TermsLink">terms of service</a>
+              <center>      I agree all statements in <a href="" className="FormField__TermsLink">terms of service</a><input className="FormField__Checkbox" type="checkbox" name="hasAgreed" value={this.state.hasAgreed} onChange={this.handleChange} /></center> 
                 </label>
               </div>
 
               <div className="FormField">
-              <Link to="/UserMap">  <button className="FormField__Button mr-20">Sign Up</button></Link> <Link to="/sign-in" className="FormField__Link">I'm already member</Link>
+           <center>  <Link to={{pathname:"/UserMap",data4:this.state.name,data2:this.state.email}}>  <button className="buttonlogout">Sign Up</button></Link> <Link to="/sign-in" className="FormField__Link" style={{marginLeft:"2%"}}>I'm already member</Link></center> 
               </div>
             </form>
-          </div>
-          <div className="signfooter" style={{marginBottom:10}}>
+
+
+         
+       </div>
+          <div className="signfooter1" style={{marginBottom:10}}>
           <footer>
                     Powered By <a href="http://www.edunomics.in" target="_blank"> <strong>Edunomics</strong></a>
                 </footer>

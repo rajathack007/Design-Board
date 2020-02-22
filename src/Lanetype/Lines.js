@@ -95,7 +95,7 @@ export default class extends Component {
               style={{ top: y, left: x }}
             />
             {next && (
-              <svg width="100%" height="100%">
+              <svg width="100%" height="100%" style={{position:"absolute"}}>
                 <line
                   x1={x + 25}
                   y1={y + 25}

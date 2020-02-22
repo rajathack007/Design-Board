@@ -1,0 +1,25 @@
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-image: linear-gradient(135deg, #aeafe8 0%, #e68ca7 100%);
+  }
+  .privacynavbar{
+    height: 50px;
+   width: 100%;
+    background: blueviolet;
+    text-align: center;
+   padding-left: 40px;
+    font-size: 2em;
+    display: flex;
+    color: white;
+  }
+  .privacyfooter{
+    height: 40px;
+    width: 100%;
+    background-color: white;
+    position: fixed;
+    bottom: 0;
+  }
+  

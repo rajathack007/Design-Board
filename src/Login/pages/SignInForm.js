@@ -1,65 +1,77 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import "./signin.css";
+import "./login.css";
 
 class SignInForm extends Component {
-    constructor() {
-        super();
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: ""
+    };
+  }
 
-        this.state = {
-            email: '',
-            password: ''
-        };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleChange(e) {
-        let target = e.target;
-        let value = target.type === 'checkbox' ? target.checked : target.value;
-        let name = target.name;
-
-        this.setState({
-          [name]: value
-        });
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-
-        console.log('The form was submitted with the following data:');
-        console.log(this.state);
-    }
-
-    render() {
-         return (<div>
-           <div className="Appnavbar"><p style={{color:"white",fontSize:20,textAlign:"center"}}>ETU LOGO</p></div> 
-        <div className="FormCenter" style={{marginLeft:650,marginTop:150,backgroundColor:'white',padding:50}}>
-            <form onSubmit={this.handleSubmit} className="FormFields" onSubmit={this.handleSubmit}>
-            <div className="FormField">
-                <label className="FormField__Label" htmlFor="email" >E-Mail Address</label>
-                <input type="email" id="email" className="FormField__Input" placeholder="Enter your email" name="email" value={this.state.email} onChange={this.handleChange} />
-              </div>
-
-              <div className="FormField">
-                <label className="FormField__Label" htmlFor="password">Password</label>
-                <input type="password" id="password" className="FormField__Input" placeholder="Enter your password" name="password" value={this.state.password} onChange={this.handleChange} />
-              </div>
-
-              <div className="FormField">
-              <Link to="/UserMap"> <button className="FormField__Button mr-20">Sign In</button></Link> <Link to="/" className="FormField__Link">Create an account</Link>
-              </div>
-            </form>
-          </div>
-          <div className="signfooter"  style={{marginBottom:10}}>
+  render() {
+    const { email, password } = this.state;
+    return (
+      <div classname="body">
+      <div className="loginnavbar"><Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"white",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
+      <Link to="/Home" style={{marginLeft:"2%",marginTop:"-0.5%",fontSize:"1.5em",paddingTop:".75%",color:"white",textDecoration:"none"}}>Home</Link>
+      </div> 
+      <div className="log">
+      <h3  style={{marginTop:"2%",marginBottom:"12%",marginLeft:"35%"}}>Welcome!</h3>
+      <form onSubmit={this.handleSubmit}>
+     
+        <label htmlFor="email" style={{marginBottom:"5%"}}><h4  >&#128231; Email</h4></label>
+        <input
+          name="email"
+          type="text"
+          placeholder="Enter your email"
+          value={email}
+          onChange={this.handleChange}
+          
+        />
+        <label htmlFor="email"style={{marginBottom:"5%"}}><h4 >&#128274;Password</h4></label>
+        <input
+          name="password"
+          type="password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={this.handleChange}
+        />
+        <center><Link to={{pathname:"/UserMap",data2:this.state.email}}> <button type="submit" className="buttonlogin">Login</button></Link></center>
+        <br></br>
+        <center> <Link to="/" className="FormField__Link">Create an account</Link>
+      
+        <Link to="/Forgotpassword" className="FormField__Link" style={{marginLeft:"8%"}}>Forgot Password?</Link></center>
+      </form></div>
+      <div className="signfooter" style={{marginBottom:10}}>
           <footer>
                     Powered By <a href="http://www.edunomics.in" target="_blank"> <strong>Edunomics</strong></a>
                 </footer>
           </div>
-          </div>
-        );
-    }
+      
+      </div>
+    );
+  }
+  // handleChanges=event=>{
+  //   this.setState({[event.target.name]:event.target.value},()=>{
+  //     console.log(this.state.email)
+  //   })
+    
+  // }
+
+  handleChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
+
+  handleSubmit = event => {
+    console.log("Submitting");
+    console.log(this.state);
+  };
 }
+
 
 export default SignInForm;

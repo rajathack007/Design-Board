@@ -26,6 +26,7 @@ class Linelane extends Component {
  <div className="sidebar" style={{overflow:"hidden",whiteSpace:"normal"}} ><p style={{textAlign:"center",marginTop:"50%"}}> {this.props.children[0]}</p></div> 
           {this.props.children[1]}
           
+          
                
                 </div>
                 

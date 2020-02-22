@@ -145,11 +145,12 @@ div.note > textarea {
   margin-right: 50px;
 }
 .navbar {
+  width: 100%;
+  height: 50px;
+  background-color: blueviolet;
+  text-align: center;
+padding-left: 1%;
   display: flex;
-  /* padding-left: 500px;
-  padding-right: 500px; */
-  font-size: 1.5em;
-  background: blueviolet;
 }
 .editornavbar {
   display:inline-flex;
@@ -363,35 +364,12 @@ div.note > textarea {
   margin: 50px;
   display: inline-flex;
 }
-/* .bubble:after {
-  content:"";
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-top: 13px solid transparent;
-  border-left: 26px solid lightseagreen;
-  border-bottom: 13px solid transparent;
-  margin: 93px 13px 13px 200px;
-} */
-/* .bubble:after {
-	content: '';
-	position: absolute;
-	bottom: 0;
-	left: 50%;
-	width: 0;
-	height: 0;
-	border: 41px solid transparent;
-	border-top-color: #00aabb;
-	border-bottom: 0;
-	border-left: 0;
-	margin-left: -20.5px;
-	margin-bottom: -41px;
-} */
+
 .phase{
-  border-radius: 0px 70px 70px 0px;
+  border-radius: 0px 60px 60px 0px;
   background:lightseagreen;
   resize: horizontal;
-  /* overflow: auto; */
+  
   overflow: hidden;
   white-space: normal;
   width: 200px;
@@ -401,10 +379,7 @@ div.note > textarea {
   border-left: 55px;
   position: relative;
 }
-a:hover {
-  
-  cursor: pointer;
-}
+
 .textlane{
   height: 500px;
   width: 700px;
@@ -414,6 +389,7 @@ a:hover {
   height: 50px;
   width: 700px;
   background: lightskyblue;
+  
 }
 .textlanetools{
   height: 50px;
@@ -433,16 +409,35 @@ a:hover {
   
  
 }
-/* .svg1 { 
-  position: relative; 
-  width: 100%; 
+.react-expand-collapse__content {
+  position: relative;
+  overflow: hidden;
 }
 
-h2 { 
- position: absolute; 
- top: 50px; 
- left:100px; 
+.react-expand-collapse__body {
+  display: inline;
+}
+
+/* expand-collapse button */
+.react-expand-collapse__button {
+  color: white;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color:black;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+
+
+
+
+
+
  
- width: 100%; 
-}  */
+
+
+
 

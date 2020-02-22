@@ -1,7 +1,7 @@
 .graph {
     width: 100vw;
     overflow: auto;
-    min-height: 100vh;
+    min-height: 50vh;
     position: relative;
   }
   .node {
@@ -13,7 +13,6 @@
     background-color: lightseagreen;
   }
   svg {
-    position: absolute;
     z-index: 1;
   }
   

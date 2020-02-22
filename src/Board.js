@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,Fragment } from "react";
 import ReactDOM from "react-dom";
 import "./index.css"; //
 import "./App.css"; //
@@ -45,7 +45,10 @@ import Textlane from './Lanetype/Textlane'
 import Imagelane from './Lanetype/Imagelane'
 import Filelane from './Lanetype/Filelane'
 import Linelane from './Lanetype/Linelane'
+import Log from './Draft/Log'
 import {Rnd} from 'react-rnd';
+import ExpandCollapse from 'react-expand-collapse';
+
 
 
 
@@ -56,6 +59,7 @@ class Board extends Component {
     super(props);
     this.state = {
       tabIndex: 0,
+      id:[],
       layer: [],
       layer1: [],
       layer2: [],
@@ -195,7 +199,11 @@ class Board extends Component {
      
     });
   };
-  
+  toggle() {
+    this.setState({
+      open: !this.state.open
+    });
+  }
   
   addRectangle = () =>{
     const Rectanglelane =()=>{
@@ -205,6 +213,7 @@ class Board extends Component {
       <div className="rectangle" style={{overflow:"hidden",whiteSpace:"normal",wordBreak:"break-word"}} >  
                   {item}
              </div>
+             
     </ReactDraggable>
       );})
       
@@ -332,6 +341,7 @@ class Board extends Component {
       
     })
   }
+  
  
   render() {
     const { open } = this.state;
@@ -360,14 +370,21 @@ class Board extends Component {
       <div className="board">
         
       
-         <div className="navbar" style={{color:"white"}}>
-          ETU LOGO
-         
-          
-          
-          
+         <div className="containernavbar1" >
+         <Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"white",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
+        
+        <Link to="/Help" style={{marginLeft:"75%",fontSize:"1.5em",paddingTop:"0.65%",color:"white",textDecoration:"none"}}>Help</Link> 
+       <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
+    
+    <a  class="dropbtn" style={{color:"white",fontSize:"1.5em",textDecoration:"none"}}>Profile</a>
+    <div class="dropdown-content">
+    <Link to="/Profile"  style={{color:"black",textDecoration:"none"}}>My Profile</Link> 
+    <Link to="/"  style={{color:"black",textDecoration:"none"}}>Logout</Link>
+      
+     </div></a>
+
         </div> 
-        <div className="projectnamenavbar">{data}
+        <div className="projectnamenavbar" contentEditable="true">{data}
         
         </div>
        
@@ -378,22 +395,33 @@ class Board extends Component {
         {this.state.totallayer.map(item=>{
           if (item.type=="Cardlane"){
           return(
-            <Cardlane>
-              {item.text}
+            <ExpandCollapse
+          previewHeight="50px"
+          
+        ><Cardlane>
+              {item.text }
               <button className="button1" onClick={() =>this.onOpenModal1("Cardlane")}>+</button>
               {this.state.Rectangle}
             </Cardlane>
+        </ExpandCollapse>
+            
           )}
          else if (item.type=="Bubblelane"){
             return(
+              <ExpandCollapse
+              previewHeight="50px">
               <Bubblelane>
                 {item.text}
                 <button className="button1" onClick={()=>this.onOpenModal1("Bubblelane")}>+</button>
                 {this.state.Bubble}
               </Bubblelane>
+         </ExpandCollapse>   
+              
+           
             )}
             else if (item.type=="Phaselane"){
               return(
+                
                 <Phaselane>
                   {item.text}
                   <button className="button1" onClick={()=>this.onOpenModal1("Phaselane")}>+</button>
@@ -426,7 +454,7 @@ class Board extends Component {
                       return(
                         <Linelane>
                           {item.text}
-                          <div style={{marginTop:-80}}>
+                          <div style={{marginTop:-150}}>
                            <Lines/> 
                           </div>
                         </Linelane>
@@ -443,26 +471,26 @@ class Board extends Component {
           
          
           <DropdownItem>
-             <a onClick={()=>this.onOpenModal("Cardlane")} >
-           &#9645; Add Card Lane</a>
+             <li onClick={()=>this.onOpenModal("Cardlane")} >
+           &#9645; Add Card Lane</li>
            </DropdownItem>
-           <DropdownItem> <a  onClick={()=>this.onOpenModal("Bubblelane")}>
-           &#128172; Add Bubble Lane</a>
+           <DropdownItem> <li  onClick={()=>this.onOpenModal("Bubblelane")}>
+           &#128172; Add Bubble Lane</li>
            </DropdownItem>
-           <DropdownItem><a  onClick={()=>this.onOpenModal("Phaselane")}>
-           &#8680; Add Phase Lane</a>
+           <DropdownItem><li  onClick={()=>this.onOpenModal("Phaselane")}>
+           &#8680; Add Phase Lane</li>
            </DropdownItem>
-           <DropdownItem><a onClick={()=>this.onOpenModal("Linelane")}>
-           📈 Add Line Lane</a>
+           <DropdownItem><li onClick={()=>this.onOpenModal("Linelane")}>
+           📈 Add Line Lane</li>
            </DropdownItem>
-           <DropdownItem><a onClick={()=>this.onOpenModal("Imagelane")}>
-           &#128190; Add Image Lane</a>
+           <DropdownItem><li onClick={()=>this.onOpenModal("Imagelane")}>
+           &#128190; Add Image Lane</li>
            </DropdownItem>
-           <DropdownItem><a onClick={()=>this.onOpenModal("Filelane")}>
-           &#128194; Add File Lane</a>
+           <DropdownItem><li onClick={()=>this.onOpenModal("Filelane")}>
+           &#128194; Add File Lane</li>
            </DropdownItem>
-           <DropdownItem><a onClick={()=>this.onOpenModal("Textlane")}>
-           &#128221; Add Text Lane</a>
+           <DropdownItem><li onClick={()=>this.onOpenModal("Textlane")}>
+           &#128221; Add Text Lane</li>
            </DropdownItem>
  
            
@@ -538,7 +566,7 @@ class Board extends Component {
         </Modal>
         <Modal open={open1} onClose={this.onCloseModal1} center>
            <div className="textlane" >
-             <div className="textlanenavbar"><div className="textsize2 " style={{padding:10}}>Edit Card</div></div>
+             <div className="textlanenavbar" ><div className="textsize2 " style={{padding:10}}>Edit Card</div></div>
              <div className="editornavbar" style={{paddingTop: "1%"}}>
 <div style={{paddingRight: "2%"}}>
              <FontPicker 
@@ -598,8 +626,13 @@ class Board extends Component {
         </Modal>
       </div>
       
-      {data1}
       
+      {data1}
+     
+        <div className="container">
+        
+         
+        </div>
         <div className="footer">
         <Tabs selectedIndex={this.state.tabIndex} onSelect={tabIndex => this.setState({ tabIndex })}>
         <TabList>

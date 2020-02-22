@@ -4,6 +4,10 @@ import Board from './Board'
 import App from './App';
 import UserMap from './Map/UserMap'
 import MapType from './MapType/MapType'
+import SignUpForm from './Login/pages/SignUpForm';
+import SignInForm from './Login/pages/SignInForm';
+import Forgotpassword from './Login/pages/Forgotpassword';
+import Home from './Home/Home'
 
 //import './index.css'
 //import './App.css'//

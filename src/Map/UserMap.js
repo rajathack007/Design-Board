@@ -26,12 +26,25 @@ class UserMap extends Component {
   };
   render(){
     const { open } = this.state;
+    
+    const {data2} = this.props.location;
+    const {data4} = this.props.location;
     return(
       <div className="body" style={{width:"100%"}} >
-       <div className="bodynavbar"> 
-      <p style={{color:"white"}}>ETU LOGO</p>
-     <p style={{color:"white",marginLeft:"60%"}}>Help</p>
-     <p style={{color:"white",marginLeft:"2%"}}>Profile</p>
+       <div className="bodynavbar" style={{overflow:"hidden"}}>       
+       <Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"white",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
+        
+        <Link to="/Help" style={{marginLeft:"75%",fontSize:"1.5em",paddingTop:"0.65%",color:"white",textDecoration:"none"}}>Help</Link> 
+  
+       <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
+    
+    <a  class="dropbtn" style={{color:"white",fontSize:"1.5em",textDecoration:"none"}} >Profile </a>
+    <div class="dropdown-content">
+    <Link to={{pathname:"/Profile",data2:data2,data4:data4}}  style={{color:"black",textDecoration:"none"}}>My Profile</Link> 
+    <Link to="/"  style={{color:"black",textDecoration:"none"}}>Logout</Link>
+      
+     </div></a>
+     
       </div> 
       
       <div className="mapcontainer">
@@ -45,12 +58,12 @@ class UserMap extends Component {
               align="center">New Project</p>
               <div className="mapbutton" onClick={this.onOpenModal}>+</div>
          
-         <Modal open={open} onClose={this.onCloseModal} center>
+         <Modal open={open} onClose={this.onCloseModal } center  >
            <div className="namemodal" >
              <div className="namemodalnavbar" ><div className="textsize2 " style={{paddingTop:5}}>Project Name</div></div>
              <div className="inputcontainer" style={{textAlign:"center"}}>
-             <input type="text" style={{fontSize:25}} name="ProjectName" placeholder="Project Name" onChange={e=>this.handleChange(e)} /><br></br><br></br>
-             <Link to={{pathname:"/MapType",data:this.state.ProjectName}}> <button type="button" style={{fontSize:25,background:"blueviolet",borderRadius:30,paddingLeft:30,paddingRight:30,textAlign:"center"}}  >Submit</button></Link> 
+             <input type="text" style={{fontSize:25}} name="ProjectName" placeholder="Project Name" onChange={e=>this.handleChange(e)} /><br></br>
+             <Link to={{pathname:"/MapType",data:this.state.ProjectName}}> <button  style={{fontSize:25,background:"blueviolet",borderRadius:30,paddingLeft:30,paddingRight:30,textAlign:"center",marginTop:"-10%"}}  >Submit</button></Link> 
               </div>
               </div>
         </Modal>
