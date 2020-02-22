@@ -1,0 +1,11 @@
+.layout{
+    color: blue;
+    background: seagreen;
+}
+.businesscard{
+    width:225px;
+    height: 200px;
+    background: lightseagreen;
+    position:absolute;
+    margin:1%;
+}

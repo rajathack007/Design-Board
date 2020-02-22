@@ -5,6 +5,7 @@ import Modal from 'react-responsive-modal';
 import GridLayout from 'react-grid-layout';
 import { StickyContainer, Sticky } from 'react-sticky';
 import ReactDraggable from 'react-draggable';
+import List from './List';
 
 
 
@@ -60,6 +61,7 @@ class Businesscanvas extends Component {
     
     
 <div className="businesslayout" >
+
       <div className="col1" ><p style={{fontSize:"1.5em",margin:"4%"}}>Key Partners</p><h1 onClick={this.addCard} >+</h1>{this.state.Card}</div>
     <div className="col2" ><p style={{fontSize:"1.5em",margin:"4%"}}>Key Activities</p><h1 >+</h1>
     <div className="centerline"></div><p style={{fontSize:"1.5em",margin:"4%"}}>Key Resources</p><h1 >+</h1></div>
@@ -72,11 +74,11 @@ class Businesscanvas extends Component {
 </div>
 
 </div>
-<div className="businessfooter" style={{marginBottom:10}}>
+{/* <div className="businessfooter" style={{marginBottom:10}}>
       <footer>
                     Powered By <a href="http://www.edunomics.in" target="_blank"> <strong>Edunomics</strong></a>
                 </footer>
-      </div>
+      </div> */}
 
           </div>
       )

@@ -397,6 +397,7 @@ class Board extends Component {
           return(
             <ExpandCollapse
           previewHeight="50px"
+         
           
         ><Cardlane>
               {item.text }

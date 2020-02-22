@@ -412,6 +412,7 @@ padding-left: 1%;
 .react-expand-collapse__content {
   position: relative;
   overflow: hidden;
+  
 }
 
 .react-expand-collapse__body {
@@ -427,6 +428,7 @@ padding-left: 1%;
   background-color:black;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  
 }
 
 
