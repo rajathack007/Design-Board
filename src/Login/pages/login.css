@@ -2,7 +2,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-image: linear-gradient(135deg, #aeafe8 0%, #e68ca7 100%);
+  background-color: white;
 } 
   
   
@@ -42,7 +42,7 @@ body {
   }
   
   .buttonlogin {
-    background-color: blueviolet;
+    background-color: #3596C9;
     color: white;
     border: none;
     outline: none;
@@ -58,9 +58,9 @@ body {
   
  
   .log{
-      height: 70%;
-      width: 30%;
-      padding: 4%;
+      height: 500px;
+      width: 450px;
+      padding: 3%;
       position: absolute;
 	top:0;
 	bottom: 0;
@@ -68,8 +68,14 @@ body {
 	right: 0;
   	
 	margin: auto;
-      background-color: white;
-      box-shadow: 10px 10px #888888;
+      background-color: #D6EAF4;
+      border-radius: 10px;
+
+      
+      -webkit-box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
+      -moz-box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
+      box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
+      
   }
   .FormField__Link {
     color: #66707d;
@@ -81,7 +87,7 @@ body {
   .loginnavbar {
     width: 200%;
     height: 50px;
-    background-color: blueviolet;
+    background-color:#A0DAF8 ;
     text-align: center;
     padding-left: 1%;
     

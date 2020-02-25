@@ -15,14 +15,14 @@ class SignInForm extends Component {
     const { email, password } = this.state;
     return (
       <div classname="body">
-      <div className="loginnavbar"><Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"white",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
-      <Link to="/Home" style={{marginLeft:"2%",marginTop:"-0.5%",fontSize:"1.5em",paddingTop:".75%",color:"white",textDecoration:"none"}}>Home</Link>
+      <div className="loginnavbar"><Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"Black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
+      <Link to="/Home" style={{marginLeft:"2%",marginTop:"-0.5%",fontSize:"1.5em",paddingTop:".75%",color:"Black",textDecoration:"none"}}>Home</Link>
       </div> 
       <div className="log">
-      <h3  style={{marginTop:"2%",marginBottom:"12%",marginLeft:"35%"}}>Welcome!</h3>
+      <h3  style={{marginTop:"1%",marginBottom:"8%",marginLeft:"33%"}}>Welcome!</h3>
       <form onSubmit={this.handleSubmit}>
      
-        <label htmlFor="email" style={{marginBottom:"5%"}}><h4  >&#128231; Email</h4></label>
+        <label htmlFor="email" style={{marginBottom:"5%"}}><h4  >Email</h4></label>
         <input
           name="email"
           type="text"
@@ -31,7 +31,7 @@ class SignInForm extends Component {
           onChange={this.handleChange}
           
         />
-        <label htmlFor="email"style={{marginBottom:"5%"}}><h4 >&#128274;Password</h4></label>
+        <label htmlFor="email"style={{marginBottom:"5%"}}><h4 >Password</h4></label>
         <input
           name="password"
           type="password"

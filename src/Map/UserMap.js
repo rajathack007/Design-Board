@@ -32,13 +32,13 @@ class UserMap extends Component {
     return(
       <div className="body" style={{width:"100%"}} >
        <div className="bodynavbar" style={{overflow:"hidden"}}>       
-       <Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"white",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
+       <Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
         
-        <Link to="/Help" style={{marginLeft:"65%",fontSize:"1.5em",paddingTop:"0.65%",color:"white",textDecoration:"none"}}>Help</Link> 
+        <Link to="/Help" style={{marginLeft:"70%",fontSize:"1.5em",paddingTop:"0.65%",color:"black",textDecoration:"none"}}>Help</Link> 
   
        <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
     
-    <a  class="dropbtn" style={{color:"white",fontSize:"1.5em",textDecoration:"none"}} >Profile </a>
+    <a  class="dropbtn" style={{color:"black",fontSize:"1.5em",textDecoration:"none"}} >Profile </a>
     <div class="dropdown-content">
     <Link to={{pathname:"/Profile",data2:data2,data4:data4}}  style={{color:"black",textDecoration:"none"}}>My Profile</Link> 
     <Link to="/"  style={{color:"black",textDecoration:"none"}}>Logout</Link>
@@ -63,7 +63,7 @@ class UserMap extends Component {
              <div className="namemodalnavbar" ><div className="textsize2 " style={{paddingTop:5,marginLeft:"5%"}}>Project Name</div></div>
              <div className="inputcontainer" style={{textAlign:"center"}}>
              <input type="text" style={{fontSize:25}} name="ProjectName" placeholder="Project Name" onChange={e=>this.handleChange(e)} /><br></br>
-             <Link to={{pathname:"/MapType",data:this.state.ProjectName}}> <button  style={{fontSize:25,background:"blueviolet",borderRadius:30,paddingLeft:30,paddingRight:30,textAlign:"center",marginTop:"-10%"}}  >Submit</button></Link> 
+             <Link to={{pathname:"/MapType",data:this.state.ProjectName}}> <button  style={{fontSize:25,background:"#3596C9",borderRadius:30,paddingLeft:30,paddingRight:30,textAlign:"center",marginTop:"-10%"}}  >Submit</button></Link> 
               </div>
               </div>
         </Modal>

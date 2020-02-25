@@ -420,7 +420,7 @@ class Board extends Component {
       <div className="board">
         <div className="containernavbar1">
           <Link to="/Home" style={{ textDecoration: "none" }}>
-            <p style={{ color: "white", fontSize: "2em", textAlign: "center" }}>
+            <p style={{ color: "black", fontSize: "2em", textAlign: "center" }}>
               ETU LOGO
             </p>
           </Link>
@@ -428,10 +428,10 @@ class Board extends Component {
           <Link
             to="/Help"
             style={{
-              marginLeft: "65%",
+              marginLeft: "70%",
               fontSize: "1.5em",
               paddingTop: "0.65%",
-              color: "white",
+              color: "black",
               textDecoration: "none"
             }}
           >
@@ -441,7 +441,7 @@ class Board extends Component {
             <a
               class="dropbtn"
               style={{
-                color: "white",
+                color: "black",
                 fontSize: "1.5em",
                 textDecoration: "none"
               }}

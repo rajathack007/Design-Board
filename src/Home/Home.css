@@ -3,17 +3,18 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-image: linear-gradient(135deg, #aeafe8 0%, #e68ca7 100%);
+  background-color: white;
+  /* background-image: linear-gradient(135deg, #aeafe8 0%, #e68ca7 100%); */
 }
 .homenavbar{
   height: 50px;
  width: 100%;
-  background: blueviolet;
+ background-color:#A0DAF8 ;
   text-align: center;
  padding-left: 40px;
   font-size: 2em;
   display: inline-flex;
-  color: white;
+  color: black;
 }
 .homefooter{
   height: 40px;
@@ -26,9 +27,9 @@ a:hover {
   cursor: pointer;
   background-color: lightslategray;
 }
-a:active{
+/* a:active{
   background-color: black;
-}
+} */
 
 
 

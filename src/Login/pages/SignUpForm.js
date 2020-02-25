@@ -36,33 +36,29 @@ class SignUpForm extends Component {
 
     render() {
         return (<div classname="body">
-           <div className="logoutnavbar1"><Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"white",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
-           <Link to="/Home" style={{marginLeft:"2%",marginTop:"-0.5%",fontSize:"1.5em",paddingTop:".75%",color:"white",textDecoration:"none"}}>Home</Link>
+           <div className="logoutnavbar1"><Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"Black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
+           <Link to="/Home" style={{marginLeft:"2%",marginTop:"-0.5%",fontSize:"1.5em",paddingTop:".75%",color:"Black",textDecoration:"none"}}>Home</Link>
            </div> 
        <div className="logout" >
          
        <form onSubmit={this.handleSubmit} className="FormFields">
               <div className="FormField">
-                <label className="FormField__Label" htmlFor="name" style={{marginBottom:"5%"}}><h4>Username</h4></label>
+                <label className="FormField__Label" htmlFor="name" style={{marginBottom:"5%",marginTop:"1%"}}><h4>Username</h4></label>
                 <input type="text" id="name" className="FormField__Input" placeholder="Enter Username" name="name" value={this.state.name} onChange={this.handleChange} />
               </div>
               <div className="FormField">
-                <label className="FormField__Label" htmlFor="password" style={{marginBottom:"5%"}}><h4>&#128274;Password</h4></label>
+                <label className="FormField__Label" htmlFor="password" style={{marginBottom:"5%"}}><h4>Password</h4></label>
                 <input type="password" id="password" className="FormField__Input" placeholder="Enter your password" name="password" value={this.state.password} onChange={this.handleChange} />
               </div>
               <div className="FormField">
-                <label className="FormField__Label" htmlFor="email"style={{marginBottom:"5%"}}><h4>&#128231; Email Address</h4></label>
+                <label className="FormField__Label" htmlFor="email"style={{marginBottom:"5%"}}><h4>Email Address</h4></label>
                 <input type="email" id="email" className="FormField__Input" placeholder="Enter your Email Address" name="email" value={this.state.email} onChange={this.handleChange} />
               </div>
 
-              <div className="FormField">
-                <label className="FormField__CheckboxLabel">
-              <center>      I agree all statements in <a href="" className="FormField__TermsLink">terms of service</a><input className="FormField__Checkbox" type="checkbox" name="hasAgreed" value={this.state.hasAgreed} onChange={this.handleChange} /></center> 
-                </label>
-              </div>
+             
 
               <div className="FormField">
-           <center>  <Link to={{pathname:"/UserMap",data4:this.state.name,data2:this.state.email}}>  <button className="buttonlogout">Sign Up</button></Link> <Link to="/sign-in" className="FormField__Link" style={{marginLeft:"2%"}}>I'm already member</Link></center> 
+           <center>  <Link to={{pathname:"/UserMap",data4:this.state.name,data2:this.state.email}}>  <button className="buttonlogout">Sign Up</button></Link><br></br><br></br> <Link to="/sign-in" className="FormField__Link" style={{marginLeft:"2%"}}>I'm already member</Link></center> 
               </div>
             </form>
 
