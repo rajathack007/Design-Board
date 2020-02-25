@@ -15,7 +15,7 @@ class Terms extends Component {
                  <Link to="/Pricing" style={{marginLeft:"2%",fontSize:20,paddingTop:".75%",color:"white",textDecoration:"none"}}>Pricing</Link>
                   <a style={{marginLeft:"2%",fontSize:20,paddingTop:".75%"}}>Terms & Condition</a>
                   <Link to="/PrivacyPolicy" style={{marginLeft:"2%",fontSize:20,paddingTop:".75%",color:"white",textDecoration:"none"}}>Privacy Policy</Link>
-                   <Link to="/sign-in" style={{marginLeft:"45%",color:"white",textDecoration:"none"}}> <a style={{fontSize:20,paddingTop:".75%"}}>Login</a></Link></div> 
+                   <Link to="/sign-in" style={{marginLeft:"38%",color:"white",textDecoration:"none"}}> <a style={{fontSize:20,paddingTop:".75%"}}>Login</a></Link></div> 
                    <div style={{marginLeft:"45%",fontSize:"2em"}}>Terms&Condition</div>
                    <center><img src="https://ht2ltd.zendesk.com/hc/article_attachments/360014926351/terms-display.png"/></center>
                    <div className="termfooter" style={{marginBottom:10}}>

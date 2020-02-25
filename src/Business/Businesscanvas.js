@@ -96,6 +96,11 @@ class Businesscanvas extends Component {
         }
       ]
     }
+    var layout = [
+ 
+      {i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4},
+      
+    ];
 
       return(
           <div className="body">
@@ -121,6 +126,11 @@ class Businesscanvas extends Component {
 <div className="businesslayout" >
 {/* <Board  draggable /> */}
 
+        
+        
+        
+     
+
        <div className="col1" ><p style={{fontSize:"1.5em",margin:"4%"}}>Key Partners</p><h1 onClick={this.addCard} >+</h1>{this.state.Card}</div>
     <div className="col2" ><p style={{fontSize:"1.5em",margin:"4%"}}>Key Activities</p><h1 onClick={this.addSCard} >+</h1>{this.state.SCard}
     <div className="centerline"></div><p style={{fontSize:"1.5em",margin:"4%"}}>Key Resources</p><h1 onClick={this.addSCard} >+</h1>{this.state.SCard}</div>
@@ -130,6 +140,7 @@ class Businesscanvas extends Component {
     <div className="col5" ><p style={{fontSize:"1.5em",margin:"4%"}}>Customer Segments</p><h1 onClick={this.addCard} >+</h1>{this.state.Card}</div>
     <div className="col6" ><p style={{fontSize:"1.5em",margin:"2%"}}>Cost Structures{this.state.Rectangle}</p><h1 onClick={this.addRect} >+</h1></div>
     <div className="col7" ><p style={{fontSize:"1.5em",margin:"2%"}}>Revenue Streams{this.state.Rectangle}</p><h1 onClick={this.addRect} >+</h1></div> 
+    
  </div>
 
 </div>

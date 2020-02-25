@@ -34,7 +34,7 @@ class UserMap extends Component {
        <div className="bodynavbar" style={{overflow:"hidden"}}>       
        <Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"white",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
         
-        <Link to="/Help" style={{marginLeft:"75%",fontSize:"1.5em",paddingTop:"0.65%",color:"white",textDecoration:"none"}}>Help</Link> 
+        <Link to="/Help" style={{marginLeft:"65%",fontSize:"1.5em",paddingTop:"0.65%",color:"white",textDecoration:"none"}}>Help</Link> 
   
        <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
     
@@ -60,7 +60,7 @@ class UserMap extends Component {
          
          <Modal open={open} onClose={this.onCloseModal } center  >
            <div className="namemodal" >
-             <div className="namemodalnavbar" ><div className="textsize2 " style={{paddingTop:5}}>Project Name</div></div>
+             <div className="namemodalnavbar" ><div className="textsize2 " style={{paddingTop:5,marginLeft:"5%"}}>Project Name</div></div>
              <div className="inputcontainer" style={{textAlign:"center"}}>
              <input type="text" style={{fontSize:25}} name="ProjectName" placeholder="Project Name" onChange={e=>this.handleChange(e)} /><br></br>
              <Link to={{pathname:"/MapType",data:this.state.ProjectName}}> <button  style={{fontSize:25,background:"blueviolet",borderRadius:30,paddingLeft:30,paddingRight:30,textAlign:"center",marginTop:"-10%"}}  >Submit</button></Link> 

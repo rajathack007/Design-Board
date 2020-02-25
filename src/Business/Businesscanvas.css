@@ -139,7 +139,7 @@ display: block;
     margin:2%;
 }
 .businessrect{
-  width:550px;
+  width:500px;
   height: 150px;
   background: lightseagreen;
   position:absolute;
@@ -149,7 +149,7 @@ display: block;
   margin-left: 200px;
 }
 .businessscard{
-  width:270px;
+  width:225px;
   height: 130px;
   background: lightseagreen;
   position:absolute;

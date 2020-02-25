@@ -15,6 +15,7 @@ import "filepond/dist/filepond.min.css";
 import Dropzone from "react-dropzone";
 import UploadImages from "yagoubi-upload-images";
 import Dropdown from "react-drop-down";
+import GridLayout from 'react-grid-layout';
 
 import Popup from "reactjs-popup";
 
@@ -308,8 +309,15 @@ class Board extends Component {
   };
   addPhase = () => {
     const Phaselane = () => {
+      var layout = [
+ 
+        {i: 'b', x: 1, y: 0, w: 3, h: 2},
+        
+      ];
+  
       return this.state.totalphase.map((item, id) => {
         return (
+          <GridLayout className="layout" layout={layout} cols={12} rowHeight={30} width={1200}>
           <div
             className="phase"
             style={{
@@ -317,10 +325,13 @@ class Board extends Component {
               whiteSpace: "normal",
               wordBreak: "break-word"
             }}
-            onClick={() => this.onOpenModal3("Phaselane", id)}
+           
+            key="b" draggable="false"
           >
-            {item}
+           <span  onClick={() => this.onOpenModal3("Phaselane", id)}>{item}</span> 
           </div>
+         
+          </GridLayout>
         );
       });
     };
@@ -390,7 +401,7 @@ class Board extends Component {
     const { open2 } = this.state;
     const { open3 } = this.state;
     const { data } = this.props.location;
-
+   
     const { data1 } = this.props.location;
     function handleSelection(value, event) {}
 
@@ -417,7 +428,7 @@ class Board extends Component {
           <Link
             to="/Help"
             style={{
-              marginLeft: "75%",
+              marginLeft: "65%",
               fontSize: "1.5em",
               paddingTop: "0.65%",
               color: "white",
@@ -435,18 +446,50 @@ class Board extends Component {
                 textDecoration: "none"
               }}
             >
-              Profile
+            &#9776; Menu
             </a>
             <div class="dropdown-content">
+
+              <a style={{ color: "black", textDecoration: "none" }}>
+              &#x2630; Map Items
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+                Archive Lanes and Cards
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+              &#10064; Make a Copy
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+              &#128229; Export Map
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+                Unarchive Map
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+               Delete Map
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+              &#9993; Contact us
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+                Terms & Condition
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+                Archived Map
+              </a>
               <Link
                 to="/Profile"
                 style={{ color: "black", textDecoration: "none" }}
               >
                 My Profile
               </Link>
+              <a style={{ color: "black", textDecoration: "none" }}>
+                Billing
+              </a>
               <Link to="/" style={{ color: "black", textDecoration: "none" }}>
                 Logout
               </Link>
+              
             </div>
           </a>
         </div>
