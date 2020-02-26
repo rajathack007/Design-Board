@@ -26,7 +26,10 @@ class Cardlane extends Component {
  <div className="sidebar" style={{overflow:"hidden",whiteSpace:"normal"}} ><p style={{textAlign:"center",marginTop:"50%"}}> {this.props.children[0]}</p></div> 
          
           <div >{this.props.children[1]}
-          {this.props.children[2]}</div>
+          {this.props.children[2]}
+         
+        
+          </div>
           
           
                

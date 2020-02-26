@@ -5,7 +5,8 @@ import Modal from 'react-responsive-modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'react-bootstrap';
 import { Card } from 'react-bootstrap';
-
+import HelpIcon from '@material-ui/icons/Help';
+import Tooltip from "@material-ui/core/Tooltip";
 
 
 class MapType extends Component {
@@ -29,8 +30,8 @@ class MapType extends Component {
         <div className="container5">
            <div className="containernavbar1">
            <Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
-        <Link to="/UserMap" style={{marginLeft:"3%",fontSize:"1.5em",paddingTop:"0.65%",color:"black",textDecoration:"none"}}>Dashboard</Link>
-        <Link to="/Help" style={{marginLeft:"60%",fontSize:"1.5em",paddingTop:"0.65%",color:"black",textDecoration:"none"}}>Help</Link> 
+       
+        <Link to="/Help" style={{marginLeft:"75%",fontSize:"1.5em",paddingTop:"0.65%",color:"black",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link> 
        <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
     
     <a  class="dropbtn" style={{color:"black",fontSize:"1.5em",textDecoration:"none"}}>Profile</a>
@@ -63,7 +64,7 @@ class MapType extends Component {
            
             <div>
         
-        <Modal open={open} onClose={this.onCloseModal} center>
+        <Modal  type="fade" open={open} onClose={this.onCloseModal} center>
             <div className="templatenavbar" ><div className="textsize2 " style={{padding:10}}>Choose  Map Template</div></div>
             <div className="template" style={{marginTop:25}}>
 

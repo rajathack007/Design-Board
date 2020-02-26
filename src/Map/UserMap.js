@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import "./UserMap.css";
 import { Link } from 'react-router-dom';
 import Modal from 'react-responsive-modal';
-
+import HelpIcon from '@material-ui/icons/Help';
+import Tooltip from "@material-ui/core/Tooltip";
 
 
 class UserMap extends Component {
@@ -34,7 +35,7 @@ class UserMap extends Component {
        <div className="bodynavbar" style={{overflow:"hidden"}}>       
        <Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
         
-        <Link to="/Help" style={{marginLeft:"70%",fontSize:"1.5em",paddingTop:"0.65%",color:"black",textDecoration:"none"}}>Help</Link> 
+        <Link to="/Help" style={{marginLeft:"75%",fontSize:"1.5em",paddingTop:"0.65%",color:"black",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link> 
   
        <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
     
@@ -63,7 +64,7 @@ class UserMap extends Component {
              <div className="namemodalnavbar" ><div className="textsize2 " style={{paddingTop:5,marginLeft:"5%"}}>Project Name</div></div>
              <div className="inputcontainer" style={{textAlign:"center"}}>
              <input type="text" style={{fontSize:25}} name="ProjectName" placeholder="Project Name" onChange={e=>this.handleChange(e)} /><br></br>
-             <Link to={{pathname:"/MapType",data:this.state.ProjectName}}> <button  style={{fontSize:25,background:"#3596C9",borderRadius:30,paddingLeft:30,paddingRight:30,textAlign:"center",marginTop:"-10%"}}  >Submit</button></Link> 
+             <Link to={{pathname:"/MapType",data:this.state.ProjectName}}> <button  className="buttonlogout"style={{marginTop:"-5%"}} >Submit</button></Link> 
               </div>
               </div>
         </Modal>

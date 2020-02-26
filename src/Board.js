@@ -54,6 +54,35 @@ import Linelane from "./Lanetype/Linelane";
 import Log from "./Draft/Log";
 import { Rnd } from "react-rnd";
 import ExpandCollapse from "react-expand-collapse";
+import ZoomInIcon from "@material-ui/icons/ZoomIn";
+import ZoomOutIcon from "@material-ui/icons/ZoomOut";
+import FullscreenIcon from "@material-ui/icons/Fullscreen";
+import FullscreenExitIcon from "@material-ui/icons/FullscreenExit";
+import HelpIcon from '@material-ui/icons/Help';
+import ArchiveIcon from '@material-ui/icons/Archive';
+import UnarchiveIcon from '@material-ui/icons/Unarchive';
+import DeleteIcon from '@material-ui/icons/Delete';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
+import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
+import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
+import Tooltip from "@material-ui/core/Tooltip";
+
+
+const zoomArr = [
+  "50%",
+  "75%",
+  "85%",
+  "90%",
+  "100%",
+  " 120%",
+  "130%",
+  "150%",
+  "180%"
+];
 
 class Board extends Component {
   constructor(props) {
@@ -108,7 +137,9 @@ class Board extends Component {
       type: "",
       tabs: [],
       edit: "",
-      id: 0
+      id: 0,
+      indexofArr: 4,
+      bool: false
     };
     //close this.state
 
@@ -208,6 +239,61 @@ class Board extends Component {
       this.addSquare();
     }
   };
+  zoomin = () => {
+    var element = document.querySelector(".maindiv");
+    let value = element.getBoundingClientRect().width / element.offsetWidth;
+    if (this.state.indexofArr < zoomArr.length - 1) {
+      this.state.indexofArr += 1;
+      value = zoomArr[this.state.indexofArr];
+      //document.querySelector("#sel").value = value;
+      // console.log('current value is',value)
+      // console.log('scale value is',value)
+      element.style["zoom"] = `${value}`;
+    }
+  };
+
+  zoomout = () => {
+    var element = document.querySelector(".maindiv");
+    let value = element.getBoundingClientRect().width / element.offsetWidth;
+    if (this.state.indexofArr > 0) {
+      this.state.indexofArr -= 1;
+      value = zoomArr[this.state.indexofArr];
+      //document.querySelector("#sel").value = value;
+      // console.log('scale value is',value)
+      element.style["zoom"] = `${value}`;
+    }
+  };
+
+  openFullscreen = state => {
+    var elem = document.documentElement;
+    if (state) {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.mozRequestFullScreen) {
+        /* Firefox */
+        elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullscreen) {
+        /* Chrome, Safari & Opera */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        /* IE/Edge */
+        elem.msRequestFullscreen();
+      }
+    } else if (!state) {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
+    }
+    this.setState({
+      bool: !this.state.bool
+    });
+  };
 
   onDrop(pictureFiles, pictureDataURLs) {
     this.setState({
@@ -271,9 +357,9 @@ class Board extends Component {
                 whiteSpace: "normal",
                 wordBreak: "break-word"
               }}
-              onClick={() => this.onOpenModal3("Cardlane", id)}
+              
             >
-              {item}
+              <div onClick={() => this.onOpenModal3("Cardlane", id)}>{item}</div>
             </div>
           </ReactDraggable>
         );
@@ -317,7 +403,7 @@ class Board extends Component {
   
       return this.state.totalphase.map((item, id) => {
         return (
-          <GridLayout className="layout" layout={layout} cols={12} rowHeight={30} width={1200}>
+          
           <div
             className="phase"
             style={{
@@ -326,12 +412,12 @@ class Board extends Component {
               wordBreak: "break-word"
             }}
            
-            key="b" draggable="false"
+             draggable="false"
           >
            <span  onClick={() => this.onOpenModal3("Phaselane", id)}>{item}</span> 
           </div>
          
-          </GridLayout>
+          
         );
       });
     };
@@ -424,20 +510,46 @@ class Board extends Component {
               ETU LOGO
             </p>
           </Link>
-
+          <a
+            onClick={this.zoomin}
+            style={{ paddingLeft: "70%",fontSize: "1.5em", marginTop: "0.55%" }}
+          >
+            <Tooltip title={<span>Zoom In</span>}>
+   <ZoomInIcon ></ZoomInIcon>
+</Tooltip>
+            
+          </a>
+          <a
+            onClick={this.zoomout}
+            style={{ marginLeft: "2%",fontSize: "1.5em", marginTop: "0.55%" }}
+          >
+            <Tooltip title={<span>Zoom Out</span>}>
+            <ZoomOutIcon ></ZoomOutIcon ></Tooltip>
+          </a>
+          <a
+            onClick={() => this.openFullscreen(!this.state.bool)}
+            style={{ marginLeft: "2%",fontSize: "1.5em", marginTop: "0.55%" }}
+          >
+            {this.state.bool ? (
+               <Tooltip title={<span>Exit Full Screen</span>}>
+              <FullscreenExitIcon></FullscreenExitIcon></Tooltip>
+            ) : (
+              <Tooltip title={<span> Full Screen</span>}><FullscreenIcon /></Tooltip>
+            )}
+          </a>
           <Link
             to="/Help"
             style={{
-              marginLeft: "70%",
+              marginLeft: "2%",
               fontSize: "1.5em",
-              paddingTop: "0.65%",
+              marginTop: "0.55%",
               color: "black",
               textDecoration: "none"
             }}
           >
-            Help
+            <Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip>
           </Link>
-          <a class="submenu" style={{ marginLeft: "2%", marginTop: "0.65%" }}>
+          <a class="submenu" style={{ marginLeft: "2%", marginTop: "0.55%" }}>
             <a
               class="dropbtn"
               style={{
@@ -446,58 +558,59 @@ class Board extends Component {
                 textDecoration: "none"
               }}
             >
-            &#9776; Menu
+            &#9776;
             </a>
-            <div class="dropdown-content">
+            <div class="dropdown-content1">
 
               <a style={{ color: "black", textDecoration: "none" }}>
               &#x2630; Map Items
               </a>
               <a style={{ color: "black", textDecoration: "none" }}>
-                Archive Lanes and Cards
+              <ArchiveIcon/>  Archive Lanes and Cards
               </a>
               <a style={{ color: "black", textDecoration: "none" }}>
-              &#10064; Make a Copy
+              <FileCopyOutlinedIcon/>  Make a Copy
               </a>
               <a style={{ color: "black", textDecoration: "none" }}>
-              &#128229; Export Map
+            <SystemUpdateAltIcon/>  Export Map
               </a>
               <a style={{ color: "black", textDecoration: "none" }}>
-                Unarchive Map
+               < UnarchiveIcon/>  Unarchive Map
               </a>
               <a style={{ color: "black", textDecoration: "none" }}>
-               Delete Map
+              <DeleteIcon/>  Delete Map
               </a>
               <a style={{ color: "black", textDecoration: "none" }}>
-              &#9993; Contact us
+              <MailOutlineIcon/>  Contact us
               </a>
               <a style={{ color: "black", textDecoration: "none" }}>
-                Terms & Condition
+                <InsertDriveFileOutlinedIcon/>Terms & Condition
               </a>
               <a style={{ color: "black", textDecoration: "none" }}>
-                Archived Map
+              <ArchiveIcon/>  Archived Map
               </a>
               <Link
                 to="/Profile"
                 style={{ color: "black", textDecoration: "none" }}
               >
-                My Profile
+               <PersonOutlineOutlinedIcon/>  My Profile
               </Link>
               <a style={{ color: "black", textDecoration: "none" }}>
-                Billing
+                <CreditCardIcon/>Billing
               </a>
               <Link to="/" style={{ color: "black", textDecoration: "none" }}>
-                Logout
+                <ExitToAppIcon/>Logout
               </Link>
               
             </div>
           </a>
         </div>
         <div className="projectnamenavbar" contentEditable="true">
-          {data}
+         
+         {(data)?data:"Unnamed Journey Map"} 
         </div>
 
-        <div>
+        <div class="maindiv">
           {/* {this.state.layer1} */}
           {this.state.totallayer.map(item => {
             if (item.type == "Cardlane") {
@@ -505,13 +618,26 @@ class Board extends Component {
                 <ExpandCollapse previewHeight="50px" expanded="true">
                   <Cardlane>
                     {item.text}
-                    <button
+                    {/* <button
                       className="button1"
                       onClick={() => this.onOpenModal1("Cardlane")}
                     >
                       +
-                    </button>
-                    {this.state.Rectangle}
+                    </button> */}
+
+                    {this.state.Rectangle} 
+                    <div class="hoverWrapper">
+ <div id="hoverShow1"> <div
+                      
+                      onClick={() => this.onOpenModal1("Cardlane")}
+                      style={{marginLeft:"40%",fontSize:"5em",color:"black"}}
+                    >
+                      <p>+</p>
+                    </div></div>
+</div>   
+                    {/* <div className="hovercard" >
+               
+                    </div> */}
                   </Cardlane>
                 </ExpandCollapse>
               );
@@ -593,11 +719,12 @@ class Board extends Component {
               );
             }
           })}
-
-          <UncontrolledButtonDropdown style={{ marginLeft: 20, marginTop: 10 }}>
+<div className="predefinelane">
+  
+          <UncontrolledButtonDropdown style={{ marginLeft: 20, marginTop: 30 }}>
             <DropdownToggle caret>Add New Lane</DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem>
+            <DropdownMenu >
+              <DropdownItem >
                 <li onClick={() => this.onOpenModal("Cardlane")}>
                   &#9645; Add Card Lane
                 </li>
@@ -634,7 +761,7 @@ class Board extends Component {
                 </li>
               </DropdownItem>
             </DropdownMenu>
-          </UncontrolledButtonDropdown>
+          </UncontrolledButtonDropdown></div>
 
           <Modal open={open} onClose={this.onCloseModal} center>
             <div className="textlane">
@@ -906,6 +1033,7 @@ class Board extends Component {
             </div>
           </Modal>
         </div>
+       
 
         {data1}
 

@@ -19,7 +19,7 @@ body {
  
 }
 
-div.board {
+.board {
   background-color: "brown";
   width: 100%;
   display: inline-block;
@@ -30,7 +30,7 @@ div.board {
   /* background-image: linear-gradient(135deg, #aeafe8 0%, #e68ca7 100%); */
 }
 
-div.note {
+.note {
   height: 185px;
   width: 170px;
   background-color: lightsalmon;
@@ -51,11 +51,11 @@ div.note {
   box-shadow: 5px 5px 15px 0 rgba(0, 0, 0, 0.2);
 }
 
-div.note:active {
+.note:active {
   cursor: -webkit-grabbing;
 }
 
-div.note p {
+.note p {
   margin: 0;
   font-size: 20px;
   padding: 5px;
@@ -63,11 +63,11 @@ div.note p {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-div.note:hover > span {
+.note:hover > span {
   opacity: 1;
 }
 
-div.note > span {
+.note > span {
   position: absolute;
   bottom: 10px;
   right: 35px;
@@ -77,13 +77,13 @@ div.note > span {
   transition: opacity 0.25s linear;
 }
 
-div.note button {
+.note button {
   margin: 10px;
   right: 10px;
   background: lightblue;
 }
 
-div.note > textarea {
+.note > textarea {
   height: 75%;
   width: 100%;
   resize: both;
@@ -124,7 +124,7 @@ div.note > textarea {
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
-  background: lightgoldenrodyellow;
+  
   
 }
 .container3 {
@@ -173,9 +173,9 @@ padding-left: 1%;
   display: flex;
   
   font-family: "Arial Narrow Bold";
-  background: lightseagreen;
+  background: lightskyblue;
 }
-.layer2 {
+/* .layer2 {
   
   display: flex;
   font-family: "Arial Narrow Bold";
@@ -210,7 +210,7 @@ padding-left: 1%;
   display: flex;
   font-family: "Arial Narrow Bold";
   background: lightseagreen;
-}
+} */
 .addlayer {
   background: mediumaquamarine;
   font-size: 1em;
@@ -233,7 +233,7 @@ padding-left: 1%;
 .projectnamenavbar {
   width: 100%;
   height: 40px;
-  background: lightslategrey;
+  background: #D7E9F3;
   font-size: 1.5em;
   padding-left: 10px;
 }
@@ -258,7 +258,7 @@ padding-left: 1%;
 .footer{
   height: 40px;
   width: 100%;
-  background-color: lightslategray;
+  background-color: #D7E9F3;
   position: fixed;
   bottom: 0;
 }
@@ -408,7 +408,7 @@ padding-left: 1%;
   border-right-style: solid ;
   border-width: 0.5em;
   border-right-color: lightslategray;
-  left: 0e;
+  left: 0;
   
   
  
@@ -434,6 +434,86 @@ padding-left: 1%;
   -webkit-tap-highlight-color: transparent;
   
 }
+.dropdown-content1{
+  display:none;
+  position:absolute;
+   z-index: 10;
+  min-width: 150px;
+  margin-top:2px;
+  background-color :white;
+  margin-left:-10%; 
+  
+}
+
+.dropdown-content1 a{
+  display:flex;
+  
+  padding: 10px 6px;
+}
+
+.dropdown-content1 a:hover{
+  border-bottom: 1px dotted #fff;
+  border-top: 1px dotted #fff;
+  background-color: lightskyblue;
+  
+}
+.dropbtn:hover,.submenu:hover .dropdown-content1{
+  display:block;
+  
+  
+  
+}
+.predefinelane{
+width: 100%;
+height: 120px;
+background-color:white;
+
+border-left: 10px solid lightskyblue;
+
+}
+.predefinelane:hover {
+  outline: 1px solid blue;
+  /* border-left: 10px solid lightskyblue; */
+}
+.dropdownlane{
+  font-size: 2em;
+}
+.dropdownlane:hover{
+  background: lightskyblue;
+}
+
+/* .hovercard{
+  width: 250px;
+  height: 150px;
+  background-color: white;
+  display: inline-flex;
+  opacity: 0.1;
+  border:5px dotted black;
+  position: absolute;
+  margin: 50px;
+} */
+.container2:hover #hoverShow1 {
+  display: inline-flex;
+  
+ }
+ 
+ .hoverWrapper #hoverShow1 {
+  display: none;
+  /* position: absolute; */
+  background-color: white;
+  width: 250px;
+  height: 150px;
+  
+  opacity: 0.1;
+  border:5px dotted black;
+  margin: 50px;
+ }
+
+
+
+
+
+
 
 
 

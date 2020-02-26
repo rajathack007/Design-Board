@@ -86,7 +86,7 @@ padding-left: 1%;
   width: 113%;
   background-color:#A0DAF8 ;
   margin: -20px;
-  border-radius: 20;
+  /* border-radius: 20; */
   color: black;
   
 }
@@ -110,7 +110,7 @@ padding-left: 1%;
    
   min-width: 150px;
   margin-top:2px;
-  background-color :lightgray;
+  background-color :white;
   margin-left:-2%; 
   
 }
