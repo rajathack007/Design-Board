@@ -10,11 +10,12 @@ body {
   height: 50px;
  width: 100%;
  background-color:#A0DAF8 ;
-  text-align: center;
+  
  padding-left: 1%;
   font-size: 2em;
   display: inline-flex;
   color: black;
+ 
 }
 .homefooter{
   height: 40px;

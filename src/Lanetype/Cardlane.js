@@ -27,6 +27,8 @@ class Cardlane extends Component {
          
           <div >{this.props.children[1]}
           {this.props.children[2]}
+          {this.props.children[3]}
+          {this.props.children[4]}
          
         
           </div>

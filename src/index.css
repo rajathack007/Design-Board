@@ -157,7 +157,7 @@ padding-left: 1%;
 .editornavbar {
   display:inline-flex;
   height: 50px;
-  width: 700px;
+  width: 500px;
   
   font-size: 1.5em;
   background-color:#A0DAF8 ;
@@ -384,19 +384,19 @@ padding-left: 1%;
 }
 
 .textlane{
-  height: 500px;
-  width: 700px;
+  height: 300px;
+  width: 500px;
 
 }
 .textlanenavbar{
   height: 50px;
-  width: 700px;
+  width: 500px;
   background: lightskyblue;
   
 }
 .textlanetools{
   height: 50px;
-  width: 100%;
+  width: 500px;
   border: black;
   background-color: rgb(250, 208, 208);
 }
@@ -495,19 +495,21 @@ border-left: 10px solid lightskyblue;
 .container2:hover #hoverShow1 {
   display: inline-flex;
   
+  
  }
  
  .hoverWrapper #hoverShow1 {
-  display: none;
-  /* position: absolute; */
+  display:none;
+  
   background-color: white;
   width: 250px;
   height: 150px;
   
   opacity: 0.1;
-  border:5px dotted black;
+  border:4px dashed black;
   margin: 50px;
  }
+ 
 
 
 

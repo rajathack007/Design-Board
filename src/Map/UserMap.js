@@ -63,7 +63,8 @@ class UserMap extends Component {
            <div className="namemodal" >
              <div className="namemodalnavbar" ><div className="textsize2 " style={{paddingTop:5,marginLeft:"5%"}}>Project Name</div></div>
              <div className="inputcontainer" style={{textAlign:"center"}}>
-             <input type="text" style={{fontSize:25}} name="ProjectName" placeholder="Project Name" onChange={e=>this.handleChange(e)} /><br></br>
+             <input type="text" style={{marginTop:"-25%"}} name="ProjectName" placeholder="Project Name" onChange={e=>this.handleChange(e)} /><br></br>
+             <input type="text"  name="ProjectDescription" placeholder="Project Description" onChange={e=>this.handleChange(e)} /><br></br>
              <Link to={{pathname:"/MapType",data:this.state.ProjectName}}> <button  className="buttonlogout"style={{marginTop:"-5%"}} >Submit</button></Link> 
               </div>
               </div>

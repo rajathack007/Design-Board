@@ -615,6 +615,7 @@ class Board extends Component {
           {this.state.totallayer.map(item => {
             if (item.type == "Cardlane") {
               return (
+                
                 <ExpandCollapse previewHeight="50px" expanded="true">
                   <Cardlane>
                     {item.text}
@@ -626,7 +627,7 @@ class Board extends Component {
                     </button> */}
 
                     {this.state.Rectangle} 
-                    <div class="hoverWrapper">
+                    <div class="hoverWrapper" style={{position:"fixed",display:"inline-flex"}}>
  <div id="hoverShow1"> <div
                       
                       onClick={() => this.onOpenModal1("Cardlane")}
@@ -719,7 +720,7 @@ class Board extends Component {
               );
             }
           })}
-<div className="predefinelane">
+<div className="predefinelane" style={{marginTop:"1%"}}>
   
           <UncontrolledButtonDropdown style={{ marginLeft: 20, marginTop: 30 }}>
             <DropdownToggle caret>Add New Lane</DropdownToggle>
@@ -763,7 +764,7 @@ class Board extends Component {
             </DropdownMenu>
           </UncontrolledButtonDropdown></div>
 
-          <Modal open={open} onClose={this.onCloseModal} center>
+          <Modal open={open} onClose={this.onCloseModal} center  >
             <div className="textlane">
               <div className="textlanenavbar">
                 <div className="textsize2 " style={{ padding: 10 }}>
@@ -827,7 +828,7 @@ class Board extends Component {
               </div>
               <textarea
                 className="apply-font Italic"
-                style={{ width: 500, height: 350, marginTop: 10 }}
+                style={{ width: 500, height: 150, marginTop: 10 }}
                 name="text"
                 onChange={e => this.change(e)}
               ></textarea>
