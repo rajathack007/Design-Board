@@ -1,35 +1,44 @@
 import React, { Component } from "react";
 import "./UserMap.css";
-import { Link } from 'react-router-dom';
-import Modal from 'react-responsive-modal';
-import HelpIcon from '@material-ui/icons/Help';
+import { Link } from "react-router-dom";
+import Modal from "react-responsive-modal";
+import HelpIcon from "@material-ui/icons/Help";
 import Tooltip from "@material-ui/core/Tooltip";
 
-
 class UserMap extends Component {
-  state = {
-    open: false,
-  ProjectName:"",
-  };
-  handleChange=event=>{
-    this.setState({[event.target.name]:event.target.value},()=>{
-      console.log(this.state.ProjectName)
-    })
-    
+  constructor() {
+    super();
+    this.state = {
+      open: false,
+      ProjectName: ""
+    };
+    this.logout = this.logout.bind(this);
   }
- 
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value }, () => {
+      console.log(this.state.ProjectName);
+    });
+  };
+  logout() {
+    // Send a logout request to the API
+    console.log("Sending a logout request to the API...");
+    this.setState({ logginStatus: false });
+    localStorage.removeItem("token");
+    // this.destroy(); // Cleanup
+  }
+
   onOpenModal = () => {
     this.setState({ open: true });
   };
- 
+
   onCloseModal = () => {
     this.setState({ open: false });
   };
-  render(){
+  render() {
     const { open } = this.state;
-    
-    const {data2} = this.props.location;
-    const {data4} = this.props.location;
+
+    const { data2 } = this.props.location;
+    const { data4 } = this.props.location;
     return(
       <div className="body" style={{width:"100%"}} >
        {/* <div className="bodynavbar" style={{overflow:"hidden"}}>       
@@ -52,14 +61,14 @@ class UserMap extends Component {
         
         <div class="navbar-links">
           <ul>
-            <li> <Link to="/Help" style={{fontSize:"1.5em",color:"white",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link></li>
+            <li> <Link to="/Help" style={{color:"white",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link></li>
            <li>
            <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
     
     <a  class="dropbtn" style={{paddingTop:"0.65%",color:"white",textDecoration:"none"}} >Profile </a>
     <div class="dropdown-content">
     <Link to={{pathname:"/Profile",data2:data2,data4:data4}}  style={{color:"black",textDecoration:"none"}}>My Profile</Link> 
-    <Link to="/"  style={{color:"black",textDecoration:"none"}}>Logout</Link>
+    <Link onClick={this.logout}  style={{color:"black",textDecoration:"none"}}>Logout</Link>
       
      </div></a>
            </li>

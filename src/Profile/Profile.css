@@ -6,7 +6,7 @@ body {
     background-color: white;
     /* background-image: linear-gradient(135deg, #aeafe8 0%, #e68ca7 100%); */
   }
-  .profilenavbar{
+  /* .profilenavbar{
     height: 50px;
    width: 100%;
    background-color:#A0DAF8 ;
@@ -15,7 +15,7 @@ body {
     
     display: flex;
     color: black;
-  }
+  } */
   .profilefooter{
     height: 40px;
     width: 100%;

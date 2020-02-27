@@ -396,16 +396,15 @@ padding-left: 1%;
 }
 .textlanenavbar{
   height: 50px;
-  width: 500px;
-  background: lightskyblue;
+  width: 108%;
+  background: #2F4F4F;
+  margin-top: -4%;
+  margin-left: -4%;
+  
+  
   
 }
-.textlanetools{
-  height: 50px;
-  width: 500px;
-  border: black;
-  background-color: rgb(250, 208, 208);
-}
+
 .sidebar{
   height: 180px;
   width: 250px;
@@ -525,6 +524,48 @@ border-left: 10px solid lightskyblue;
   overflow-y: hidden;
   white-space: nowrap;
  }
+ 
+.projectnamenavbar {
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #DCDCDC;
+  color: black;
+}
+
+.brand-title {
+  font-size: 1.5rem;
+  margin: .1rem;
+}
+
+.projectnamenavbar-links {
+  height: 100%;
+}
+
+.projectnamenavbar-links ul {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.projectnamenavbar-links li {
+  list-style: none;
+  margin: 10px;
+  margin-top: -1px;
+  font-size: 1.25em;
+}
+
+.projectnamenavbar-links li a {
+  display: block;
+  text-decoration: none;
+  color: white;
+ 
+}
+
+.projectnamenavbar-links li:hover {
+  background-color: #555;
+}
 
 
 

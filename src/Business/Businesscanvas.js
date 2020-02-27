@@ -7,6 +7,8 @@ import { StickyContainer, Sticky } from 'react-sticky';
 import ReactDraggable from 'react-draggable';
 import List from './List';
 import Board from "react-trello";
+import HelpIcon from "@material-ui/icons/Help";
+import Tooltip from "@material-ui/core/Tooltip";
 
 
 
@@ -104,21 +106,26 @@ class Businesscanvas extends Component {
 
       return(
           <div className="body">
-<div className="businessnavbar">
-<Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
+<nav class="navbar">
+        <div class="brand-title"><Link to="/Home" style={{color:"white",textDecoration:"none"}}> ETU LOGO</Link></div>
         
-        <Link to="/Help" style={{marginLeft:"75%",fontSize:"1.5em",paddingTop:"0.65%",color:"black",textDecoration:"none"}}>Help</Link> 
-  
-       <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
+        <div class="navbar-links">
+          <ul>
+          <li> <Link to="/UserMap" style={{color:"white",textDecoration:"none"}}>Dashboard</Link></li>
+            <li> <Link to="/Help" style={{color:"white",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link></li>
+           <li>
+           <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
     
-    <a  class="dropbtn" style={{color:"black",fontSize:"1.5em",textDecoration:"none"}} >Profile </a>
+    <a  class="dropbtn" style={{paddingTop:"0.65%",color:"white",textDecoration:"none"}} >Profile </a>
     <div class="dropdown-content">
-    <Link to={{pathname:"/Profile"}}  style={{color:"black",textDecoration:"none"}}>My Profile</Link> 
-    <Link to="/"  style={{color:"black",textDecoration:"none"}}>Logout</Link>
+    <Link to="/Profile"  style={{color:"black",textDecoration:"none"}}>My Profile</Link> 
+    <Link onClick={this.logout}  style={{color:"black",textDecoration:"none"}}>Logout</Link>
       
      </div></a>
-
-</div>
+           </li>
+          </ul>
+        </div>
+      </nav>
 <div className="businesscontainer">
 
     

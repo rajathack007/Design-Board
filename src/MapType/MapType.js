@@ -28,7 +28,17 @@ class MapType extends Component {
       console.log(data);
       return(
         <div className="container5">
-           <div className="containernavbar1">
+          <nav class="navbar">
+        <div class="brand-title"><Link to="/Home" style={{color:"white",textDecoration:"none"}}> ETU LOGO</Link></div>
+        
+        <div class="navbar-links">
+          <ul>
+            <li> <Link to="/Help" style={{color:"white",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip>Help</Link></li>
+           
+          </ul>
+        </div>
+      </nav>
+           {/* <div className="containernavbar1">
            <Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
        
         <Link to="/Help" style={{marginLeft:"75%",fontSize:"1.5em",paddingTop:"0.65%",color:"black",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link> 
@@ -40,7 +50,7 @@ class MapType extends Component {
     <Link to="/"  style={{color:"black",textDecoration:"none"}}>Logout</Link>
       
      </div></a>
-          </div> 
+          </div>  */}
           <div className="projectnamenavbar">{data}</div>
           
           <div className="newmapcontainer1">
@@ -67,8 +77,8 @@ class MapType extends Component {
         <Modal  type="fade" open={open} onClose={this.onCloseModal} center>
           <div className="template">
             <div className="templatenavbar" >Choose  Map Template</div>
-            <div className="templaterow">
-            <Link to={{pathname:"/Board",data:data}} style={{textDecoration:"none",color:"black",marginLeft:"-5%"}} > <Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,borderRadius:10}}>
+            <div className="templaterow" style={{marginTop:"3.5%",marginLeft:"1.5%"}}>
+            <Link to={{pathname:"/Board",data:data}} style={{textDecoration:"none",color:"black"}} > <Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Blank Map</Card.Header>
   <Card.Body>
     <Card.Title>Blank Map</Card.Title>
@@ -77,7 +87,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card></Link>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Tutorial Map</Card.Header>
   <Card.Body>
     <Card.Title>Tutorial Map</Card.Title>
@@ -86,7 +96,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Vacation Travel</Card.Header>
   <Card.Body>
     <Card.Title>Vacation Travel</Card.Title>
@@ -95,7 +105,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Elderly Need for Care</Card.Header>
   <Card.Body>
     <Card.Title>Elderly Need for Care</Card.Title>
@@ -104,8 +114,8 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card></div>
-<div className="templaterow" style={{marginTop:"-5.5%"}}>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"-5%",borderRadius:10}}>
+<div className="templaterow" style={{marginTop:"-5.5%",marginLeft:"1.5%"}}>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Food Ordering and Delivery</Card.Header>
   <Card.Body>
     <Card.Title>Food Ordering and Delivery</Card.Title>
@@ -114,7 +124,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Retail Online/Offline Template</Card.Header>
   <Card.Body>
     <Card.Title>Retail Online/Offline</Card.Title>
@@ -123,7 +133,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a  Journey Map for Ideation</Card.Header>
   <Card.Body>
     <Card.Title>Customer  Map for Ideation</Card.Title>
@@ -132,7 +142,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a PSD Blueprint Template</Card.Header>
   <Card.Body>
     <Card.Title>PSD Blueprint Template</Card.Title>

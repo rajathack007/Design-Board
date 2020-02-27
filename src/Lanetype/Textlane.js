@@ -20,7 +20,7 @@ class Textlane extends Component {
              
                 
                 <div style={{display:"inline-flex"}}>
-          <div className="sidebar" style={{overflow:"hidden",whiteSpace:"normal"}} ><p style={{textAlign:"center",marginTop:"50%"}}> {this.props.children[0]}</p></div>
+          <div className="sidebar" style={{overflow:"hidden",whiteSpace:"normal"}} ><p style={{textAlign:"center",marginTop:"20%"}}> {this.props.children[0]}</p></div>
           {this.props.children[1]}
           {this.props.children[2]}
                

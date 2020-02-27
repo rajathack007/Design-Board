@@ -16,7 +16,12 @@ import Dropzone from "react-dropzone";
 import UploadImages from "yagoubi-upload-images";
 import Dropdown from "react-drop-down";
 import GridLayout from 'react-grid-layout';
-
+import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import "../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
+import parse from "html-react-parser";
 import Popup from "reactjs-popup";
 
 import {
@@ -139,7 +144,8 @@ class Board extends Component {
       edit: "",
       id: 0,
       indexofArr: 4,
-      bool: false
+      bool: false,
+      editorState: EditorState.createEmpty()
     };
     //close this.state
 
@@ -155,36 +161,106 @@ class Board extends Component {
     this.addUnderline = this.addUnderline.bind(this);
     this.addBold = this.addBold.bind(this);
   } //close constructor()
-
+  onEditorStateChange = editorState => {
+    this.setState(
+      {
+        editorState,
+        text1: draftToHtml(convertToRaw(editorState.getCurrentContent()))
+      },
+      () => {
+        console.log("t1", this.state.text1);
+      }
+    );
+  };
+  onEditorStateChange1 = editorState => {
+    this.setState(
+      {
+        editorState,
+        text: draftToHtml(convertToRaw(editorState.getCurrentContent()))
+      },
+      () => {
+        console.log("t1", this.state.text1);
+      }
+    );
+  };
   onOpenModal = type => {
-    this.setState({ open: true, type });
+    this.setState({ open: true, type, editorState: EditorState.createEmpty() });
   };
   onOpenModal1 = type => {
-    this.setState({ open1: true, type });
+    this.setState({
+      open1: true,
+      type,
+      editorState: EditorState.createEmpty()
+    });
   };
   onOpenModal2 = () => {
     this.setState({ open2: true });
   };
   onOpenModal3 = (type, id) => {
     console.log("id", id);
-    if (type == "Cardlane")
+    if (type == "Cardlane") {
       this.setState(
         { open3: true, type, edit: this.state.totalcard[id], id },
         () => {
           console.log("text", this.state.totalcard);
         }
       );
-    else if (type == "Bubblelane")
+      const html = this.state.totalcard[id];
+      const contentBlock = htmlToDraft(html);
+      if (contentBlock) {
+        const contentState = ContentState.createFromBlockArray(
+          contentBlock.contentBlocks
+        );
+        const editorState = EditorState.createWithContent(contentState);
+        this.state = {
+          editorState
+        };
+      }
+    } else if (type == "Bubblelane") {
       this.setState({
         open3: true,
         type,
         edit: this.state.totalbubble[id],
         id
       });
-    else if (type == "Phaselane")
+      const html = this.state.totalbubble[id];
+      const contentBlock = htmlToDraft(html);
+      if (contentBlock) {
+        const contentState = ContentState.createFromBlockArray(
+          contentBlock.contentBlocks
+        );
+        const editorState = EditorState.createWithContent(contentState);
+        this.state = {
+          editorState
+        };
+      }
+    } else if (type == "Phaselane") {
       this.setState({ open3: true, type, edit: this.state.totalphase[id], id });
-    else if (type == "Textlane")
+      const html = this.state.totalphase[id];
+      const contentBlock = htmlToDraft(html);
+      if (contentBlock) {
+        const contentState = ContentState.createFromBlockArray(
+          contentBlock.contentBlocks
+        );
+        const editorState = EditorState.createWithContent(contentState);
+        this.state = {
+          editorState
+        };
+      }
+    } else if (type == "Textlane") {
       this.setState({ open3: true, type, edit: this.state.totaltext[id], id });
+      const html = this.state.totaltext[id];
+      const contentBlock = htmlToDraft(html);
+      if (contentBlock) {
+        const contentState = ContentState.createFromBlockArray(
+          contentBlock.contentBlocks
+        );
+        const editorState = EditorState.createWithContent(contentState);
+        this.state = {
+          editorState
+        };
+      }
+    }
   };
 
   onCloseModal = () => {
@@ -219,22 +295,22 @@ class Board extends Component {
     let type = this.state.type;
     if (type == "Cardlane") {
       const newItems = [...this.state.totalcard];
-      newItems[id] = this.state.edit;
+      newItems[id] = this.state.text1;
       this.setState({ open3: false, totalcard: newItems });
       this.addRectangle();
     } else if (type == "Bubblelane") {
       const newItems = [...this.state.totalbubble];
-      newItems[id] = this.state.edit;
+      newItems[id] = this.state.text1;
       this.setState({ open3: false, totalbubble: newItems });
       this.addBubble();
     } else if (type == "Phaselane") {
       const newItems = [...this.state.totalphase];
-      newItems[id] = this.state.edit;
+      newItems[id] = this.state.text1;
       this.setState({ open3: false, totalphase: newItems });
       this.addPhase();
     } else if (type == "Textlane") {
       const newItems = [...this.state.totaltext];
-      newItems[id] = this.state.edit;
+      newItems[id] = this.state.text1;
       this.setState({ open3: false, totaltext: newItems });
       this.addSquare();
     }
@@ -359,7 +435,7 @@ class Board extends Component {
               }}
               
             >
-              <div onClick={() => this.onOpenModal3("Cardlane", id)}>{item}</div>
+              <div onClick={() => this.onOpenModal3("Cardlane", id)}> {parse(item)}</div>
             </div>
           </ReactDraggable>
         );
@@ -383,7 +459,7 @@ class Board extends Component {
               }}
               onClick={() => this.onOpenModal3("Bubblelane", id)}
             >
-              {item}
+               {parse(item)}
             </div>
           </ReactDraggable>
         );
@@ -414,7 +490,7 @@ class Board extends Component {
            
              draggable="false"
           >
-           <span  onClick={() => this.onOpenModal3("Phaselane", id)}>{item}</span> 
+           <span  onClick={() => this.onOpenModal3("Phaselane", id)}> {parse(item)}</span> 
           </div>
          
           
@@ -438,7 +514,7 @@ class Board extends Component {
             }}
             onClick={() => this.onOpenModal3("Textlane", id)}
           >
-            {item}
+             {parse(item)}
           </div>
         );
       });
@@ -487,7 +563,8 @@ class Board extends Component {
     const { open2 } = this.state;
     const { open3 } = this.state;
     const { data } = this.props.location;
-   
+    const { editorState } = this.state;
+    const { editorState1 } = this.state;
     const { data1 } = this.props.location;
     function handleSelection(value, event) {}
 
@@ -504,7 +581,7 @@ class Board extends Component {
     }
     return (
       <div className="board">
-        <div className="containernavbar1">
+        {/* <div className="containernavbar1">
           <Link to="/Home" style={{ textDecoration: "none" }}>
             <p style={{ color: "black", fontSize: "2em", textAlign: "center" }}>
               ETU LOGO
@@ -604,10 +681,106 @@ class Board extends Component {
               
             </div>
           </a>
+        </div> */}
+        <nav class="navbar">
+        <div class="brand-title"><Link to="/Home" style={{color:"white",textDecoration:"none",}}> ETU LOGO</Link></div>
+        
+        <div class="navbar-links">
+          <ul>
+            <li> <Link to="/Help" style={{color:"white",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link></li>
+           
+           <a class="submenu" style={{ marginLeft: "2%", marginTop: "0.55%" }}>
+            <a
+              class="dropbtn"
+              style={{
+                color: "white",
+                fontSize:"1.25em",
+                textDecoration: "none"
+              }}
+            >
+            &#9776;Menu
+            </a>
+            <div class="dropdown-content1">
+
+              <a style={{ color: "black", textDecoration: "none" }}>
+              &#x2630; Map Items
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+              <ArchiveIcon/>  Archive Lanes and Cards
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+              <FileCopyOutlinedIcon/>  Make a Copy
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+            <SystemUpdateAltIcon/>  Export Map
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+               < UnarchiveIcon/>  Unarchive Map
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+              <DeleteIcon/>  Delete Map
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+              <MailOutlineIcon/>  Contact us
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+                <InsertDriveFileOutlinedIcon/>Terms & Condition
+              </a>
+              <a style={{ color: "black", textDecoration: "none" }}>
+              <ArchiveIcon/>  Archived Map
+              </a>
+              <Link
+                to="/Profile"
+                style={{ color: "black", textDecoration: "none" }}
+              >
+               <PersonOutlineOutlinedIcon/>  My Profile
+              </Link>
+              <a style={{ color: "black", textDecoration: "none" }}>
+                <CreditCardIcon/>Billing
+              </a>
+              <Link to="/" style={{ color: "black", textDecoration: "none" }}>
+                <ExitToAppIcon/>Logout
+              </Link>
+              
+            </div>
+          </a>
+           
+          </ul>
         </div>
-        <div className="projectnamenavbar" contentEditable="true">
+      </nav>
+        <div className="projectnamenavbar"  >
          
-         {(data)?data:"Unnamed Journey Map"} 
+        <div contentEditable="true"> {(data)?data:"Unnamed Journey Map"}</div> 
+        <div class="projectnamenavbar-links">
+        <ul>
+         <li
+            onClick={this.zoomin}
+            
+            
+          >
+            <Tooltip title={<span>Zoom In</span>}>
+   <ZoomInIcon ></ZoomInIcon>
+</Tooltip>
+            
+          </li>
+          <li
+            onClick={this.zoomout}
+            style={{ marginLeft: "2%" }}
+          >
+            <Tooltip title={<span>Zoom Out</span>}>
+            <ZoomOutIcon ></ZoomOutIcon ></Tooltip>
+          </li>
+          <li
+            onClick={() => this.openFullscreen(!this.state.bool)}
+            style={{ marginLeft: "2%" }}
+          >
+            {this.state.bool ? (
+               <Tooltip title={<span>Exit Full Screen</span>}>
+              <FullscreenExitIcon></FullscreenExitIcon></Tooltip>
+            ) : (
+              <Tooltip title={<span> Full Screen</span>}><FullscreenIcon /></Tooltip>
+            )}
+          </li></ul></div>
         </div>
         
         <div class="maindiv">
@@ -619,7 +792,7 @@ class Board extends Component {
                 
                 <ExpandCollapse previewHeight="50px" expanded="true" >
                   <Cardlane>
-                    {item.text}
+                   {parse(item.text)}
                     {/* <button
                       className="button1"
                       onClick={() => this.onOpenModal1("Cardlane")}
@@ -628,7 +801,7 @@ class Board extends Component {
                     </button> */}
 
                     {this.state.Rectangle} 
-                    <div class="hoverWrapper" style={{position:"fixed",display:"inline-flex"}}>
+                    <div class="hoverWrapper" style={{position:"absolute",display:"inline-flex"}}>
  <div id="hoverShow1"> <div
                       
                       onClick={() => this.onOpenModal1("Cardlane")}
@@ -648,7 +821,7 @@ class Board extends Component {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                   <Bubblelane>
-                    {item.text}
+                   {parse(item.text)}
                     <button
                       className="button1"
                       onClick={() => this.onOpenModal1("Bubblelane")}
@@ -663,7 +836,7 @@ class Board extends Component {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                 <Phaselane>
-                  {item.text}
+                 {parse(item.text)}
                   <button
                     className="button1"
                     onClick={() => this.onOpenModal1("Phaselane")}
@@ -678,7 +851,7 @@ class Board extends Component {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                 <Textlane>
-                  {item.text}
+                 {parse(item.text)}
                   <button
                     className="button1"
                     onClick={() => this.onOpenModal1("Textlane")}
@@ -692,7 +865,7 @@ class Board extends Component {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                 <Imagelane>
-                  {item.text}
+                 {parse(item.text)}
                   <UploadImages
                     multiple
                     onChange={this.onChange}
@@ -704,7 +877,7 @@ class Board extends Component {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                 <Filelane>
-                  {item.text}
+                 {parse(item.text)}
                   <div className="file">
                     <FilePond />
                   </div>
@@ -714,7 +887,7 @@ class Board extends Component {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                 <Linelane>
-                  {item.text}
+                 {parse(item.text)}
                   <div style={{ marginTop: -150 }}>
                     <Lines />
                   </div>
@@ -722,7 +895,7 @@ class Board extends Component {
               );
             }
           })}</div>
-<div className="predefinelane" style={{marginTop:"1%"}}>
+<div className="predefinelane" style={{marginTop:"0.5%"}}>
   
           <UncontrolledButtonDropdown style={{ marginLeft: 20, marginTop: 30 }}>
             <DropdownToggle caret>Add New Lane</DropdownToggle>
@@ -773,9 +946,7 @@ class Board extends Component {
                   Edit Lane
                 </div>
               </div>
-              <div className="editornavbar" style={{ paddingTop: "1%" }}>
-                <div style={{ paddingRight: "2%" }}>
-                  <FontPicker
+              {/* <FontPicker
                     apiKey="AIzaSyBjbypy3oo5oo_xPba71Dnb6836mBwoWVQ"
                     activeFontFamily={this.state.activeFontFamily}
                     onChange={nextFont =>
@@ -783,57 +954,20 @@ class Board extends Component {
                         activeFontFamily: nextFont.family
                       })
                     }
-                  />
-                </div>
-                <div style={{ paddingRight: "2%" }}>
-                  <button className="Italic" onClick={this.addItalic}>
-                    I
-                  </button>
-                  {this.state.Italic}
-                </div>
-                <div style={{ paddingRight: "2%" }}>
-                  <button className="Underline" onClick={this.addUnderline}>
-                    U
-                  </button>
-
-                  {this.state.Underline}
-                </div>
-                <div style={{ paddingRight: "2%" }}>
-                  <button className="Bold" onClick={this.addBold}>
-                    B
-                  </button>
-                  {this.state.Bold}
-                </div>
-
-                <FontSizeChanger
-                  targets={["#target .content"]}
-                  onChange={(element, newValue, oldValue) => {
-                    console.log(element, newValue, oldValue);
-                  }}
-                  options={{
-                    stepSize: 2,
-                    range: 3
-                  }}
-                  customButtons={{
-                    up: <span style={{ fontSize: "36px" }}>A</span>,
-                    down: <span style={{ fontSize: "20px" }}>A</span>,
-                    style: {
-                      backgroundColor: "red",
-                      color: "white",
-                      WebkitBoxSizing: "border-box",
-                      WebkitBorderRadius: "5px",
-                      width: "60px"
-                    },
-                    buttonsMargin: 10
-                  }}
-                />
-              </div>
-              <textarea
+                  /> */}
+             
+              <Editor
+                editorState={editorState}
+                wrapperClassName="demo-wrapper"
+                editorClassName="demo-editor"
+                onEditorStateChange={this.onEditorStateChange1}
+              />
+              {/* <textarea
                 className="apply-font Italic"
                 style={{ width: 500, height: 150, marginTop: 10 }}
                 name="text"
                 onChange={e => this.change(e)}
-              ></textarea>
+              ></textarea> */}
               <br></br>
               <button
                 type="button"
@@ -851,67 +985,14 @@ class Board extends Component {
                   Edit Card
                 </div>
               </div>
-              <div className="editornavbar" style={{ paddingTop: "1%" }}>
-                <div style={{ paddingRight: "2%" }}>
-                  <FontPicker
-                    apiKey="AIzaSyBjbypy3oo5oo_xPba71Dnb6836mBwoWVQ"
-                    activeFontFamily={this.state.activeFontFamily}
-                    onChange={nextFont =>
-                      this.setState({
-                        activeFontFamily: nextFont.family
-                      })
-                    }
-                  />
-                </div>
-                <div style={{ paddingRight: "2%" }}>
-                  <button className="Italic" onClick={this.addItalic}>
-                    I
-                  </button>
-                  {this.state.Italic}
-                </div>
-                <div style={{ paddingRight: "2%" }}>
-                  <button className="Underline" onClick={this.addUnderline}>
-                    U
-                  </button>
-
-                  {this.state.Underline}
-                </div>
-                <div style={{ paddingRight: "2%" }}>
-                  <button className="Bold" onClick={this.addBold}>
-                    B
-                  </button>
-                  {this.state.Bold}
-                </div>
-
-                <FontSizeChanger
-                  targets={["#target .content"]}
-                  onChange={(element, newValue, oldValue) => {
-                    console.log(element, newValue, oldValue);
-                  }}
-                  options={{
-                    stepSize: 2,
-                    range: 3
-                  }}
-                  customButtons={{
-                    up: <span style={{ fontSize: "36px" }}>A</span>,
-                    down: <span style={{ fontSize: "20px" }}>A</span>,
-                    style: {
-                      backgroundColor: "red",
-                      color: "white",
-                      WebkitBoxSizing: "border-box",
-                      WebkitBorderRadius: "5px",
-                      width: "60px"
-                    },
-                    buttonsMargin: 10
-                  }}
-                />
-              </div>
-              <textarea
-                className="apply-font Italic "
-                style={{ width: 500, height: 150, marginTop: 10 }}
-                name="text1"
-                onChange={e => this.change(e)}
-              ></textarea>
+             
+              <Editor
+                editorState={editorState}
+                wrapperClassName="demo-wrapper"
+                editorClassName="demo-editor"
+                onEditorStateChange={this.onEditorStateChange}
+              />
+              
               <br></br>
               <button
                 type="button"
@@ -929,68 +1010,13 @@ class Board extends Component {
                   Edit Card
                 </div>
               </div>
-              <div className="editornavbar" style={{ paddingTop: "1%" }}>
-                <div style={{ paddingRight: "2%" }}>
-                  <FontPicker
-                    apiKey="AIzaSyBjbypy3oo5oo_xPba71Dnb6836mBwoWVQ"
-                    activeFontFamily={this.state.activeFontFamily}
-                    onChange={nextFont =>
-                      this.setState({
-                        activeFontFamily: nextFont.family
-                      })
-                    }
-                  />
-                </div>
-                <div style={{ paddingRight: "2%" }}>
-                  <button className="Italic" onClick={this.addItalic}>
-                    I
-                  </button>
-                  {this.state.Italic}
-                </div>
-                <div style={{ paddingRight: "2%" }}>
-                  <button className="Underline" onClick={this.addUnderline}>
-                    U
-                  </button>
-
-                  {this.state.Underline}
-                </div>
-                <div style={{ paddingRight: "2%" }}>
-                  <button className="Bold" onClick={this.addBold}>
-                    B
-                  </button>
-                  {this.state.Bold}
-                </div>
-
-                <FontSizeChanger
-                  targets={["#target .content"]}
-                  onChange={(element, newValue, oldValue) => {
-                    console.log(element, newValue, oldValue);
-                  }}
-                  options={{
-                    stepSize: 2,
-                    range: 3
-                  }}
-                  customButtons={{
-                    up: <span style={{ fontSize: "36px" }}>A</span>,
-                    down: <span style={{ fontSize: "20px" }}>A</span>,
-                    style: {
-                      backgroundColor: "red",
-                      color: "white",
-                      WebkitBoxSizing: "border-box",
-                      WebkitBorderRadius: "5px",
-                      width: "60px"
-                    },
-                    buttonsMargin: 10
-                  }}
-                />
-              </div>
-              <textarea
-                className="apply-font Italic "
-                style={{ width: 500, height: 150, marginTop: 10 }}
-                name="edit"
-                value={this.state.edit}
-                onChange={e => this.change(e)}
-              ></textarea>
+              
+              <Editor
+                editorState={editorState}
+                wrapperClassName="demo-wrapper"
+                editorClassName="demo-editor"
+                onEditorStateChange={this.onEditorStateChange}
+              />
               <br></br>
               <button
                 type="button"
@@ -1004,8 +1030,8 @@ class Board extends Component {
           <Modal open={open2} onClose={this.onCloseModal2} center>
             <div className="namemodal">
               <div className="namemodalnavbar">
-                <div className="textsize2 " style={{ paddingTop: 5 }}>
-                  Map Name
+                <div className="textsize2 " style={{ paddingTop: 5,paddingLeft:10 }}>
+                  Project Name
                 </div>
               </div>
               <div className="inputcontainer" style={{ textAlign: "center" }}>
@@ -1018,16 +1044,11 @@ class Board extends Component {
                 />
                 <br></br>
                 <br></br>
-                <button
+                <button className="buttonlogout"
                   type="button"
                   onClick={this.onCloseModal2}
                   style={{
-                    fontSize: 25,
-                    background: "blueviolet",
-                    borderRadius: 30,
-                    paddingLeft: 30,
-                    paddingRight: 30,
-                    textAlign: "center"
+                   marginTop:"-15%"
                   }}
                 >
                   Submit
@@ -1048,7 +1069,7 @@ class Board extends Component {
           >
             {" "}
             <TabList>
-              <Tab selected="true"contentEditable="true"> CJM default</Tab>
+              <Tab selected="true"contentEditable="true"> {(data)?data:"Unnamed Journey Map"}</Tab>
 
               {this.state.tabs.map(item => {
                 return (
@@ -1056,7 +1077,7 @@ class Board extends Component {
                     contentEditable="true"
                     onClick={() => this.setState({ totallayer: [] })}
                   >
-                    {item}
+                     {parse(item)}
                   </Tab>
                 );
               })}
