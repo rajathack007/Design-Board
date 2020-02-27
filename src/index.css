@@ -119,11 +119,13 @@ body {
   background: lightgoldenrodyellow;
 }
 .container2 {
-  height: 280px;
+  height: 130px;
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
+  outline: 2px solid gray;
+  margin-top: 2px;
   
   
 }
@@ -314,14 +316,15 @@ padding-left: 1%;
   
 }
 .square{
-  height: 150px;
+  height: 100px;
   width: 150px;
   background-color:lightseagreen;
   overflow: hidden;
   white-space: normal;
   display: inline-flex;
   
-  margin:50px;
+  margin-left: 30px;
+  margin-top: 7px;
   
 }
 .square1{
@@ -337,15 +340,16 @@ padding-left: 1%;
   
 }
 .rectangle{
-  height: 150px;
-  width: 250px;
+  height: 100px;
+  width: 200px;
   background-color:lightseagreen;
   overflow: hidden;
   white-space: normal;
   
   
    display: inline-flex; 
-  margin:50px;
+  margin-left: 30px;
+  margin-top: 7px;
   
 }
 .line{
@@ -362,8 +366,9 @@ padding-left: 1%;
   overflow: hidden;
   white-space: normal;
   width: 200px;
-  height: 150px;  
-  margin: 50px;
+  height: 100px;  
+  margin-left: 30px;
+  margin-top: 7px;
   display: inline-flex;
 }
 
@@ -375,8 +380,9 @@ padding-left: 1%;
   overflow: hidden;
   white-space: normal;
   width: 200px;
-  height: 150px;  
-  margin: 50px;
+  height: 100px;  
+  margin-left: 30px;
+  margin-top: 7px;
   display: inline-flex;
   border-left: 55px;
   position: relative;
@@ -401,7 +407,7 @@ padding-left: 1%;
   background-color: rgb(250, 208, 208);
 }
 .sidebar{
-  height: 300px;
+  height: 180px;
   width: 250px;
   background-color: white;
   overflow-wrap: break-word;
@@ -465,7 +471,7 @@ padding-left: 1%;
 }
 .predefinelane{
 width: 100%;
-height: 120px;
+height: 130px;
 background-color:white;
 
 border-left: 10px solid lightskyblue;
@@ -502,14 +508,23 @@ border-left: 10px solid lightskyblue;
   display:none;
   
   background-color: white;
-  width: 250px;
-  height: 150px;
+  width: 200px;
+  height: 100px;
   
   opacity: 0.1;
   border:4px dashed black;
-  margin: 50px;
+  margin-left: 30px;
+  margin-top: 7px;
  }
- 
+ .wholecontainer{
+   width: 100%;
+   height: 100%;
+   
+  
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+ }
 
 
 

@@ -609,14 +609,15 @@ class Board extends Component {
          
          {(data)?data:"Unnamed Journey Map"} 
         </div>
-
+        
         <div class="maindiv">
-          {/* {this.state.layer1} */}
+        
+          {/* {this.state.layer1} */}<div className="wholecontainer">
           {this.state.totallayer.map(item => {
             if (item.type == "Cardlane") {
               return (
                 
-                <ExpandCollapse previewHeight="50px" expanded="true">
+                <ExpandCollapse previewHeight="50px" expanded="true" >
                   <Cardlane>
                     {item.text}
                     {/* <button
@@ -631,7 +632,8 @@ class Board extends Component {
  <div id="hoverShow1"> <div
                       
                       onClick={() => this.onOpenModal1("Cardlane")}
-                      style={{marginLeft:"40%",fontSize:"5em",color:"black"}}
+                      style={{marginLeft:"33%",fontSize:"5em",color:"black",marginTop:"-10%"}}
+                     
                     >
                       <p>+</p>
                     </div></div>
@@ -719,7 +721,7 @@ class Board extends Component {
                 </Linelane></ExpandCollapse>
               );
             }
-          })}
+          })}</div>
 <div className="predefinelane" style={{marginTop:"1%"}}>
   
           <UncontrolledButtonDropdown style={{ marginLeft: 20, marginTop: 30 }}>
@@ -1046,7 +1048,7 @@ class Board extends Component {
           >
             {" "}
             <TabList>
-              <Tab selected="true"> CJM default</Tab>
+              <Tab selected="true"contentEditable="true"> CJM default</Tab>
 
               {this.state.tabs.map(item => {
                 return (

@@ -14,9 +14,9 @@ class Imagelane extends Component {
     render(){
           return (
           <div>
-          <div className="layer1" >
+          {/* <div className="layer1" >
                   <p style={{fontSize:"1.25em",marginTop:"1%"}}>Image Lane</p>
-                </div>
+                </div> */}
               <div className="container2" >
              
                 

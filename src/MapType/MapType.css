@@ -75,7 +75,7 @@ margin: auto;
 box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
   width: 200px;
   border: 2px solid black;
-  border-radius: 20px;
+  border-radius: 5px;
   padding-left: 10px;
   padding-right: 10px;
   margin: 15px;
@@ -87,7 +87,7 @@ box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
   padding-right: 10px;
   width: 200px;
   border: 2px solid black;
-  border-radius: 20px;
+  border-radius: 5px;
   margin: 15px;
   -webkit-box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
   -moz-box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
@@ -103,7 +103,7 @@ box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
   box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
   width: 200px;
   border: 2px solid black;
-  border-radius: 20px;
+  border-radius: 5px;
   margin: 15px;
 }
 .template {
