@@ -68,7 +68,7 @@ body {
 	right: 0;
   	
 	margin: auto;
-      background-color: #D6EAF4;
+      background-color: #D3D3D3;
       border-radius: 10px;
 
       
@@ -84,7 +84,7 @@ body {
     border-bottom: 1.5px solid #225e62;
     padding-bottom: 5px;
   }
-  .loginnavbar {
+  /* .loginnavbar {
     width: 200%;
     height: 50px;
     background-color:#A0DAF8 ;
@@ -92,7 +92,7 @@ body {
     padding-left: 1%;
     
     display: flex;
-  }
+  } */
   .signfooter{
     height: 40px;
     width: 100%;

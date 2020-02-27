@@ -68,7 +68,7 @@ class MapType extends Component {
           <div className="template">
             <div className="templatenavbar" >Choose  Map Template</div>
             <div className="templaterow">
-            <Link to={{pathname:"/Board",data:data}} style={{textDecoration:"none",color:"black",marginLeft:"-5%"}} > <Card className="text-center" style={{background:' #CCFFE5',width:180,height:200}}>
+            <Link to={{pathname:"/Board",data:data}} style={{textDecoration:"none",color:"black",marginLeft:"-5%"}} > <Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Blank Map</Card.Header>
   <Card.Body>
     <Card.Title>Blank Map</Card.Title>
@@ -77,7 +77,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card></Link>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%"}}>
+<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Tutorial Map</Card.Header>
   <Card.Body>
     <Card.Title>Tutorial Map</Card.Title>
@@ -86,7 +86,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%"}}>
+<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Vacation Travel</Card.Header>
   <Card.Body>
     <Card.Title>Vacation Travel</Card.Title>
@@ -95,7 +95,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%"}}>
+<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Elderly Need for Care</Card.Header>
   <Card.Body>
     <Card.Title>Elderly Need for Care</Card.Title>
@@ -104,8 +104,8 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card></div>
-<div className="templaterow" style={{marginTop:"-2%"}}>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"-5%"}}>
+<div className="templaterow" style={{marginTop:"-5.5%"}}>
+<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"-5%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Food Ordering and Delivery</Card.Header>
   <Card.Body>
     <Card.Title>Food Ordering and Delivery</Card.Title>
@@ -114,7 +114,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%"}}>
+<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Retail Online/Offline Template</Card.Header>
   <Card.Body>
     <Card.Title>Retail Online/Offline</Card.Title>
@@ -123,7 +123,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%"}}>
+<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a  Journey Map for Ideation</Card.Header>
   <Card.Body>
     <Card.Title>Customer  Map for Ideation</Card.Title>
@@ -132,7 +132,7 @@ class MapType extends Component {
     </Card.Text>
   </Card.Body>
 </Card>
-<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%"}}>
+<Card className="text-center" style={{background:' #CCFFE5',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a PSD Blueprint Template</Card.Header>
   <Card.Body>
     <Card.Title>PSD Blueprint Template</Card.Title>

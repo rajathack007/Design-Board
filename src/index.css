@@ -521,7 +521,7 @@ border-left: 10px solid lightskyblue;
    height: 100%;
    
   
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
  }

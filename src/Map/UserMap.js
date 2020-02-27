@@ -32,7 +32,7 @@ class UserMap extends Component {
     const {data4} = this.props.location;
     return(
       <div className="body" style={{width:"100%"}} >
-       <div className="bodynavbar" style={{overflow:"hidden"}}>       
+       {/* <div className="bodynavbar" style={{overflow:"hidden"}}>       
        <Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
         
         <Link to="/Help" style={{marginLeft:"75%",fontSize:"1.5em",paddingTop:"0.65%",color:"black",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link> 
@@ -46,7 +46,26 @@ class UserMap extends Component {
       
      </div></a>
      
-      </div> 
+      </div>  */}
+      <nav class="navbar">
+        <div class="brand-title"><Link to="/Home" style={{color:"white",textDecoration:"none"}}> ETU LOGO</Link></div>
+        
+        <div class="navbar-links">
+          <ul>
+            <li> <Link to="/Help" style={{fontSize:"1.5em",color:"white",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link></li>
+           <li>
+           <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
+    
+    <a  class="dropbtn" style={{paddingTop:"0.65%",color:"white",textDecoration:"none"}} >Profile </a>
+    <div class="dropdown-content">
+    <Link to={{pathname:"/Profile",data2:data2,data4:data4}}  style={{color:"black",textDecoration:"none"}}>My Profile</Link> 
+    <Link to="/"  style={{color:"black",textDecoration:"none"}}>Logout</Link>
+      
+     </div></a>
+           </li>
+          </ul>
+        </div>
+      </nav>
       
       <div className="mapcontainer">
       

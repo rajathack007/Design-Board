@@ -36,9 +36,20 @@ class SignUpForm extends Component {
 
     render() {
         return (<div classname="body">
-           <div className="logoutnavbar1"><Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"Black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
+          <nav class="navbar">
+        <div class="brand-title"><Link to="/Home" style={{color:"white",textDecoration:"none"}}> ETU LOGO</Link></div>
+        
+        <div class="navbar-links">
+          <ul>
+            <li> <Link to="/Home" style={{marginLeft:"2%",fontSize:20,paddingTop:".75%",color:"white",textDecoration:"none"}}>Home</Link></li>
+            
+            <li> <Link to="/sign-in" style={{textAlign:"right",color:"black",paddingLeft:"1%",paddingRight:"1%",textDecoration:"none"}}> <a style={{textAlign:"right",fontSize:20,paddingTop:".75%"}}>Login</a></Link></li>
+          </ul>
+        </div>
+      </nav>
+           {/* <div className="logoutnavbar1"><Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"Black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
            <Link to="/Home" style={{marginLeft:"2%",marginTop:"-0.5%",fontSize:"1.5em",paddingTop:".75%",color:"Black",textDecoration:"none"}}>Home</Link>
-           </div> 
+           </div>  */}
        <div className="logout" >
          
        <form onSubmit={this.handleSubmit} className="FormFields">

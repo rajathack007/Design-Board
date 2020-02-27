@@ -15,7 +15,7 @@
 	right: 0;
   	
 	margin: auto;
-  background-color: #D6EAF4;
+  background-color: #D3D3D3;
   border-radius: 10px;
 
   
@@ -23,7 +23,7 @@
   -moz-box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
   box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
   }
-  .logoutnavbar1 {
+  /* .logoutnavbar1 {
     width: 200%;
     height: 50px;
     background-color:#A0DAF8 ;
@@ -31,7 +31,7 @@
     padding-left: 1%;
     
     display: flex;
-  }
+  } */
   .signfooter1{
     height: 40px;
     width: 100%;
