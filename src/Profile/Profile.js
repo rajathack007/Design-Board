@@ -39,6 +39,7 @@ class Profile extends Component {
   }
 
   async handleSubmit(e) {
+    const tokenvalue = localStorage.getItem("token");
     let data = {
       oldPassword: this.state.password,
       newpassword: this.state.newpassword
@@ -46,10 +47,14 @@ class Profile extends Component {
     e.preventDefault();
     if (this.state.newpassword === this.state.confirmpassword) {
       try {
-        const response = await axios.post(`${API_URL}reset`, data);
+        const response = await axios.post(
+          `${API_URL}reset`,
+          data,
+          (axios.defaults.headers.common["x-access-token"] = tokenvalue)
+        );
         console.log(response);
         if (response.data.success) {
-          localStorage.setItem("token", response.data.token);
+          alert(response.data.msg);
           console.log("Password changed");
         }
       } catch (err) {
@@ -85,7 +90,7 @@ class Profile extends Component {
           </ul>
         </div>
       </nav>
-        <div style={{ marginTop: "1%" }}>
+      <div style={{ marginTop: "1%" }}>
           <h3 style={{ textAlign: "center", marginTop: "2%" }}>Profile</h3>
           <form className="FormFields">
             <div>

@@ -4,21 +4,49 @@ import { Link } from "react-router-dom";
 import Modal from "react-responsive-modal";
 import HelpIcon from "@material-ui/icons/Help";
 import Tooltip from "@material-ui/core/Tooltip";
+import axios from "axios";
+import { API_URL } from "../services/url";
 
 class UserMap extends Component {
   constructor() {
     super();
     this.state = {
       open: false,
-      ProjectName: ""
+      ProjectName: "",
+      ProjectDescription: "",
+      tokenvalue: "",
+      data: []
     };
     this.logout = this.logout.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value }, () => {
       console.log(this.state.ProjectName);
     });
   };
+  async componentDidMount() {
+    this.setState({ tokenvalue: localStorage.getItem("token") });
+    const tokenvalue = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        `${API_URL}project/`,
+        (axios.defaults.headers.common["x-access-token"] = tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      if (response.status === 200) {
+        this.setState({ data: response.data }, () => {
+          console.log("data", response.data);
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   logout() {
     // Send a logout request to the API
     console.log("Sending a logout request to the API...");
@@ -34,14 +62,44 @@ class UserMap extends Component {
   onCloseModal = () => {
     this.setState({ open: false });
   };
+
+  async onSubmit(e) {
+    e.preventDefault();
+    console.log("submit");
+    let data = {
+      name: this.state.ProjectName,
+      desc: this.state.ProjectDescription
+    };
+    try {
+      const response = await axios.post(
+        `${API_URL}project/add`,
+        data,
+        (axios.defaults.headers.common[
+          "x-access-token"
+        ] = this.state.tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        alert(response.data.msg);
+        console.log("data", data);
+        this.props.history.push("/MapType");
+      }
+    } catch (err) {
+      console.error(err.response.data.msg);
+      alert(err.response.data.msg);
+    }
+  }
   render() {
     const { open } = this.state;
 
-    const { data2 } = this.props.location;
-    const { data4 } = this.props.location;
-    return(
-      <div className="body" style={{width:"100%"}} >
-       {/* <div className="bodynavbar" style={{overflow:"hidden"}}>       
+    return (
+      <div className="body" style={{ width: "100%" }}>
+        {/* <div className="bodynavbar" style={{overflow:"hidden"}}>       
        <Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
         
         <Link to="/Help" style={{marginLeft:"75%",fontSize:"1.5em",paddingTop:"0.65%",color:"black",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link> 
@@ -56,57 +114,144 @@ class UserMap extends Component {
      </div></a>
      
       </div>  */}
-      <nav class="navbar">
-        <div class="brand-title"><Link to="/Home" style={{color:"white",textDecoration:"none"}}> ETU LOGO</Link></div>
-        
-        <div class="navbar-links">
-          <ul>
-            <li> <Link to="/Help" style={{color:"white",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link></li>
-           <li>
-           <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
-    
-    <a  class="dropbtn" style={{paddingTop:"0.65%",color:"white",textDecoration:"none"}} >Profile </a>
-    <div class="dropdown-content">
-    <Link to={{pathname:"/Profile",data2:data2,data4:data4}}  style={{color:"black",textDecoration:"none"}}>My Profile</Link> 
-    <Link onClick={this.logout}  style={{color:"black",textDecoration:"none"}}>Logout</Link>
-      
-     </div></a>
-           </li>
-          </ul>
-        </div>
-      </nav>
-      
-      <div className="mapcontainer">
-      
-        <div className="containernavbar"><p>Map</p></div>
-        
-        <div className="map">
-
-        
-        <p className="textsize1"
-              align="center">New Project</p>
-              <div className="mapbutton" onClick={this.onOpenModal}>+</div>
-         
-         <Modal open={open} onClose={this.onCloseModal } center  >
-           <div className="namemodal" >
-             <div className="namemodalnavbar" ><div className="textsize2 " style={{paddingTop:5,marginLeft:"5%"}}>Project Name</div></div>
-             <div className="inputcontainer" style={{textAlign:"center"}}>
-             <input type="text" style={{marginTop:"-25%"}} name="ProjectName" placeholder="Project Name" onChange={e=>this.handleChange(e)} /><br></br>
-             <input type="text"  name="ProjectDescription" placeholder="Project Description" onChange={e=>this.handleChange(e)} /><br></br>
-             <Link to={{pathname:"/MapType",data:this.state.ProjectName}}> <button  className="buttonlogout"style={{marginTop:"-5%"}} >Submit</button></Link> 
-              </div>
-              </div>
-        </Modal>
-       
+        <nav class="navbar">
+          <div class="brand-title">
+            <Link
+              to="/UserMap"
+              style={{ color: "white", textDecoration: "none" }}
+            >
+              {" "}
+              ETU LOGO
+            </Link>
           </div>
+
+          <div class="navbar-links">
+            <ul>
+              <li>
+                {" "}
+                <Link
+                  to="/Help"
+                  style={{
+                    fontSize: "1.5em",
+                    color: "white",
+                    textDecoration: "none"
+                  }}
+                >
+                  <Tooltip title={<span>Help</span>}>
+                    <HelpIcon />
+                  </Tooltip>
+                </Link>
+              </li>
+              <li>
+                <a
+                  class="submenu"
+                  style={{ marginLeft: "2%", marginTop: "0.65%" }}
+                >
+                  <a
+                    class="dropbtn"
+                    style={{
+                      paddingTop: "0.65%",
+                      color: "white",
+                      textDecoration: "none"
+                    }}
+                  >
+                    Profile{" "}
+                  </a>
+                  <div class="dropdown-content">
+                    <Link
+                      to={{ pathname: "/Profile" }}
+                      style={{ color: "black", textDecoration: "none" }}
+                    >
+                      My Profile
+                    </Link>
+                    <Link
+                      onClick={this.logout}
+                      style={{ color: "black", textDecoration: "none" }}
+                    >
+                      Logout
+                    </Link>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <div className="mapcontainer">
+          <div className="containernavbar">
+            <p>Map</p>
+          </div>
+
+          <div className="map">
+            <p className="textsize1" align="center">
+              New Project
+            </p>
+            <div className="mapbutton" onClick={this.onOpenModal}>
+              +
+            </div>
+
+            <Modal open={open} onClose={this.onCloseModal} center>
+              <div className="namemodal">
+                <div className="namemodalnavbar">
+                  <div
+                    className="textsize2 "
+                    style={{ paddingTop: 5, marginLeft: "5%" }}
+                  >
+                    Project Name
+                  </div>
+                </div>
+                <div className="inputcontainer" style={{ textAlign: "center" }}>
+                  <input
+                    type="text"
+                    style={{ marginTop: "-25%" }}
+                    name="ProjectName"
+                    placeholder="Project Name"
+                    onChange={e => this.handleChange(e)}
+                  />
+                  <br></br>
+                  <input
+                    type="text"
+                    name="ProjectDescription"
+                    placeholder="Project Description"
+                    onChange={e => this.handleChange(e)}
+                  />
+                  <br></br>{" "}
+                  <button
+                    className="buttonlogout"
+                    style={{ marginTop: "-5%" }}
+                    onClick={e => this.onSubmit(e)}
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </Modal>
+            {this.state.data.map(item => {
+              return (
+                <div
+                  className="map"
+                  onClick={() => {
+                    this.props.history.push("/Board/" + item._id);
+                  }}
+                >
+                  <p className="textsize1" align="center">
+                    {item.name}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div className="projectfooter" style={{ marginBottom: 10 }}>
+          <footer>
+            Powered By{" "}
+            <a href="http://www.edunomics.in" target="_blank">
+              {" "}
+              <strong>Edunomics</strong>
+            </a>
+          </footer>
+        </div>
       </div>
-      <div className="projectfooter" style={{marginBottom:10}}>
-      <footer>
-                    Powered By <a href="http://www.edunomics.in" target="_blank"> <strong>Edunomics</strong></a>
-                </footer>
-      </div>
-     </div>
-     
     );
   }
 }
