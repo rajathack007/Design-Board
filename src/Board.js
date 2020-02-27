@@ -908,7 +908,7 @@ class Board extends Component {
               </div>
               <textarea
                 className="apply-font Italic "
-                style={{ width: 500, height: 350, marginTop: 10 }}
+                style={{ width: 500, height: 150, marginTop: 10 }}
                 name="text1"
                 onChange={e => this.change(e)}
               ></textarea>
@@ -986,7 +986,7 @@ class Board extends Component {
               </div>
               <textarea
                 className="apply-font Italic "
-                style={{ width: 500, height: 350, marginTop: 10 }}
+                style={{ width: 500, height: 150, marginTop: 10 }}
                 name="edit"
                 value={this.state.edit}
                 onChange={e => this.change(e)}
