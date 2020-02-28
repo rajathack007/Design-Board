@@ -7,25 +7,86 @@ import { Button } from 'react-bootstrap';
 import { Card } from 'react-bootstrap';
 import HelpIcon from '@material-ui/icons/Help';
 import Tooltip from "@material-ui/core/Tooltip";
-
+import axios from "axios";
+import { API_URL } from "../services/url";
 
 class MapType extends Component {
   state = {
     open: false,
+    maptype: "",
+    id: "",
+    data: []
   };
  
-  onOpenModal = () => {
-    this.setState({ open: true });
+  onOpenModal = maptype => {
+    this.setState({ open: true, maptype });
   };
- 
+  async componentDidMount() {
+    const tokenvalue = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        `${API_URL}project/`,
+        (axios.defaults.headers.common["x-access-token"] = tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      this.setState(
+        {
+          tokenvalue: localStorage.getItem("token"),
+          Project_id: this.props.match.params.id.split(":")[1],
+          data: response.data
+        },
+        () => {
+          console.log(this.state.data);
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  async onSubprojectsubmit(e) {
+    let data = {
+      projectid: this.state.Project_id,
+      subProjectName: "Untitled",
+      mapType: this.state.maptype
+    };
+    this.setState({ open4: false });
+    try {
+      const response = await axios.post(
+        `${API_URL}subproject/add`,
+        data,
+        (axios.defaults.headers.common[
+          "x-access-token"
+        ] = this.state.tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      console.log(response);
+      const subprojectid = response.data._id;
+      if (response.status === 200) {
+        this.props.history.push(
+          `/Board:${this.state.Project_id}/${subprojectid}`
+        );
+      }
+    } catch (err) {
+      console.log(err);
+      //alert(err.response.data.msg);
+    }
+  }
   onCloseModal = () => {
     this.setState({ open: false });
   };
     //constructor
     render(){
       const { open } = this.state;
-      const {data} = this.props.location;
-      console.log(data);
+      // const {data} = this.props.location;
+      // console.log(data);
       return(
         <div className="container5">
           <nav class="navbar">
@@ -51,7 +112,12 @@ class MapType extends Component {
       
      </div></a>
           </div>  */}
-          <div className="projectnamenavbar">{data}</div>
+           <div className="projectnamenavbar">
+          {" "}
+          {this.state.data.map(item => {
+            if (item._id === this.state.id) return <div>{item.name}</div>;
+          })}
+        </div>
           
           <div className="newmapcontainer1">
             <div className="newmapcontainernavbar1">
@@ -61,7 +127,7 @@ class MapType extends Component {
              <div className="customerjourneymap1">
               <p className="textsize1"align="center">Customer Journey Map</p>
               
-              <div className="mapbutton1" onClick={this.onOpenModal}>+</div>
+              <div className="mapbutton1" onClick={()=>this.onOpenModal("Customer")}>+</div>
             </div>
             <div className="businessmodelcanvas1">
               <p className="textsize1" align="center">Business Model Canvas</p>
@@ -78,7 +144,9 @@ class MapType extends Component {
           <div className="template">
             <div className="templatenavbar" >Choose  Map Template</div>
             <div className="templaterow" style={{marginTop:"3.5%",marginLeft:"1.5%"}}>
-            <Link to={{pathname:"/Board",data:data}} style={{textDecoration:"none",color:"black"}} > <Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,borderRadius:10}}>
+            <Link  onClick={e => this.onSubprojectsubmit(e)}
+                      state={this.state.maptype}
+                       style={{textDecoration:"none",color:"black"}} > <Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,borderRadius:10}}>
   <Card.Header style={{margin:10}}>Create a Blank Map</Card.Header>
   <Card.Body>
     <Card.Title>Blank Map</Card.Title>

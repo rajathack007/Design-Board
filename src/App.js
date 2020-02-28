@@ -41,6 +41,9 @@ class App extends Component {
 
   render() {
     const { isSignedIn, route } = this.state;
+    //console.log(this.props.match);
+
+    //const { pat } = this.props.match;
 
     return (
       <Router>
@@ -68,8 +71,8 @@ class App extends Component {
                   ></Route>
 
                   <Route path="/UserMap" component={UserMap}></Route>
-                  <Route path="/MapType" component={MapType}></Route>
-                  <Route path="/Board" component={Board}></Route>
+                  <Route path="/MapType:id" component={MapType}></Route>
+                  <Route path={`/Board:id/:subid`} component={Board}></Route>
                 </div>
               ) : route === "signin" ? (
                 <p />

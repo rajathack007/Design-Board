@@ -15,7 +15,10 @@ class UserMap extends Component {
       ProjectName: "",
       ProjectDescription: "",
       tokenvalue: "",
-      data: []
+      data: [],
+      project_data: [],
+      name: "",
+      redirect: false
     };
     this.logout = this.logout.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -52,6 +55,7 @@ class UserMap extends Component {
     console.log("Sending a logout request to the API...");
     this.setState({ logginStatus: false });
     localStorage.removeItem("token");
+    this.props.history.push("/sign-in");
     // this.destroy(); // Cleanup
   }
 
@@ -85,13 +89,14 @@ class UserMap extends Component {
       );
       console.log(response);
       if (response.status === 200) {
-        alert(response.data.msg);
+        alert("Project added");
         console.log("data", data);
-        this.props.history.push("/MapType");
+        this.setState({ redirect: true, project_data: response.data });
+        this.props.history.push(`/MapType:${response.data._id}`);
       }
     } catch (err) {
-      console.error(err.response.data.msg);
-      alert(err.response.data.msg);
+      console.error(err);
+      
     }
   }
   render() {
@@ -127,21 +132,7 @@ class UserMap extends Component {
 
           <div class="navbar-links">
             <ul>
-              <li>
-                {" "}
-                <Link
-                  to="/Help"
-                  style={{
-                    fontSize: "1.5em",
-                    color: "white",
-                    textDecoration: "none"
-                  }}
-                >
-                  <Tooltip title={<span>Help</span>}>
-                    <HelpIcon />
-                  </Tooltip>
-                </Link>
-              </li>
+            <li> <Link to="/Help" style={{color:"white",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link></li>
               <li>
                 <a
                   class="submenu"
@@ -181,9 +172,10 @@ class UserMap extends Component {
           <div className="containernavbar">
             <p>Map</p>
           </div>
-
-          <div className="map">
-            <p className="textsize1" align="center">
+          
+<div className="rowcontainermap">
+          <div className="map" >
+            <p style={{fontSize:"1.5em"}} onClick={this.onOpenModal}>
               New Project
             </p>
             <div className="mapbutton" onClick={this.onOpenModal}>
@@ -230,6 +222,7 @@ class UserMap extends Component {
               return (
                 <div
                   className="map"
+                  style={{marginTop:"-5.5%"}}
                   onClick={() => {
                     this.props.history.push("/Board/" + item._id);
                   }}
@@ -240,7 +233,7 @@ class UserMap extends Component {
                 </div>
               );
             })}
-          </div>
+          </div></div>
         </div>
         <div className="projectfooter" style={{ marginBottom: 10 }}>
           <footer>

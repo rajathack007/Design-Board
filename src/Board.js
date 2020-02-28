@@ -16,6 +16,8 @@ import Dropzone from "react-dropzone";
 import UploadImages from "yagoubi-upload-images";
 import Dropdown from "react-drop-down";
 import GridLayout from 'react-grid-layout';
+import axios from "axios";
+import { API_URL } from "./services/url";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -75,7 +77,8 @@ import CreditCardIcon from '@material-ui/icons/CreditCard';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 import Tooltip from "@material-ui/core/Tooltip";
-
+//  var dragula = require('react-dragula');
+ import Dragula from 'react-dragula';
 
 const zoomArr = [
   "50%",
@@ -128,6 +131,7 @@ class Board extends Component {
       open1: false,
       open2: false,
       open3: false,
+      open4:false,
       visible: false,
       show: false,
       pictures: [],
@@ -145,6 +149,13 @@ class Board extends Component {
       id: 0,
       indexofArr: 4,
       bool: false,
+      Project_id: "",
+      Project_data: [],
+      sub_project_data: [],
+      Sub_project_id: "",
+      
+      maptype: "",
+      lanegrid_no: 0,
       editorState: EditorState.createEmpty()
     };
     //close this.state
@@ -160,7 +171,9 @@ class Board extends Component {
     this.addItalic = this.addItalic.bind(this);
     this.addUnderline = this.addUnderline.bind(this);
     this.addBold = this.addBold.bind(this);
+    this.onCloseModal = this.onCloseModal.bind(this);
   } //close constructor()
+  
   onEditorStateChange = editorState => {
     this.setState(
       {
@@ -183,6 +196,63 @@ class Board extends Component {
       }
     );
   };
+  async componentDidMount() {
+    const tokenvalue = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        `${API_URL}project/`,
+        (axios.defaults.headers.common["x-access-token"] = tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      console.log("project_data", response);
+      console.log("url", this.props.match);
+      const Project_id = this.props.match.params.id.split(":")[1];
+      const Sub_project_id = this.props.match.params.subid;
+
+      const response1 = await axios.get(
+        `${API_URL}subproject/${Project_id}`,
+        (axios.defaults.headers.common["x-access-token"] = tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      console.log("Sub_project_data", response1);
+      console.log("Sub_project_id", Sub_project_id);
+
+      const response2 = await axios.get(
+        `${API_URL}lane/${Sub_project_id}`,
+        (axios.defaults.headers.common["x-access-token"] = tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      console.log("lane_data", response2);
+
+      this.setState(
+        {
+          tokenvalue: localStorage.getItem("token"),
+          Project_id,
+          Sub_project_id,
+          Project_data: response.data,
+          sub_project_data: response1.data,
+          totallayer: response2.data
+        },
+        () => {
+          console.log(this.state.Project_id);
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
   onOpenModal = type => {
     this.setState({ open: true, type, editorState: EditorState.createEmpty() });
   };
@@ -263,13 +333,56 @@ class Board extends Component {
     }
   };
 
-  onCloseModal = () => {
-    this.setState({ open: false });
+  // onCloseModal = () => {
+  //   this.setState({ open: false });
+  //   this.state.totallayer.push({
+  //     text: this.state.text,
+  //     type: this.state.type
+  //   });
+  // };
+  async onCloseModal(e) {
+    console.log(this.state.lanegrid_no);
+    this.setState(
+      {
+        open: false,
+        lanegrid_no: parseInt(parseInt(this.state.lanegrid_no) + 1)
+      },
+      () => {
+        console.log("lanegridno", this.state.lanegrid_no);
+      }
+    );
     this.state.totallayer.push({
-      text: this.state.text,
-      type: this.state.type
+      laneType: this.state.type,
+      laneName: this.state.text,
+      laneGridNo: this.state.lanegrid_no
     });
-  };
+    let data = {
+      laneType: this.state.type,
+      laneName: this.state.text,
+      laneGridNo: this.state.lanegrid_no
+    };
+    try {
+      const response = await axios.post(
+        `${API_URL}lane/add/${this.state.Sub_project_id}`,
+        data,
+        (axios.defaults.headers.common[
+          "x-access-token"
+        ] = this.state.tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("lane added");
+      }
+    } catch (err) {
+      console.error(err.response.data.msg);
+      alert("Lane couldn't be added");
+    }
+  }
   onCloseModal1 = () => {
     this.setState({ open1: false });
     if (this.state.type == "Cardlane") {
@@ -289,6 +402,9 @@ class Board extends Component {
   onCloseModal2 = () => {
     this.setState({ open2: false });
     this.state.tabs.push(this.state.text2);
+  };
+  onAddSubProject = () => {
+    this.setState({ open2: false, open4: true, maptype: "Customer" });
   };
   onCloseModal3 = () => {
     let id = this.state.id;
@@ -315,6 +431,44 @@ class Board extends Component {
       this.addSquare();
     }
   };
+  onCloseModal4 = () => {
+    this.setState({ open4: false });
+  };
+  async onSubprojectsubmit(e) {
+    this.state.sub_project_data.push({
+      projectid: this.state.Project_id,
+      subProjectName: this.state.text2,
+      mapType: this.state.maptype
+    });
+    let data = {
+      projectid: this.state.Project_id,
+      subProjectName: this.state.text2,
+      mapType: this.state.maptype
+    };
+    this.setState({ open4: false });
+    try {
+      const response = await axios.post(
+        `${API_URL}subproject/add`,
+        data,
+        (axios.defaults.headers.common[
+          "x-access-token"
+        ] = this.state.tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        alert(response.data.msg);
+        console.log("data", data);
+      }
+    } catch (err) {
+      console.error(err.response.data.msg);
+      alert(err.response.data.msg);
+    }
+  }
   zoomin = () => {
     var element = document.querySelector(".maindiv");
     let value = element.getBoundingClientRect().width / element.offsetWidth;
@@ -556,18 +710,30 @@ class Board extends Component {
       Bold: [...this.state.Bold, <Boldfont />]
     });
   };
+  // function() {
+  //   dragula([].slice.apply(document.querySelectorAll('.maindiv')));
+  // };
+  dragulaDecorator = (componentBackingInstance) => {
+    if (componentBackingInstance) {
+      let options = { };
+      Dragula([componentBackingInstance], options);
+    }
+  };
 
   render() {
     const { open } = this.state;
     const { open1 } = this.state;
     const { open2 } = this.state;
     const { open3 } = this.state;
-    const { data } = this.props.location;
+    const { open4 } = this.state;
+    // const { data } = this.props.location;
     const { editorState } = this.state;
     const { editorState1 } = this.state;
-    const { data1 } = this.props.location;
+    // const { data1 } = this.props.location;
     function handleSelection(value, event) {}
-
+    // function() {
+    //   dragula([].slice.apply(document.querySelectorAll('.container2')));
+    // })();
     let wrapperStyle = {};
     if (this.state.showBound) {
       wrapperStyle = {
@@ -750,7 +916,12 @@ class Board extends Component {
       </nav>
         <div className="projectnamenavbar"  >
          
-        <div contentEditable="true"> {(data)?data:"Unnamed Journey Map"}</div> 
+        <div contentEditable="true">{this.state.Project_data.map(item => {
+            console.log(item._id);
+            console.log(this.state.Project_id);
+            if (item._id === this.state.Project_id)
+              return <div>{item.name}</div>;
+          })}</div> 
         <div class="projectnamenavbar-links">
         <ul>
          <li
@@ -785,14 +956,14 @@ class Board extends Component {
         
         <div class="maindiv">
         
-          {/* {this.state.layer1} */}<div className="wholecontainer">
+          {/* {this.state.layer1} */}<div className="wholecontainer"  ref={this.dragulaDecorator}>
           {this.state.totallayer.map(item => {
-            if (item.type == "Cardlane") {
+            if (item.laneType == "card") {
               return (
                 
                 <ExpandCollapse previewHeight="50px" expanded="true" >
                   <Cardlane>
-                   {parse(item.text)}
+                   {parse(item.laneName)}
                     {/* <button
                       className="button1"
                       onClick={() => this.onOpenModal1("Cardlane")}
@@ -817,11 +988,11 @@ class Board extends Component {
                   </Cardlane>
                 </ExpandCollapse>
               );
-            } else if (item.type == "Bubblelane") {
+            } else if (item.laneType == "bubble") {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                   <Bubblelane>
-                   {parse(item.text)}
+                   {parse(item.laneName)}
                     <button
                       className="button1"
                       onClick={() => this.onOpenModal1("Bubblelane")}
@@ -832,11 +1003,11 @@ class Board extends Component {
                   </Bubblelane>
                 </ExpandCollapse>
               );
-            } else if (item.type == "Phaselane") {
+            } else if (item.laneType == "phase") {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                 <Phaselane>
-                 {parse(item.text)}
+                 {parse(item.laneName)}
                   <button
                     className="button1"
                     onClick={() => this.onOpenModal1("Phaselane")}
@@ -847,11 +1018,11 @@ class Board extends Component {
                 </Phaselane>
                 </ExpandCollapse>
               );
-            } else if (item.type == "Textlane") {
+            } else if (item.laneType == "Textlane") {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                 <Textlane>
-                 {parse(item.text)}
+                 {parse(item.laneName)}
                   <button
                     className="button1"
                     onClick={() => this.onOpenModal1("Textlane")}
@@ -861,11 +1032,11 @@ class Board extends Component {
                   {this.state.Square}
                 </Textlane></ExpandCollapse>
               );
-            } else if (item.type == "Imagelane") {
+            } else if (item.laneType == "Imagelane") {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                 <Imagelane>
-                 {parse(item.text)}
+                 {parse(item.laneName)}
                   <UploadImages
                     multiple
                     onChange={this.onChange}
@@ -873,21 +1044,21 @@ class Board extends Component {
                   />
                 </Imagelane></ExpandCollapse>
               );
-            } else if (item.type == "Filelane") {
+            } else if (item.laneType == "Filelane") {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                 <Filelane>
-                 {parse(item.text)}
+                 {parse(item.laneName)}
                   <div className="file">
                     <FilePond />
                   </div>
                 </Filelane></ExpandCollapse>
               );
-            } else if (item.type == "Linelane") {
+            } else if (item.laneType == "Linelane") {
               return (
                 <ExpandCollapse previewHeight="50px" expanded="true">
                 <Linelane>
-                 {parse(item.text)}
+                 {parse(item.laneName)}
                   <div style={{ marginTop: -150 }}>
                     <Lines />
                   </div>
@@ -901,18 +1072,18 @@ class Board extends Component {
             <DropdownToggle caret>Add New Lane</DropdownToggle>
             <DropdownMenu >
               <DropdownItem >
-                <li onClick={() => this.onOpenModal("Cardlane")}>
+                <li onClick={() => this.onOpenModal("card")}>
                   &#9645; Add Card Lane
                 </li>
               </DropdownItem>
               <DropdownItem>
                 {" "}
-                <li onClick={() => this.onOpenModal("Bubblelane")}>
+                <li onClick={() => this.onOpenModal("bubble")}>
                   &#128172; Add Bubble Lane
                 </li>
               </DropdownItem>
               <DropdownItem>
-                <li onClick={() => this.onOpenModal("Phaselane")}>
+                <li onClick={() => this.onOpenModal("phase")}>
                   &#8680; Add Phase Lane
                 </li>
               </DropdownItem>
@@ -939,7 +1110,7 @@ class Board extends Component {
             </DropdownMenu>
           </UncontrolledButtonDropdown></div>
 
-          <Modal open={open} onClose={this.onCloseModal} center  >
+          <Modal open={open} onClose={e => this.onCloseModal(e)} center  >
             <div className="textlane">
               <div className="textlanenavbar">
                 <div className="textsize2 " style={{ padding: 10 }}>
@@ -972,7 +1143,7 @@ class Board extends Component {
               <button
                 type="button"
                 style={{ fontSize: 20, marginLeft: 80 }}
-                onClick={this.onCloseModal}
+                onClick={e => this.onCloseModal(e)}
               >
                 Save
               </button>
@@ -1046,7 +1217,7 @@ class Board extends Component {
                 <br></br>
                 <button className="buttonlogout"
                   type="button"
-                  onClick={this.onCloseModal2}
+                  onClick={this.onAddSubProject}
                   style={{
                    marginTop:"-15%"
                   }}
@@ -1056,43 +1227,143 @@ class Board extends Component {
               </div>
             </div>
           </Modal>
+          <Modal type="fade" open={open4} onClose={this.onCloseModal4} center>
+            <div className="template">
+              <div className="templatenavbar">Choose Map Template</div>
+              <div className="templaterow" style={{marginTop:"3.5%",marginLeft:"1.5%"}}>
+                <Link
+                  onClick={e => this.onSubprojectsubmit(e)}
+                  style={{textDecoration:"none",color:"black"}}
+                >
+                  {" "}
+                  <Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,borderRadius:10}}>
+  <Card.Header style={{margin:10}}>Create a Blank Map</Card.Header>
+  <Card.Body>
+    <Card.Title>Blank Map</Card.Title>
+    <Card.Text>
+     
+    </Card.Text>
+  </Card.Body>
+</Card></Link>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+  <Card.Header style={{margin:10}}>Create a Tutorial Map</Card.Header>
+  <Card.Body>
+    <Card.Title>Tutorial Map</Card.Title>
+    <Card.Text>
+     
+    </Card.Text>
+  </Card.Body>
+</Card>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+  <Card.Header style={{margin:10}}>Create a Vacation Travel</Card.Header>
+  <Card.Body>
+    <Card.Title>Vacation Travel</Card.Title>
+    <Card.Text>
+     
+    </Card.Text>
+  </Card.Body>
+</Card>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+  <Card.Header style={{margin:10}}>Create a Elderly Need for Care</Card.Header>
+  <Card.Body>
+    <Card.Title>Elderly Need for Care</Card.Title>
+    <Card.Text>
+     
+    </Card.Text>
+  </Card.Body>
+</Card></div>
+<div className="templaterow" style={{marginTop:"-5.5%",marginLeft:"1.5%"}}>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,borderRadius:10}}>
+  <Card.Header style={{margin:10}}>Create a Food Ordering and Delivery</Card.Header>
+  <Card.Body>
+    <Card.Title>Food Ordering and Delivery</Card.Title>
+    <Card.Text>
+     
+    </Card.Text>
+  </Card.Body>
+</Card>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+  <Card.Header style={{margin:10}}>Create a Retail Online/Offline Template</Card.Header>
+  <Card.Body>
+    <Card.Title>Retail Online/Offline</Card.Title>
+    <Card.Text>
+     
+    </Card.Text>
+  </Card.Body>
+</Card>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+  <Card.Header style={{margin:10}}>Create a  Journey Map for Ideation</Card.Header>
+  <Card.Body>
+    <Card.Title>Customer  Map for Ideation</Card.Title>
+    <Card.Text>
+     
+    </Card.Text>
+  </Card.Body>
+</Card>
+<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
+  <Card.Header style={{margin:10}}>Create a PSD Blueprint Template</Card.Header>
+  <Card.Body>
+    <Card.Title>PSD Blueprint Template</Card.Title>
+    <Card.Text>
+     
+    </Card.Text>
+  </Card.Body>
+</Card>
+              </div>
+            </div>
+          </Modal>
         </div>
        
 
-        {data1}
+        
 
         <div className="container"></div>
         <div className="footer">
-          <Tabs
-            selectedIndex={this.state.tabIndex}
-            onSelect={tabIndex => this.setState({ tabIndex })}
-          >
-            {" "}
-            <TabList>
-              <Tab selected="true"contentEditable="true"> {(data)?data:"Unnamed Journey Map"}</Tab>
-
-              {this.state.tabs.map(item => {
-                return (
-                  <Tab
-                    contentEditable="true"
-                    onClick={() => this.setState({ totallayer: [] })}
-                  >
-                     {parse(item)}
-                  </Tab>
-                );
-              })}
-              <Tab onClick={this.onOpenModal2}>
-                {" "}
-                <a style={{ fontSize: 20 }}>+</a>
-              </Tab>
-            </TabList>
-            <TabPanel></TabPanel>
-            {this.state.tabs.map(item => {
-              return <TabPanel></TabPanel>;
-            })}
-            <TabPanel></TabPanel>
-          </Tabs>
-        </div>
+            <Tabs
+              selectedIndex={this.state.tabIndex}
+              onSelect={tabIndex => this.setState({ tabIndex })}
+            >
+              {" "}
+              <TabList>
+                {this.state.sub_project_data.map((item, id) => {
+                  console.log("subitem", this.state.Sub_project_id);
+                  if (item._id === this.state.Sub_project_id) {
+                    return (
+                      <Tab
+                        onClick={() => {
+                          this.props.history.push(
+                            `/Board:${this.state.Project_id}/${item._id}`
+                          );
+                        }}
+                        selected="true"
+                      >
+                        {item.subProjectName}
+                      </Tab>
+                    );
+                  } else {
+                    return (
+                      <Tab
+                        onClick={() => {
+                          this.props.history.push(
+                            `/Board:${this.state.Project_id}/${item._id}`
+                          );
+                        }}
+                      >
+                        {item.subProjectName}
+                      </Tab>
+                    );
+                  }
+                })}
+                <Tab onClick={this.onOpenModal2}>
+                  {" "}
+                  <a style={{ fontSize: 20 }}>+</a>
+                </Tab>
+              </TabList>
+              <TabPanel></TabPanel>
+              <TabPanel></TabPanel>
+              <TabPanel></TabPanel>
+            </Tabs>
+          </div>
       </div>
     );
   }

@@ -125,7 +125,7 @@ body {
   overflow-y: hidden;
   white-space: nowrap;
   outline: 2px solid gray;
-  margin-top: 2px;
+  margin-top: 10px;
   
   
 }
@@ -177,42 +177,7 @@ padding-left: 1%;
   font-family: "Arial Narrow Bold";
   background: lightskyblue;
 }
-/* .layer2 {
-  
-  display: flex;
-  font-family: "Arial Narrow Bold";
-  background: lightseagreen;
-}
-.layer3 {
-  width: 100%;
-  display: flex;
-  font-family: "Arial Narrow Bold";
-  background: lightseagreen;
-}
-.layer4 {
-  width: 100%;
-  display: flex;
-  font-family: "Arial Narrow Bold";
-  background: lightseagreen;
-}
-.layer5 {
-  width: 100%;
-  display: flex;
-  font-family: "Arial Narrow Bold";
-  background: lightseagreen;
-}
-.layer6 {
-  width: 100%;
-  display: flex;
-  font-family: "Arial Narrow Bold";
-  background: lightseagreen;
-}
-.layer7 {
-  width: 100%;
-  display: flex;
-  font-family: "Arial Narrow Bold";
-  background: lightseagreen;
-} */
+
 .addlayer {
   background: mediumaquamarine;
   font-size: 1em;
@@ -322,7 +287,7 @@ padding-left: 1%;
   overflow: hidden;
   white-space: normal;
   display: inline-flex;
-  
+  padding: 5px;
   margin-left: 30px;
   margin-top: 7px;
   
@@ -334,7 +299,7 @@ padding-left: 1%;
   overflow: hidden;
   white-space: normal;
   display: inline-flex;
-  
+  padding: 5px;
   margin: 50px;
   
   
@@ -345,7 +310,7 @@ padding-left: 1%;
   background-color:lightseagreen;
   overflow: hidden;
   white-space: normal;
-  
+  padding: 5px;
   
    display: inline-flex; 
   margin-left: 30px;
@@ -370,13 +335,14 @@ padding-left: 1%;
   margin-left: 30px;
   margin-top: 7px;
   display: inline-flex;
+  padding: 5px;
 }
 
 .phase{
   border-radius: 0px 30px 30px 0px;
   background:lightseagreen;
   resize: horizontal;
-  
+  padding: 5px;
   overflow: hidden;
   white-space: normal;
   width: 200px;
@@ -418,6 +384,7 @@ padding-left: 1%;
   
  
 }
+
 .react-expand-collapse__content {
   position: relative;
   overflow: hidden;
@@ -566,9 +533,17 @@ border-left: 10px solid lightskyblue;
 .projectnamenavbar-links li:hover {
   background-color: #555;
 }
+/* .container2:hover{
+  outline: none;
+}
+ */
 
-
-
+ .handle {
+  padding: 0 5px;
+  margin-right: 5px;
+  background-color: rgba(0, 0, 0, 0.4);
+  cursor: move;
+}
 
 
 

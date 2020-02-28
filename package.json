@@ -44,6 +44,7 @@
     "react-draft-wysiwyg": "^1.14.4",
     "react-draggable": "^4.2.0",
     "react-draggable-resizable": "^1.0.1",
+    "react-dragula": "^1.1.17",
     "react-drop-down": "^1.0.3",
     "react-dropzone": "^10.2.1",
     "react-emojipicker": "^1.1.1",
@@ -52,6 +53,7 @@
     "react-final-form-undo": "^1.0.1",
     "react-font-size-changer": "^0.2.0",
     "react-fontawesome": "^1.7.1",
+    "react-grid-dnd": "^2.1.2",
     "react-grid-layout": "^0.17.1",
     "react-hide-at": "^1.0.4",
     "react-hide-show-utils": "^1.0.2",
@@ -95,9 +97,11 @@
     "slate": "^0.57.1",
     "slate-html-serializer": "^0.8.11",
     "storm-react-diagrams": "^5.2.1",
+    "styled-components": "^5.0.1",
     "typescript": "^3.7.5",
     "use-emoji": "^1.0.0",
     "use-undo": "^1.0.3",
+    "usedo": "^1.0.1",
     "yagoubi-upload-images": "^1.2.6"
   },
   "scripts": {
