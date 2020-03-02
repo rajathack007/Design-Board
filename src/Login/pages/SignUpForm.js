@@ -34,6 +34,7 @@ class SignUpForm extends Component {
         localStorage.setItem("token", response.data.token);
         console.log("Logged In");
         this.props.history.push("/UserMap");
+        window.location.reload();
       }
     } catch (err) {
       console.error(err.response.data.msg);

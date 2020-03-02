@@ -23,6 +23,8 @@ class Bubblelane extends Component {
           <div className="sidebar" style={{overflow:"hidden",whiteSpace:"normal"}} ><p style={{textAlign:"center",marginTop:"20%"}}> {this.props.children[0]}</p></div>
           {this.props.children[1]}
           {this.props.children[2]}
+          {this.props.children[3]}
+          {this.props.children[4]}
                
                 </div>
                 

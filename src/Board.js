@@ -1,4 +1,3 @@
-
 import React, { Component, Fragment } from "react";
 import ReactDOM from "react-dom";
 import "./index.css"; //
@@ -15,7 +14,7 @@ import "filepond/dist/filepond.min.css";
 import Dropzone from "react-dropzone";
 import UploadImages from "yagoubi-upload-images";
 import Dropdown from "react-drop-down";
-import GridLayout from 'react-grid-layout';
+import GridLayout from "react-grid-layout";
 import axios from "axios";
 import { API_URL } from "./services/url";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
@@ -65,20 +64,20 @@ import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import FullscreenExitIcon from "@material-ui/icons/FullscreenExit";
-import HelpIcon from '@material-ui/icons/Help';
-import ArchiveIcon from '@material-ui/icons/Archive';
-import UnarchiveIcon from '@material-ui/icons/Unarchive';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
-import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
-import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
-import CreditCardIcon from '@material-ui/icons/CreditCard';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
+import HelpIcon from "@material-ui/icons/Help";
+import ArchiveIcon from "@material-ui/icons/Archive";
+import UnarchiveIcon from "@material-ui/icons/Unarchive";
+import DeleteIcon from "@material-ui/icons/Delete";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import FileCopyOutlinedIcon from "@material-ui/icons/FileCopyOutlined";
+import PersonOutlineOutlinedIcon from "@material-ui/icons/PersonOutlineOutlined";
+import InsertDriveFileOutlinedIcon from "@material-ui/icons/InsertDriveFileOutlined";
+import CreditCardIcon from "@material-ui/icons/CreditCard";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt";
 import Tooltip from "@material-ui/core/Tooltip";
 //  var dragula = require('react-dragula');
- import Dragula from 'react-dragula';
+import Dragula from "react-dragula";
 
 const zoomArr = [
   "50%",
@@ -131,7 +130,7 @@ class Board extends Component {
       open1: false,
       open2: false,
       open3: false,
-      open4:false,
+      open4: false,
       visible: false,
       show: false,
       pictures: [],
@@ -153,14 +152,20 @@ class Board extends Component {
       Project_data: [],
       sub_project_data: [],
       Sub_project_id: "",
-      
+      layer_index: "",
+      node_index: "",
       maptype: "",
-      lanegrid_no: 0,
-      editorState: EditorState.createEmpty()
+      lanegrid_no: "",
+      lane_id: "",
+      card_id: "",
+      editorState: EditorState.createEmpty(),
+      projectedit: false,
+      project_name: ""
     };
     //close this.state
 
     this.addCircle = this.addCircle.bind(this);
+    this.logout = this.logout.bind(this);
 
     this.addSquare = this.addSquare.bind(this);
     this.addRectangle = this.addRectangle.bind(this);
@@ -172,8 +177,16 @@ class Board extends Component {
     this.addUnderline = this.addUnderline.bind(this);
     this.addBold = this.addBold.bind(this);
     this.onCloseModal = this.onCloseModal.bind(this);
+    this.onEditProjectName = this.onEditProjectName.bind(this);
   } //close constructor()
-  
+
+  onEditProjectName = name => {
+    this.setState({
+      projectedit: true,
+      project_name: name
+    });
+  };
+
   onEditorStateChange = editorState => {
     this.setState(
       {
@@ -192,7 +205,7 @@ class Board extends Component {
         text: draftToHtml(convertToRaw(editorState.getCurrentContent()))
       },
       () => {
-        console.log("t1", this.state.text1);
+        console.log("t1", this.state.text);
       }
     );
   };
@@ -243,10 +256,11 @@ class Board extends Component {
           Sub_project_id,
           Project_data: response.data,
           sub_project_data: response1.data,
-          totallayer: response2.data
+          totallayer: response2.data,
+          lanegrid_no: response2.data.length
         },
         () => {
-          console.log(this.state.Project_id);
+          console.log(this.state.lanegrid_no);
         }
       );
     } catch (error) {
@@ -256,79 +270,131 @@ class Board extends Component {
   onOpenModal = type => {
     this.setState({ open: true, type, editorState: EditorState.createEmpty() });
   };
-  onOpenModal1 = type => {
-    this.setState({
-      open1: true,
-      type,
-      editorState: EditorState.createEmpty()
-    });
+  onOpenModal1 = (type, id) => {
+    this.setState(
+      {
+        open1: true,
+        type,
+        lane_id: id,
+        editorState: EditorState.createEmpty()
+      },
+      () => {
+        console.log("id", this.state.lane_id, id);
+      }
+    );
   };
   onOpenModal2 = () => {
     this.setState({ open2: true });
   };
-  onOpenModal3 = (type, id) => {
+  onOpenModal5 = (id1, lane_id, type, lanegrid_no) => {
+    console.log("id", id1);
+
+    this.setState(
+      {
+        open5: true,
+        edit: this.state.totallayer[id1].laneName,
+        layer_index: id1,
+        lane_id,
+        type,
+        lanegrid_no
+      },
+      () => {
+        console.log("text", this.state.totallayer[id1].laneName);
+      }
+    );
+    const html = this.state.totallayer[id1].laneName;
+    const contentBlock = htmlToDraft(html);
+    if (contentBlock) {
+      const contentState = ContentState.createFromBlockArray(
+        contentBlock.contentBlocks
+      );
+      const editorState = EditorState.createWithContent(contentState);
+      this.setState({ editorState });
+    }
+  };
+
+  onOpenModal3 = (type, id1, id, lane_id, card_id) => {
     console.log("id", id);
-    if (type == "Cardlane") {
+    if (type == "card") {
       this.setState(
-        { open3: true, type, edit: this.state.totalcard[id], id },
+        {
+          open3: true,
+          type,
+          edit: this.state.totallayer[id1].nodes[id].cardHTML,
+          layer_index: id1,
+          node_index: id,
+          lane_id,
+          card_id
+        },
         () => {
-          console.log("text", this.state.totalcard);
+          console.log("text", this.state.totallayer[id1].nodes[id].cardHTML);
         }
       );
-      const html = this.state.totalcard[id];
+      const html = this.state.totallayer[id1].nodes[id].cardHTML;
       const contentBlock = htmlToDraft(html);
       if (contentBlock) {
         const contentState = ContentState.createFromBlockArray(
           contentBlock.contentBlocks
         );
         const editorState = EditorState.createWithContent(contentState);
-        this.state = {
-          editorState
-        };
+        this.setState({ editorState });
       }
-    } else if (type == "Bubblelane") {
+    } else if (type == "bubble") {
       this.setState({
         open3: true,
         type,
-        edit: this.state.totalbubble[id],
-        id
+        edit: this.state.totallayer[id1].nodes[id].bubbleHTML,
+        layer_index: id1,
+        node_index: id,
+        lane_id,
+        card_id
       });
-      const html = this.state.totalbubble[id];
+      const html = this.state.totallayer[id1].nodes[id].bubbleHTML;
       const contentBlock = htmlToDraft(html);
       if (contentBlock) {
         const contentState = ContentState.createFromBlockArray(
           contentBlock.contentBlocks
         );
         const editorState = EditorState.createWithContent(contentState);
-        this.state = {
-          editorState
-        };
+        this.setState({ editorState });
       }
-    } else if (type == "Phaselane") {
-      this.setState({ open3: true, type, edit: this.state.totalphase[id], id });
-      const html = this.state.totalphase[id];
+    } else if (type == "phase") {
+      this.setState({
+        open3: true,
+        type,
+        edit: this.state.totallayer[id1].nodes[id].phaseHTML,
+        layer_index: id1,
+        node_index: id,
+        lane_id,
+        card_id
+      });
+      const html = this.state.totallayer[id1].nodes[id].phaseHTML;
       const contentBlock = htmlToDraft(html);
       if (contentBlock) {
         const contentState = ContentState.createFromBlockArray(
           contentBlock.contentBlocks
         );
         const editorState = EditorState.createWithContent(contentState);
-        this.state = {
-          editorState
-        };
+        this.setState({ editorState });
       }
-    } else if (type == "Textlane") {
-      this.setState({ open3: true, type, edit: this.state.totaltext[id], id });
-      const html = this.state.totaltext[id];
+    } else if (type == "text") {
+      this.setState({
+        open3: true,
+        type,
+        edit: this.state.totallayer[id1].nodes[id].textHTML,
+        layer_index: id1,
+        node_index: id,
+        lane_id,
+        card_id
+      });
+      const html = this.state.totallayer[id1].nodes[id].textHTML;
       const contentBlock = htmlToDraft(html);
       if (contentBlock) {
         const contentState = ContentState.createFromBlockArray(
           contentBlock.contentBlocks
         );
         const editorState = EditorState.createWithContent(contentState);
-        this.state = {
-          editorState
-        };
+        this.setState({ editorState });
       }
     }
   };
@@ -351,16 +417,13 @@ class Board extends Component {
         console.log("lanegridno", this.state.lanegrid_no);
       }
     );
-    this.state.totallayer.push({
-      laneType: this.state.type,
-      laneName: this.state.text,
-      laneGridNo: this.state.lanegrid_no
-    });
+
     let data = {
       laneType: this.state.type,
       laneName: this.state.text,
-      laneGridNo: this.state.lanegrid_no
+      laneGridNo: this.state.lanegrid_no.toString()
     };
+    console.log("data", data);
     try {
       const response = await axios.post(
         `${API_URL}lane/add/${this.state.Sub_project_id}`,
@@ -377,28 +440,205 @@ class Board extends Component {
       console.log(response);
       if (response.status === 200) {
         console.log("lane added");
+        this.state.totallayer.push(response.data);
+        this.setState({ totallayer: this.state.totallayer });
       }
     } catch (err) {
-      console.error(err.response.data.msg);
+      console.log(err);
       alert("Lane couldn't be added");
     }
   }
-  onCloseModal1 = () => {
-    this.setState({ open1: false });
-    if (this.state.type == "Cardlane") {
-      this.state.totalcard.push(this.state.text1);
-      this.addRectangle();
-    } else if (this.state.type == "Bubblelane") {
-      this.state.totalbubble.push(this.state.text1);
-      this.addBubble();
-    } else if (this.state.type == "Phaselane") {
-      this.state.totalphase.push(this.state.text1);
-      this.addPhase();
-    } else if (this.state.type == "Textlane") {
-      this.state.totaltext.push(this.state.text1);
-      this.addSquare();
+  async onRoutechange(Sub_project_id, e) {
+    e.preventDefault();
+    const tokenvalue = localStorage.getItem("token");
+    try {
+      const response2 = await axios.get(
+        `${API_URL}lane/${Sub_project_id}`,
+        (axios.defaults.headers.common["x-access-token"] = tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      console.log("lane_data", response2);
+
+      this.setState(
+        {
+          Sub_project_id,
+          totallayer: response2.data,
+          laneGridNo: response2.data.length - 1
+        },
+        () => {
+          console.log(this.state.Sub_Project_id);
+        }
+      );
+    } catch (error) {
+      console.log(error);
     }
-  };
+  }
+  async onCloseModal1(e) {
+    this.setState({ open1: false });
+    let index = "";
+    if (this.state.type == "card") {
+      for (var i = 0; i < this.state.totallayer.length; i++) {
+        if (this.state.totallayer[i]._id == this.state.lane_id) {
+          index = i;
+          break;
+        }
+      }
+
+      let data = {
+        cardHTML: this.state.text1,
+        gridID: 0,
+        cardStatus: "Start",
+        cardCategory: "Customer"
+      };
+      try {
+        const response = await axios.post(
+          `${API_URL}lane/card/add/${this.state.lane_id}`,
+          data,
+          (axios.defaults.headers.common[
+            "x-access-token"
+          ] = this.state.tokenvalue),
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          console.log("card added");
+          this.state.totallayer[index].nodes.push(
+            response.data.nodes[response.data.nodes.length - 1]
+          );
+          this.setState({ totallayer: this.state.totallayer });
+        }
+      } catch (err) {
+        console.log(err);
+        alert("Card couldn't be added");
+      }
+    } else if (this.state.type == "bubble") {
+      for (var i = 0; i < this.state.totallayer.length; i++) {
+        if (this.state.totallayer[i]._id == this.state.lane_id) {
+          index = i;
+          break;
+        }
+      }
+
+      let data = {
+        bubbleHTML: this.state.text1,
+        gridID: 0,
+        bubbleStatus: "Start",
+        bubbleCategory: "Customer"
+      };
+      console.log("submit_data", data);
+      console.log("lane_id", this.state.lane_id);
+      try {
+        const response = await axios.post(
+          `${API_URL}lane/bubble/add/${this.state.lane_id}`,
+          data,
+          (axios.defaults.headers.common[
+            "x-access-token"
+          ] = this.state.tokenvalue),
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          console.log("bubble added");
+          this.state.totallayer[index].nodes.push(
+            response.data.nodes[response.data.nodes.length - 1]
+          );
+          this.setState({ totallayer: this.state.totallayer });
+        }
+      } catch (err) {
+        console.log(err);
+        alert("bubble couldn't be added");
+      }
+    } else if (this.state.type == "phase") {
+      for (var i = 0; i < this.state.totallayer.length; i++) {
+        if (this.state.totallayer[i]._id == this.state.lane_id) {
+          index = i;
+        }
+      }
+
+      let data = {
+        phaseHTML: this.state.text1,
+        gridID: 0,
+        phaseWidth: "",
+        phaseStatus: "Start",
+        phaseCategory: "Customer"
+      };
+      try {
+        const response = await axios.post(
+          `${API_URL}lane/phase/add/${this.state.lane_id}`,
+          data,
+          (axios.defaults.headers.common[
+            "x-access-token"
+          ] = this.state.tokenvalue),
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          console.log("phase added");
+          this.state.totallayer[index].nodes.push(
+            response.data.nodes[response.data.nodes.length - 1]
+          );
+          this.setState({ totallayer: this.state.totallayer });
+        }
+      } catch (err) {
+        console.log(err);
+        alert("phase couldn't be added");
+      }
+    } else if (this.state.type == "text") {
+      for (var i = 0; i < this.state.totallayer.length; i++) {
+        if (this.state.totallayer[i]._id == this.state.lane_id) {
+          index = i
+        }
+      }
+
+      let data = {
+        textHTML: this.state.text1,
+        gridID: 0,
+        textStatus: "Start",
+        textCategory: "Customer"
+      };
+      try {
+        const response = await axios.post(
+          `${API_URL}lane/text/add/${this.state.lane_id}`,
+          data,
+          (axios.defaults.headers.common[
+            "x-access-token"
+          ] = this.state.tokenvalue),
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          console.log("text added");
+          this.state.totallayer[index].nodes.push(
+            response.data.nodes[response.data.nodes.length - 1]
+          );
+          this.setState({ totallayer: this.state.totallayer });
+        }
+      } catch (err) {
+        console.log(err);
+        alert("text couldn't be added");
+      }
+    }
+  }
   onCloseModal2 = () => {
     this.setState({ open2: false });
     this.state.tabs.push(this.state.text2);
@@ -406,34 +646,179 @@ class Board extends Component {
   onAddSubProject = () => {
     this.setState({ open2: false, open4: true, maptype: "Customer" });
   };
-  onCloseModal3 = () => {
-    let id = this.state.id;
+  async onCloseModal3(e) {
+    let layer_index = this.state.layer_index;
+    let node_index = this.state.node_index;
     let type = this.state.type;
-    if (type == "Cardlane") {
-      const newItems = [...this.state.totalcard];
-      newItems[id] = this.state.text1;
-      this.setState({ open3: false, totalcard: newItems });
-      this.addRectangle();
-    } else if (type == "Bubblelane") {
-      const newItems = [...this.state.totalbubble];
-      newItems[id] = this.state.text1;
-      this.setState({ open3: false, totalbubble: newItems });
-      this.addBubble();
-    } else if (type == "Phaselane") {
-      const newItems = [...this.state.totalphase];
-      newItems[id] = this.state.text1;
-      this.setState({ open3: false, totalphase: newItems });
-      this.addPhase();
-    } else if (type == "Textlane") {
-      const newItems = [...this.state.totaltext];
-      newItems[id] = this.state.text1;
-      this.setState({ open3: false, totaltext: newItems });
-      this.addSquare();
+    if (type == "card") {
+      const newItems = [...this.state.totallayer];
+      newItems[layer_index].nodes[node_index].cardHTML = this.state.text1;
+      this.setState({ open3: false, totallayer: newItems });
+      let data = {
+        _id: this.state.card_id,
+        cardHTML: this.state.text1,
+        gridID: 0,
+        cardStatus: "Start",
+        cardCategory: "Customer"
+      };
+      try {
+        const response = await axios.put(
+          `${API_URL}lane/card/edit/${this.state.lane_id}`,
+          data,
+          (axios.defaults.headers.common[
+            "x-access-token"
+          ] = this.state.tokenvalue),
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          console.log("card edited");
+        }
+      } catch (err) {
+        console.log(err);
+        alert("card couldn't be edited");
+      }
+    } else if (type == "bubble") {
+      const newItems = [...this.state.totallayer];
+      newItems[layer_index].nodes[node_index].bubbleHTML = this.state.text1;
+      this.setState({ open3: false, totallayer: newItems });
+      let data = {
+        _id: this.state.card_id,
+        bubbleHTML: this.state.text1,
+        gridID: 0,
+        bubbleStatus: "Start",
+        bubbleCategory: "Customer"
+      };
+      console.log("edited_data", data);
+      try {
+        const response = await axios.put(
+          `${API_URL}lane/bubble/edit/${this.state.lane_id}`,
+          data,
+          (axios.defaults.headers.common[
+            "x-access-token"
+          ] = this.state.tokenvalue),
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          console.log("bubble edited");
+        }
+      } catch (err) {
+        console.log(err);
+        alert("bubble couldn't be edited");
+      }
+    } else if (type == "phase") {
+      const newItems = [...this.state.totallayer];
+      newItems[layer_index].nodes[node_index].phaseHTML = this.state.text1;
+      this.setState({ open3: false, totallayer: newItems });
+      let data = {
+        _id: this.state.card_id,
+        phaseHTML: this.state.text1,
+        gridID: 0,
+        phaseStatus: "Start",
+        phaseCategory: "Customer"
+      };
+      console.log("edited_data", data);
+      try {
+        const response = await axios.put(
+          `${API_URL}lane/phase/edit/${this.state.lane_id}`,
+          data,
+          (axios.defaults.headers.common[
+            "x-access-token"
+          ] = this.state.tokenvalue),
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          console.log("phase edited");
+        }
+      } catch (err) {
+        console.log(err);
+        alert("phase couldn't be edited");
+      }
+    } else if (type == "text") {
+      const newItems = [...this.state.totallayer];
+      newItems[layer_index].nodes[node_index].textHTML = this.state.text1;
+      this.setState({ open3: false, totallayer: newItems });
+      let data = {
+        _id: this.state.card_id,
+        textHTML: this.state.text1,
+        gridID: 0,
+        textStatus: "Start",
+        textCategory: "Customer"
+      };
+      try {
+        const response = await axios.put(
+          `${API_URL}lane/text/edit/${this.state.lane_id}`,
+          data,
+          (axios.defaults.headers.common[
+            "x-access-token"
+          ] = this.state.tokenvalue),
+          {
+            headers: {
+              "content-type": "application/x-www-form-urlencoded"
+            }
+          }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          console.log("text edited");
+        }
+      } catch (err) {
+        console.log(err);
+        alert("text couldn't be edited");
+      }
     }
-  };
+  }
   onCloseModal4 = () => {
     this.setState({ open4: false });
   };
+  async onCloseModal5(e) {
+    let layer_index = this.state.layer_index;
+    const newItems = [...this.state.totallayer];
+    newItems[layer_index].laneName = this.state.text;
+    this.setState({ open5: false, totallayer: newItems });
+    let data = {
+      _id: this.state.lane_id,
+      laneName: this.state.text,
+      laneGridNo: this.state.lanegrid_no,
+      laneType: this.state.type
+    };
+    console.log("edited data", data);
+    try {
+      const response = await axios.put(
+        `${API_URL}lane/edit`,
+        data,
+        (axios.defaults.headers.common[
+          "x-access-token"
+        ] = this.state.tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      console.log(response);
+      if (response.status === 200) {
+        console.log("lane edited");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("lane name couldn't be edited");
+    }
+  }
   async onSubprojectsubmit(e) {
     this.state.sub_project_data.push({
       projectid: this.state.Project_id,
@@ -461,8 +846,9 @@ class Board extends Component {
       );
       console.log(response);
       if (response.status === 200) {
-        alert(response.data.msg);
+        //alert(response.data.msg);
         console.log("data", data);
+        this.onRoutechange(response.data._id, e);
       }
     } catch (err) {
       console.error(err.response.data.msg);
@@ -543,7 +929,7 @@ class Board extends Component {
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value }, () => {
-      console.log(this.state.ProjectName);
+      console.log(this.state.project_name);
     });
   };
   change = e => {
@@ -587,9 +973,11 @@ class Board extends Component {
                 whiteSpace: "normal",
                 wordBreak: "break-word"
               }}
-              
             >
-              <div onClick={() => this.onOpenModal3("Cardlane", id)}> {parse(item)}</div>
+              <div onClick={() => this.onOpenModal3("Cardlane", id)}>
+                {" "}
+                {parse(item.cardHTML)}
+              </div>
             </div>
           </ReactDraggable>
         );
@@ -613,7 +1001,7 @@ class Board extends Component {
               }}
               onClick={() => this.onOpenModal3("Bubblelane", id)}
             >
-               {parse(item)}
+              {parse(item)}
             </div>
           </ReactDraggable>
         );
@@ -625,15 +1013,10 @@ class Board extends Component {
   };
   addPhase = () => {
     const Phaselane = () => {
-      var layout = [
- 
-        {i: 'b', x: 1, y: 0, w: 3, h: 2},
-        
-      ];
-  
+      var layout = [{ i: "b", x: 1, y: 0, w: 3, h: 2 }];
+
       return this.state.totalphase.map((item, id) => {
         return (
-          
           <div
             className="phase"
             style={{
@@ -641,13 +1024,13 @@ class Board extends Component {
               whiteSpace: "normal",
               wordBreak: "break-word"
             }}
-           
-             draggable="false"
+            draggable="false"
           >
-           <span  onClick={() => this.onOpenModal3("Phaselane", id)}> {parse(item)}</span> 
+            <span onClick={() => this.onOpenModal3("Phaselane", id)}>
+              {" "}
+              {parse(item)}
+            </span>
           </div>
-         
-          
         );
       });
     };
@@ -668,7 +1051,7 @@ class Board extends Component {
             }}
             onClick={() => this.onOpenModal3("Textlane", id)}
           >
-             {parse(item)}
+            {parse(item)}
           </div>
         );
       });
@@ -713,12 +1096,21 @@ class Board extends Component {
   // function() {
   //   dragula([].slice.apply(document.querySelectorAll('.maindiv')));
   // };
-  dragulaDecorator = (componentBackingInstance) => {
+  dragulaDecorator = componentBackingInstance => {
     if (componentBackingInstance) {
-      let options = { };
+      let options = {};
       Dragula([componentBackingInstance], options);
     }
   };
+  logout() {
+    // Send a logout request to the API
+    console.log("Sending a logout request to the API...");
+
+    localStorage.removeItem("token");
+    this.props.history.push("/sign-in");
+    window.location.reload();
+    // this.destroy(); // Cleanup
+  }
 
   render() {
     const { open } = this.state;
@@ -726,11 +1118,12 @@ class Board extends Component {
     const { open2 } = this.state;
     const { open3 } = this.state;
     const { open4 } = this.state;
+    const { open5 } = this.state;
     // const { data } = this.props.location;
     const { editorState } = this.state;
     const { editorState1 } = this.state;
     // const { data1 } = this.props.location;
-    function handleSelection(value, event) {}
+
     // function() {
     //   dragula([].slice.apply(document.querySelectorAll('.container2')));
     // })();
@@ -849,268 +1242,473 @@ class Board extends Component {
           </a>
         </div> */}
         <nav class="navbar">
-        <div class="brand-title"><Link to="/Home" style={{color:"white",textDecoration:"none",}}> ETU LOGO</Link></div>
-        
-        <div class="navbar-links">
-          <ul>
-            <li> <Link to="/Help" style={{color:"white",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link></li>
-           
-           <a class="submenu" style={{ marginLeft: "2%", marginTop: "0.55%" }}>
-            <a
-              class="dropbtn"
-              style={{
-                color: "white",
-                fontSize:"1.25em",
-                textDecoration: "none"
-              }}
+          <div class="brand-title">
+            <Link
+              to="/UserMap"
+              style={{ color: "white", textDecoration: "none" }}
             >
-            &#9776;Menu
-            </a>
-            <div class="dropdown-content1">
+              {" "}
+              ETU LOGO
+            </Link>
+          </div>
 
-              <a style={{ color: "black", textDecoration: "none" }}>
-              &#x2630; Map Items
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-              <ArchiveIcon/>  Archive Lanes and Cards
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-              <FileCopyOutlinedIcon/>  Make a Copy
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-            <SystemUpdateAltIcon/>  Export Map
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-               < UnarchiveIcon/>  Unarchive Map
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-              <DeleteIcon/>  Delete Map
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-              <MailOutlineIcon/>  Contact us
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-                <InsertDriveFileOutlinedIcon/>Terms & Condition
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-              <ArchiveIcon/>  Archived Map
-              </a>
-              <Link
-                to="/Profile"
-                style={{ color: "black", textDecoration: "none" }}
+          <div class="navbar-links">
+            <ul>
+              <li>
+                {" "}
+                <Link
+                  to="/Help"
+                  style={{ color: "white", textDecoration: "none" }}
+                >
+                  <Tooltip title={<span>Help</span>}>
+                    <HelpIcon />
+                  </Tooltip>
+                </Link>
+              </li>
+
+              <a
+                class="submenu"
+                style={{ marginLeft: "2%", marginTop: "0.55%" }}
               >
-               <PersonOutlineOutlinedIcon/>  My Profile
-              </Link>
-              <a style={{ color: "black", textDecoration: "none" }}>
-                <CreditCardIcon/>Billing
+                <a
+                  class="dropbtn"
+                  style={{
+                    color: "white",
+                    fontSize: "1.25em",
+                    textDecoration: "none"
+                  }}
+                >
+                  &#9776;Menu
+                </a>
+                <div class="dropdown-content1">
+                  <a style={{ color: "black", textDecoration: "none" }}>
+                    &#x2630; Map Items
+                  </a>
+                  <a style={{ color: "black", textDecoration: "none" }}>
+                    <ArchiveIcon /> Archive Lanes and Cards
+                  </a>
+                  <a style={{ color: "black", textDecoration: "none" }}>
+                    <FileCopyOutlinedIcon /> Make a Copy
+                  </a>
+                  <a style={{ color: "black", textDecoration: "none" }}>
+                    <SystemUpdateAltIcon /> Export Map
+                  </a>
+                  <a style={{ color: "black", textDecoration: "none" }}>
+                    <UnarchiveIcon /> Unarchive Map
+                  </a>
+                  <a style={{ color: "black", textDecoration: "none" }}>
+                    <DeleteIcon /> Delete Map
+                  </a>
+                  <a style={{ color: "black", textDecoration: "none" }}>
+                    <MailOutlineIcon /> Contact us
+                  </a>
+                  <a style={{ color: "black", textDecoration: "none" }}>
+                    <InsertDriveFileOutlinedIcon />
+                    Terms & Condition
+                  </a>
+                  <a style={{ color: "black", textDecoration: "none" }}>
+                    <ArchiveIcon /> Archived Map
+                  </a>
+                  <Link
+                    to="/Profile"
+                    style={{ color: "black", textDecoration: "none" }}
+                  >
+                    <PersonOutlineOutlinedIcon /> My Profile
+                  </Link>
+                  <a style={{ color: "black", textDecoration: "none" }}>
+                    <CreditCardIcon />
+                    Billing
+                  </a>
+                  <Link
+                    onClick={this.logout}
+                    style={{ color: "black", textDecoration: "none" }}
+                  >
+                    <ExitToAppIcon />
+                    Logout
+                  </Link>
+                </div>
               </a>
-              <Link to="/" style={{ color: "black", textDecoration: "none" }}>
-                <ExitToAppIcon/>Logout
-              </Link>
-              
-            </div>
-          </a>
-           
-          </ul>
+            </ul>
+          </div>
+        </nav>
+        <div className="projectnamenavbar">
+          <div>
+            {this.state.Project_data.map(item => {
+              console.log(item._id);
+              console.log(this.state.Project_id);
+              if (item._id === this.state.Project_id) {
+                this.state.project_name = item.name;
+                return <div>{item.name}</div>;
+              }
+            })}
+          </div>
+          <div class="projectnamenavbar-links">
+            <ul>
+              <li onClick={this.zoomin}>
+                <Tooltip title={<span>Zoom In</span>}>
+                  <ZoomInIcon></ZoomInIcon>
+                </Tooltip>
+              </li>
+              <li onClick={this.zoomout} style={{ marginLeft: "2%" }}>
+                <Tooltip title={<span>Zoom Out</span>}>
+                  <ZoomOutIcon></ZoomOutIcon>
+                </Tooltip>
+              </li>
+              <li
+                onClick={() => this.openFullscreen(!this.state.bool)}
+                style={{ marginLeft: "2%" }}
+              >
+                {this.state.bool ? (
+                  <Tooltip title={<span>Exit Full Screen</span>}>
+                    <FullscreenExitIcon></FullscreenExitIcon>
+                  </Tooltip>
+                ) : (
+                  <Tooltip title={<span> Full Screen</span>}>
+                    <FullscreenIcon />
+                  </Tooltip>
+                )}
+              </li>
+            </ul>
+          </div>
         </div>
-      </nav>
-        <div className="projectnamenavbar"  >
-         
-        <div contentEditable="true">{this.state.Project_data.map(item => {
-            console.log(item._id);
-            console.log(this.state.Project_id);
-            if (item._id === this.state.Project_id)
-              return <div>{item.name}</div>;
-          })}</div> 
-        <div class="projectnamenavbar-links">
-        <ul>
-         <li
-            onClick={this.zoomin}
-            
-            
-          >
-            <Tooltip title={<span>Zoom In</span>}>
-   <ZoomInIcon ></ZoomInIcon>
-</Tooltip>
-            
-          </li>
-          <li
-            onClick={this.zoomout}
-            style={{ marginLeft: "2%" }}
-          >
-            <Tooltip title={<span>Zoom Out</span>}>
-            <ZoomOutIcon ></ZoomOutIcon ></Tooltip>
-          </li>
-          <li
-            onClick={() => this.openFullscreen(!this.state.bool)}
-            style={{ marginLeft: "2%" }}
-          >
-            {this.state.bool ? (
-               <Tooltip title={<span>Exit Full Screen</span>}>
-              <FullscreenExitIcon></FullscreenExitIcon></Tooltip>
-            ) : (
-              <Tooltip title={<span> Full Screen</span>}><FullscreenIcon /></Tooltip>
-            )}
-          </li></ul></div>
-        </div>
-        
+
         <div class="maindiv">
-        
-          {/* {this.state.layer1} */}<div className="wholecontainer"  ref={this.dragulaDecorator}>
-          {this.state.totallayer.map(item => {
-            if (item.laneType == "card") {
-              return (
-                
-                <ExpandCollapse previewHeight="50px" expanded="true" >
-                  <Cardlane>
-                   {parse(item.laneName)}
-                    {/* <button
+          {/* {this.state.layer1} */}
+          <div className="wholecontainer">
+            {this.state.totallayer.map((item, id1) => {
+              let lane_id = item._id;
+              if (item.laneType == "card") {
+                return (
+                  <ExpandCollapse previewHeight="50px" expanded="true">
+                    <Cardlane>
+                      <div
+                        onClick={() =>
+                          this.onOpenModal5(
+                            id1,
+                            lane_id,
+                            item.laneType,
+                            item.laneGridNo
+                          )
+                        }
+                      >
+                        {parse(item.laneName)}
+                      </div>
+                      {/* <button
                       className="button1"
                       onClick={() => this.onOpenModal1("Cardlane")}
                     >
                       +
                     </button> */}
 
-                    {this.state.Rectangle} 
-                    <div class="hoverWrapper" style={{position:"absolute",display:"inline-flex"}}>
- <div id="hoverShow1"> <div
-                      
-                      onClick={() => this.onOpenModal1("Cardlane")}
-                      style={{marginLeft:"33%",fontSize:"5em",color:"black",marginTop:"-10%"}}
-                     
-                    >
-                      <p>+</p>
-                    </div></div>
-</div>   
-                    {/* <div className="hovercard" >
+                      {item.nodes.map((item, id) => {
+                        let card_id = item._id;
+                        return (
+                          <ReactDraggable>
+                            <div
+                              className="rectangle"
+                              style={{
+                                overflow: "hidden",
+                                whiteSpace: "normal",
+                                wordBreak: "break-word"
+                              }}
+                            >
+                              <div
+                                onClick={() =>
+                                  this.onOpenModal3(
+                                    "card",
+                                    id1,
+                                    id,
+                                    lane_id,
+                                    card_id
+                                  )
+                                }
+                              >
+                                {" "}
+                                {parse(item.cardHTML)}
+                              </div>
+                            </div>
+                          </ReactDraggable>
+                        );
+                      })}
+                      <div
+                        class="hoverWrapper"
+                        style={{ position: "absolute", display: "inline-flex" }}
+                      >
+                        <div id="hoverShow1">
+                          {" "}
+                          <div
+                            onClick={() => this.onOpenModal1("card", item._id)}
+                            style={{
+                              marginLeft: "33%",
+                              fontSize: "5em",
+                              color: "black",
+                              marginTop: "-10%"
+                            }}
+                          >
+                            <p>+</p>
+                          </div>
+                        </div>
+                      </div>
+                      {/* <div className="hovercard" >
                
                     </div> */}
-                  </Cardlane>
-                </ExpandCollapse>
-              );
-            } else if (item.laneType == "bubble") {
-              return (
-                <ExpandCollapse previewHeight="50px" expanded="true">
-                  <Bubblelane>
-                   {parse(item.laneName)}
-                    <button
-                      className="button1"
-                      onClick={() => this.onOpenModal1("Bubblelane")}
-                    >
-                      +
-                    </button>
-                    {this.state.Bubble}
-                  </Bubblelane>
-                </ExpandCollapse>
-              );
-            } else if (item.laneType == "phase") {
-              return (
-                <ExpandCollapse previewHeight="50px" expanded="true">
-                <Phaselane>
-                 {parse(item.laneName)}
-                  <button
-                    className="button1"
-                    onClick={() => this.onOpenModal1("Phaselane")}
-                  >
-                    +
-                  </button>
-                  {this.state.Phase}
-                </Phaselane>
-                </ExpandCollapse>
-              );
-            } else if (item.laneType == "Textlane") {
-              return (
-                <ExpandCollapse previewHeight="50px" expanded="true">
-                <Textlane>
-                 {parse(item.laneName)}
-                  <button
-                    className="button1"
-                    onClick={() => this.onOpenModal1("Textlane")}
-                  >
-                    +
-                  </button>
-                  {this.state.Square}
-                </Textlane></ExpandCollapse>
-              );
-            } else if (item.laneType == "Imagelane") {
-              return (
-                <ExpandCollapse previewHeight="50px" expanded="true">
-                <Imagelane>
-                 {parse(item.laneName)}
-                  <UploadImages
-                    multiple
-                    onChange={this.onChange}
-                    style={{ height: 100 }}
-                  />
-                </Imagelane></ExpandCollapse>
-              );
-            } else if (item.laneType == "Filelane") {
-              return (
-                <ExpandCollapse previewHeight="50px" expanded="true">
-                <Filelane>
-                 {parse(item.laneName)}
-                  <div className="file">
-                    <FilePond />
-                  </div>
-                </Filelane></ExpandCollapse>
-              );
-            } else if (item.laneType == "Linelane") {
-              return (
-                <ExpandCollapse previewHeight="50px" expanded="true">
-                <Linelane>
-                 {parse(item.laneName)}
-                  <div style={{ marginTop: -150 }}>
-                    <Lines />
-                  </div>
-                </Linelane></ExpandCollapse>
-              );
-            }
-          })}</div>
-<div className="predefinelane" style={{marginTop:"0.5%"}}>
-  
-          <UncontrolledButtonDropdown style={{ marginLeft: 20, marginTop: 30 }}>
-            <DropdownToggle caret>Add New Lane</DropdownToggle>
-            <DropdownMenu >
-              <DropdownItem >
-                <li onClick={() => this.onOpenModal("card")}>
-                  &#9645; Add Card Lane
-                </li>
-              </DropdownItem>
-              <DropdownItem>
-                {" "}
-                <li onClick={() => this.onOpenModal("bubble")}>
-                  &#128172; Add Bubble Lane
-                </li>
-              </DropdownItem>
-              <DropdownItem>
-                <li onClick={() => this.onOpenModal("phase")}>
-                  &#8680; Add Phase Lane
-                </li>
-              </DropdownItem>
-              <DropdownItem>
-                <li onClick={() => this.onOpenModal("Linelane")}>
-                  📈 Add Line Lane
-                </li>
-              </DropdownItem>
-              <DropdownItem>
-                <li onClick={() => this.onOpenModal("Imagelane")}>
-                  &#128190; Add Image Lane
-                </li>
-              </DropdownItem>
-              <DropdownItem>
-                <li onClick={() => this.onOpenModal("Filelane")}>
-                  &#128194; Add File Lane
-                </li>
-              </DropdownItem>
-              <DropdownItem>
-                <li onClick={() => this.onOpenModal("Textlane")}>
-                  &#128221; Add Text Lane
-                </li>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledButtonDropdown></div>
+                    </Cardlane>
+                  </ExpandCollapse>
+                );
+              } else if (item.laneType == "bubble") {
+                return (
+                  <ExpandCollapse previewHeight="50px" expanded="true">
+                    <Bubblelane>
+                      <div
+                        onClick={() =>
+                          this.onOpenModal5(
+                            id1,
+                            lane_id,
+                            "bubble",
+                            item.laneGridNo
+                          )
+                        }
+                      >
+                        {parse(item.laneName)}
+                      </div>
+                      {item.nodes.map((item, id) => {
+                        let card_id = item._id;
+                        return (
+                          <ReactDraggable>
+                            <div
+                              className="bubble"
+                              style={{
+                                overflow: "hidden",
+                                whiteSpace: "normal",
+                                wordBreak: "break-word"
+                              }}
+                              onClick={() =>
+                                this.onOpenModal3(
+                                  "bubble",
+                                  id1,
+                                  id,
+                                  lane_id,
+                                  card_id
+                                )
+                              }
+                            >
+                              {parse(item.bubbleHTML)}
+                            </div>
+                          </ReactDraggable>
+                        );
+                      })}
+                      <button
+                        className="button1"
+                        onClick={() => this.onOpenModal1("bubble", item._id)}
+                      >
+                        +
+                      </button>
+                    </Bubblelane>
+                  </ExpandCollapse>
+                );
+              } else if (item.laneType == "phase") {
+                return (
+                  <ExpandCollapse previewHeight="50px" expanded="true">
+                    <Phaselane>
+                      <div
+                        onClick={() =>
+                          this.onOpenModal5(
+                            id1,
+                            lane_id,
+                            "phase",
+                            item.laneGridNo
+                          )
+                        }
+                      >
+                        {parse(item.laneName)}
+                      </div>
+                      <button
+                        className="button1"
+                        onClick={() => this.onOpenModal1("phase", item._id)}
+                      >
+                        +
+                      </button>
+                      {item.nodes.map((item, id) => {
+                        let card_id = item._id;
+                        return (
+                          <div
+                            className="phase"
+                            style={{
+                              overflow: "hidden",
+                              whiteSpace: "normal",
+                              wordBreak: "break-word"
+                            }}
+                            draggable="false"
+                          >
+                            <span
+                              onClick={() =>
+                                this.onOpenModal3(
+                                  "phase",
+                                  id1,
+                                  id,
+                                  lane_id,
+                                  card_id
+                                )
+                              }
+                            >
+                              {" "}
+                              {parse(item.phaseHTML)}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </Phaselane>
+                  </ExpandCollapse>
+                );
+              } else if (item.laneType == "text") {
+                return (
+                  <ExpandCollapse previewHeight="50px" expanded="true">
+                    <Textlane>
+                      <div
+                        onClick={() =>
+                          this.onOpenModal5(
+                            id1,
+                            lane_id,
+                            "text",
+                            item.laneGridNo
+                          )
+                        }
+                      >
+                        {parse(item.laneName)}
+                      </div>
+                      <button
+                        className="button1"
+                        onClick={() => this.onOpenModal1("text", item._id)}
+                      >
+                        +
+                      </button>
+                      {item.nodes.map((item, id) => {
+                        let card_id = item._id;
+                        return (
+                          <div
+                            className="square"
+                            style={{
+                              overflow: "hidden",
+                              whiteSpace: "normal",
+                              wordBreak: "break-word"
+                            }}
+                            onClick={() =>
+                              this.onOpenModal3(
+                                "text",
+                                id1,
+                                id,
+                                lane_id,
+                                card_id
+                              )
+                            }
+                          >
+                            {parse(item.textHTML)}
+                          </div>
+                        );
+                      })}
+                    </Textlane>
+                  </ExpandCollapse>
+                );
+              } else if (item.laneType == "image") {
+                return (
+                  <ExpandCollapse previewHeight="50px" expanded="true">
+                    <Imagelane>
+                      <div
+                        onClick={() =>
+                          this.onOpenModal5(
+                            id1,
+                            lane_id,
+                            "image",
+                            item.laneGridNo
+                          )
+                        }
+                      >
+                        {parse(item.laneName)}
+                      </div>
+                      <UploadImages
+                        multiple
+                        onChange={this.onChange}
+                        style={{ height: 100 }}
+                      />
+                    </Imagelane>
+                  </ExpandCollapse>
+                );
+              } else if (item.laneType == "file") {
+                return (
+                  <ExpandCollapse previewHeight="50px" expanded="true">
+                    <Filelane>
+                      <div
+                        onClick={() => this.onOpenModal5(id1, lane_id, "file")}
+                      >
+                        {parse(item.laneName)}
+                      </div>
+                      <div className="file">
+                        <FilePond />
+                      </div>
+                    </Filelane>
+                  </ExpandCollapse>
+                );
+              } else if (item.laneType == "line") {
+                return (
+                  <ExpandCollapse previewHeight="50px" expanded="true">
+                    <Linelane>
+                      {parse(item.laneName)}
+                      <div style={{ marginTop: -150 }}>
+                        <Lines />
+                      </div>
+                    </Linelane>
+                  </ExpandCollapse>
+                );
+              }
+            })}
+          </div>
+          <div className="predefinelane" style={{ marginTop: "0.5%" }}>
+            <UncontrolledButtonDropdown
+              style={{ marginLeft: 20, marginTop: 30 }}
+            >
+              <DropdownToggle caret>Add New Lane</DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem>
+                  <li onClick={() => this.onOpenModal("card")}>
+                    &#9645; Add Card Lane
+                  </li>
+                </DropdownItem>
+                <DropdownItem>
+                  {" "}
+                  <li onClick={() => this.onOpenModal("bubble")}>
+                    &#128172; Add Bubble Lane
+                  </li>
+                </DropdownItem>
+                <DropdownItem>
+                  <li onClick={() => this.onOpenModal("phase")}>
+                    &#8680; Add Phase Lane
+                  </li>
+                </DropdownItem>
+                <DropdownItem>
+                  <li onClick={() => this.onOpenModal("line")}>
+                    📈 Add Line Lane
+                  </li>
+                </DropdownItem>
+                <DropdownItem>
+                  <li onClick={() => this.onOpenModal("image")}>
+                    &#128190; Add Image Lane
+                  </li>
+                </DropdownItem>
+                <DropdownItem>
+                  <li onClick={() => this.onOpenModal("file")}>
+                    &#128194; Add File Lane
+                  </li>
+                </DropdownItem>
+                <DropdownItem>
+                  <li onClick={() => this.onOpenModal("text")}>
+                    &#128221; Add Text Lane
+                  </li>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledButtonDropdown>
+          </div>
 
-          <Modal open={open} onClose={e => this.onCloseModal(e)} center  >
+          <Modal open={open} onClose={e => this.onCloseModal(e)} center>
             <div className="textlane">
               <div className="textlanenavbar">
                 <div className="textsize2 " style={{ padding: 10 }}>
@@ -1126,7 +1724,7 @@ class Board extends Component {
                       })
                     }
                   /> */}
-             
+
               <Editor
                 editorState={editorState}
                 wrapperClassName="demo-wrapper"
@@ -1149,39 +1747,63 @@ class Board extends Component {
               </button>
             </div>
           </Modal>
-          <Modal open={open1} onClose={this.onCloseModal1} center>
+          <Modal open={open5} onClose={e => this.onCloseModal5(e)} center>
+            <div className="textlane">
+              <div className="textlanenavbar">
+                <div className="textsize2 " style={{ padding: 10 }}>
+                  Edit Lane
+                </div>
+<div style={{marginLeft:"2%"}}>
+                <Editor
+                  editorState={editorState}
+                  wrapperClassName="demo-wrapper"
+                  editorClassName="demo-editor"
+                  onEditorStateChange={this.onEditorStateChange1}
+                /></div>
+                <br></br>
+                <button
+                  type="button"
+                  style={{ fontSize: 20, marginLeft: 80 }}
+                  onClick={e => this.onCloseModal5(e)}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </Modal>
+          <Modal open={open1} onClose={e => this.onCloseModal1(e)} center>
             <div className="textlane">
               <div className="textlanenavbar">
                 <div className="textsize2 " style={{ padding: 10 }}>
                   Edit Card
                 </div>
               </div>
-             
+
               <Editor
                 editorState={editorState}
                 wrapperClassName="demo-wrapper"
                 editorClassName="demo-editor"
                 onEditorStateChange={this.onEditorStateChange}
               />
-              
+
               <br></br>
               <button
                 type="button"
                 style={{ fontSize: 20, marginLeft: 80 }}
-                onClick={this.onCloseModal1}
+                onClick={e => this.onCloseModal1(e)}
               >
                 Save
               </button>
             </div>
           </Modal>
-          <Modal open={open3} onClose={this.onCloseModal3} center>
+          <Modal open={open3} onClose={e => this.onCloseModal3(e)} center>
             <div className="textlane">
               <div className="textlanenavbar">
                 <div className="textsize2 " style={{ padding: 10 }}>
                   Edit Card
                 </div>
               </div>
-              
+
               <Editor
                 editorState={editorState}
                 wrapperClassName="demo-wrapper"
@@ -1192,7 +1814,7 @@ class Board extends Component {
               <button
                 type="button"
                 style={{ fontSize: 20, marginLeft: 80 }}
-                onClick={this.onCloseModal3}
+                onClick={e => this.onCloseModal3(e)}
               >
                 Save
               </button>
@@ -1201,7 +1823,10 @@ class Board extends Component {
           <Modal open={open2} onClose={this.onCloseModal2} center>
             <div className="namemodal">
               <div className="namemodalnavbar">
-                <div className="textsize2 " style={{ paddingTop: 5,paddingLeft:10 }}>
+                <div
+                  className="textsize2 "
+                  style={{ paddingTop: 5, paddingLeft: 10 }}
+                >
                   Project Name
                 </div>
               </div>
@@ -1215,11 +1840,12 @@ class Board extends Component {
                 />
                 <br></br>
                 <br></br>
-                <button className="buttonlogout"
+                <button
+                  className="buttonlogout"
                   type="button"
                   onClick={this.onAddSubProject}
                   style={{
-                   marginTop:"-15%"
+                    marginTop: "-15%"
                   }}
                 >
                   Submit
@@ -1230,144 +1856,213 @@ class Board extends Component {
           <Modal type="fade" open={open4} onClose={this.onCloseModal4} center>
             <div className="template">
               <div className="templatenavbar">Choose Map Template</div>
-              <div className="templaterow" style={{marginTop:"3.5%",marginLeft:"1.5%"}}>
+              <div
+                className="templaterow"
+                style={{ marginTop: "3.5%", marginLeft: "1.5%" }}
+              >
                 <Link
                   onClick={e => this.onSubprojectsubmit(e)}
-                  style={{textDecoration:"none",color:"black"}}
+                  style={{ textDecoration: "none", color: "black" }}
                 >
                   {" "}
-                  <Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,borderRadius:10}}>
-  <Card.Header style={{margin:10}}>Create a Blank Map</Card.Header>
-  <Card.Body>
-    <Card.Title>Blank Map</Card.Title>
-    <Card.Text>
-     
-    </Card.Text>
-  </Card.Body>
-</Card></Link>
-<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
-  <Card.Header style={{margin:10}}>Create a Tutorial Map</Card.Header>
-  <Card.Body>
-    <Card.Title>Tutorial Map</Card.Title>
-    <Card.Text>
-     
-    </Card.Text>
-  </Card.Body>
-</Card>
-<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
-  <Card.Header style={{margin:10}}>Create a Vacation Travel</Card.Header>
-  <Card.Body>
-    <Card.Title>Vacation Travel</Card.Title>
-    <Card.Text>
-     
-    </Card.Text>
-  </Card.Body>
-</Card>
-<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
-  <Card.Header style={{margin:10}}>Create a Elderly Need for Care</Card.Header>
-  <Card.Body>
-    <Card.Title>Elderly Need for Care</Card.Title>
-    <Card.Text>
-     
-    </Card.Text>
-  </Card.Body>
-</Card></div>
-<div className="templaterow" style={{marginTop:"-5.5%",marginLeft:"1.5%"}}>
-<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,borderRadius:10}}>
-  <Card.Header style={{margin:10}}>Create a Food Ordering and Delivery</Card.Header>
-  <Card.Body>
-    <Card.Title>Food Ordering and Delivery</Card.Title>
-    <Card.Text>
-     
-    </Card.Text>
-  </Card.Body>
-</Card>
-<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
-  <Card.Header style={{margin:10}}>Create a Retail Online/Offline Template</Card.Header>
-  <Card.Body>
-    <Card.Title>Retail Online/Offline</Card.Title>
-    <Card.Text>
-     
-    </Card.Text>
-  </Card.Body>
-</Card>
-<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
-  <Card.Header style={{margin:10}}>Create a  Journey Map for Ideation</Card.Header>
-  <Card.Body>
-    <Card.Title>Customer  Map for Ideation</Card.Title>
-    <Card.Text>
-     
-    </Card.Text>
-  </Card.Body>
-</Card>
-<Card className="text-center" style={{background:' #D3D3D3',width:180,height:200,marginLeft:"1%",borderRadius:10}}>
-  <Card.Header style={{margin:10}}>Create a PSD Blueprint Template</Card.Header>
-  <Card.Body>
-    <Card.Title>PSD Blueprint Template</Card.Title>
-    <Card.Text>
-     
-    </Card.Text>
-  </Card.Body>
-</Card>
+                  <Card
+                    className="text-center"
+                    style={{
+                      background: " #D3D3D3",
+                      width: 180,
+                      height: 200,
+                      borderRadius: 10
+                    }}
+                  >
+                    <Card.Header style={{ margin: 10 }}>
+                      Create a Blank Map
+                    </Card.Header>
+                    <Card.Body>
+                      <Card.Title>Blank Map</Card.Title>
+                      <Card.Text></Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Link>
+                <Card
+                  className="text-center"
+                  style={{
+                    background: " #D3D3D3",
+                    width: 180,
+                    height: 200,
+                    marginLeft: "1%",
+                    borderRadius: 10
+                  }}
+                >
+                  <Card.Header style={{ margin: 10 }}>
+                    Create a Tutorial Map
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Title>Tutorial Map</Card.Title>
+                    <Card.Text></Card.Text>
+                  </Card.Body>
+                </Card>
+                <Card
+                  className="text-center"
+                  style={{
+                    background: " #D3D3D3",
+                    width: 180,
+                    height: 200,
+                    marginLeft: "1%",
+                    borderRadius: 10
+                  }}
+                >
+                  <Card.Header style={{ margin: 10 }}>
+                    Create a Vacation Travel
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Title>Vacation Travel</Card.Title>
+                    <Card.Text></Card.Text>
+                  </Card.Body>
+                </Card>
+                <Card
+                  className="text-center"
+                  style={{
+                    background: " #D3D3D3",
+                    width: 180,
+                    height: 200,
+                    marginLeft: "1%",
+                    borderRadius: 10
+                  }}
+                >
+                  <Card.Header style={{ margin: 10 }}>
+                    Create a Elderly Need for Care
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Title>Elderly Need for Care</Card.Title>
+                    <Card.Text></Card.Text>
+                  </Card.Body>
+                </Card>
+              </div>
+              <div
+                className="templaterow"
+                style={{ marginTop: "-5.5%", marginLeft: "1.5%" }}
+              >
+                <Card
+                  className="text-center"
+                  style={{
+                    background: " #D3D3D3",
+                    width: 180,
+                    height: 200,
+                    borderRadius: 10
+                  }}
+                >
+                  <Card.Header style={{ margin: 10 }}>
+                    Create a Food Ordering and Delivery
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Title>Food Ordering and Delivery</Card.Title>
+                    <Card.Text></Card.Text>
+                  </Card.Body>
+                </Card>
+                <Card
+                  className="text-center"
+                  style={{
+                    background: " #D3D3D3",
+                    width: 180,
+                    height: 200,
+                    marginLeft: "1%",
+                    borderRadius: 10
+                  }}
+                >
+                  <Card.Header style={{ margin: 10 }}>
+                    Create a Retail Online/Offline Template
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Title>Retail Online/Offline</Card.Title>
+                    <Card.Text></Card.Text>
+                  </Card.Body>
+                </Card>
+                <Card
+                  className="text-center"
+                  style={{
+                    background: " #D3D3D3",
+                    width: 180,
+                    height: 200,
+                    marginLeft: "1%",
+                    borderRadius: 10
+                  }}
+                >
+                  <Card.Header style={{ margin: 10 }}>
+                    Create a Journey Map for Ideation
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Title>Customer Map for Ideation</Card.Title>
+                    <Card.Text></Card.Text>
+                  </Card.Body>
+                </Card>
+                <Card
+                  className="text-center"
+                  style={{
+                    background: " #D3D3D3",
+                    width: 180,
+                    height: 200,
+                    marginLeft: "1%",
+                    borderRadius: 10
+                  }}
+                >
+                  <Card.Header style={{ margin: 10 }}>
+                    Create a PSD Blueprint Template
+                  </Card.Header>
+                  <Card.Body>
+                    <Card.Title>PSD Blueprint Template</Card.Title>
+                    <Card.Text></Card.Text>
+                  </Card.Body>
+                </Card>
               </div>
             </div>
           </Modal>
         </div>
-       
-
-        
 
         <div className="container"></div>
         <div className="footer">
-            <Tabs
-              selectedIndex={this.state.tabIndex}
-              onSelect={tabIndex => this.setState({ tabIndex })}
-            >
-              {" "}
-              <TabList>
-                {this.state.sub_project_data.map((item, id) => {
-                  console.log("subitem", this.state.Sub_project_id);
-                  if (item._id === this.state.Sub_project_id) {
-                    return (
-                      <Tab
-                        onClick={() => {
-                          this.props.history.push(
-                            `/Board:${this.state.Project_id}/${item._id}`
-                          );
-                        }}
-                        selected="true"
-                      >
-                        {item.subProjectName}
-                      </Tab>
-                    );
-                  } else {
-                    return (
-                      <Tab
-                        onClick={() => {
-                          this.props.history.push(
-                            `/Board:${this.state.Project_id}/${item._id}`
-                          );
-                        }}
-                      >
-                        {item.subProjectName}
-                      </Tab>
-                    );
-                  }
-                })}
-                <Tab onClick={this.onOpenModal2}>
-                  {" "}
-                  <a style={{ fontSize: 20 }}>+</a>
-                </Tab>
-              </TabList>
-              <TabPanel></TabPanel>
-              <TabPanel></TabPanel>
-              <TabPanel></TabPanel>
-            </Tabs>
-          </div>
+          <Tabs
+            selectedIndex={this.state.tabIndex}
+            onSelect={tabIndex => this.setState({ tabIndex })}
+          >
+            {" "}
+            <TabList>
+              {this.state.sub_project_data.map((item, id) => {
+                if (item._id === this.state.Sub_project_id) {
+                  return (
+                    <Tab
+                      onClick={e => {
+                        this.onRoutechange(item._id, e);
+                      }}
+                      selected="true"
+                    >
+                      {item.subProjectName}
+                    </Tab>
+                  );
+                } else {
+                  return (
+                    <Tab
+                      onClick={e => {
+                        this.onRoutechange(item._id, e);
+                      }}
+                    >
+                      {item.subProjectName}
+                    </Tab>
+                  );
+                }
+              })}
+              <Tab onClick={this.onOpenModal2}>
+                {" "}
+                <a style={{ fontSize: 20 }}>+</a>
+              </Tab>
+            </TabList>
+            <TabPanel></TabPanel>
+            <TabPanel></TabPanel>
+            <TabPanel></TabPanel>
+          </Tabs>
+        </div>
       </div>
     );
   }
 }
 
 export default Board;
-

@@ -7,6 +7,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import axios from "axios";
 import { API_URL } from "../services/url";
 
+
 class UserMap extends Component {
   constructor() {
     super();
@@ -22,6 +23,7 @@ class UserMap extends Component {
     };
     this.logout = this.logout.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onRoutechange = this.onRoutechange.bind(this);
   }
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value }, () => {
@@ -50,12 +52,35 @@ class UserMap extends Component {
       console.log(error);
     }
   }
+  async onRoutechange(project_id, e) {
+    e.preventDefault();
+    const tokenvalue = localStorage.getItem("token");
+    try {
+      const response1 = await axios.get(
+        `${API_URL}subproject/${project_id}`,
+        (axios.defaults.headers.common["x-access-token"] = tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      console.log("Sub_project_data", response1);
+      if (response1.status === 200) {
+        let sub_id = response1.data[0]._id;
+        this.props.history.push(`/Board:${project_id}/${sub_id}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   logout() {
     // Send a logout request to the API
     console.log("Sending a logout request to the API...");
     this.setState({ logginStatus: false });
     localStorage.removeItem("token");
     this.props.history.push("/sign-in");
+    window.location.reload();
     // this.destroy(); // Cleanup
   }
 
@@ -96,7 +121,6 @@ class UserMap extends Component {
       }
     } catch (err) {
       console.error(err);
-      
     }
   }
   render() {
@@ -199,6 +223,7 @@ class UserMap extends Component {
                     name="ProjectName"
                     placeholder="Project Name"
                     onChange={e => this.handleChange(e)}
+                    maxlength="30"  size="30"
                   />
                   <br></br>
                   <input
@@ -218,14 +243,15 @@ class UserMap extends Component {
                 </div>
               </div>
             </Modal>
-            {this.state.data.map(item => {
+            
+          </div>
+          {this.state.data.map(item => {
               return (
                 <div
                   className="map"
-                  style={{marginTop:"-5.5%"}}
-                  onClick={() => {
-                    this.props.history.push("/Board/" + item._id);
-                  }}
+                  // style={{marginTop:"-5.5%"}}
+                  onClick={e => this.onRoutechange(item._id, e)}
+                 
                 >
                   <p className="textsize1" align="center">
                     {item.name}
@@ -233,8 +259,8 @@ class UserMap extends Component {
                 </div>
               );
             })}
-          </div></div>
-        </div>
+          </div>
+          </div>
         <div className="projectfooter" style={{ marginBottom: 10 }}>
           <footer>
             Powered By{" "}

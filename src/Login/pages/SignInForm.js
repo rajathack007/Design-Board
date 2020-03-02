@@ -25,9 +25,10 @@ class SignInForm extends Component {
         localStorage.setItem("token", response.data.token);
         console.log("Logged In");
         this.props.history.push("/UserMap");
+        window.location.reload();
       }
     } catch (err) {
-      console.error(err.response.data.msg);
+      console.log(err);
       alert(err.response.data.msg);
     }
   }
@@ -37,19 +38,37 @@ class SignInForm extends Component {
     return (
       <div classname="body">
         <nav class="navbar">
-        <div class="brand-title"><Link to="/Home" style={{color:"white",textDecoration:"none"}}> ETU LOGO</Link></div>
-        
-        <div class="navbar-links">
-          <ul>
-            <li> <Link to="/Home" style={{marginLeft:"2%",fontSize:20,paddingTop:".75%",color:"white",textDecoration:"none"}}>Home</Link></li>
-           
-          </ul>
-        </div>
-      </nav>
-      {/* <div className="loginnavbar"><Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"Black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
+          <div class="brand-title">
+            <Link to="/Home" style={{ color: "white", textDecoration: "none" }}>
+              {" "}
+              ETU LOGO
+            </Link>
+          </div>
+
+          <div class="navbar-links">
+            <ul>
+              <li>
+                {" "}
+                <Link
+                  to="/Home"
+                  style={{
+                    marginLeft: "2%",
+                    fontSize: 20,
+                    paddingTop: ".75%",
+                    color: "white",
+                    textDecoration: "none"
+                  }}
+                >
+                  Home
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        {/* <div className="loginnavbar"><Link to="/Home"style={{textDecoration:"none"}}><p style={{color:"Black",fontSize:"2em",textAlign:"center"}}>ETU LOGO</p></Link>
       <Link to="/Home" style={{marginLeft:"2%",marginTop:"-0.5%",fontSize:"1.5em",paddingTop:".75%",color:"Black",textDecoration:"none"}}>Home</Link>
       </div>  */}
-      <div className="log">
+        <div className="log">
           <h3
             style={{ marginTop: "1%", marginBottom: "8%", marginLeft: "33%" }}
           >

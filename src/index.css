@@ -128,6 +128,7 @@ body {
   margin-top: 10px;
   
   
+  
 }
 .container3 {
   height: 280px;
@@ -288,7 +289,7 @@ padding-left: 1%;
   white-space: normal;
   display: inline-flex;
   padding: 5px;
-  margin-left: 30px;
+  margin-left: 40px;
   margin-top: 7px;
   
 }
@@ -313,8 +314,9 @@ padding-left: 1%;
   padding: 5px;
   
    display: inline-flex; 
-  margin-left: 30px;
+  margin-left: 40px;
   margin-top: 7px;
+  position: relative;
   
 }
 .line{
@@ -332,7 +334,7 @@ padding-left: 1%;
   white-space: normal;
   width: 200px;
   height: 100px;  
-  margin-left: 30px;
+  margin-left: 40px;
   margin-top: 7px;
   display: inline-flex;
   padding: 5px;
@@ -347,7 +349,7 @@ padding-left: 1%;
   white-space: normal;
   width: 200px;
   height: 100px;  
-  margin-left: 30px;
+  margin-left: 40px;
   margin-top: 7px;
   display: inline-flex;
   border-left: 55px;
@@ -358,6 +360,7 @@ padding-left: 1%;
 .textlane{
   height: 300px;
   width: 500px;
+ 
 
 }
 .textlanenavbar{
@@ -366,13 +369,12 @@ padding-left: 1%;
   background: #2F4F4F;
   margin-top: -4%;
   margin-left: -4%;
-  
-  
-  
+ 
 }
 
+
 .sidebar{
-  height: 180px;
+  height: 130px;
   width: 250px;
   background-color: white;
   overflow-wrap: break-word;
@@ -486,7 +488,7 @@ border-left: 10px solid lightskyblue;
    width: 100%;
    height: 100%;
    
-  
+
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;

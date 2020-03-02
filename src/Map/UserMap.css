@@ -14,7 +14,7 @@ body {
 }
 
 .mapcontainer {
-  width: 700px;
+  width: 800px;
   height: 450px;
   
   border-radius: 20px;
@@ -36,6 +36,7 @@ box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
 /* white-space: normal;
 flex-wrap: wrap;
 display: flex; */
+/* overflow: auto; */
 }
 
 .map {
@@ -51,20 +52,17 @@ display: flex; */
 box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
 position: relative;
   
-  display: flex;
+  display: inline-flex;
 
 
 
 }
 .rowcontainermap{
-  
-  overflow: hidden;
-  height: 350px;
-  width: 100%;
-  display: inline-block;
-  flex-wrap: wrap;
-  /* white-space: normal; */
+height:400px;
+width: 800px;
+overflow: auto;
 }
+
 .textsize2 {
   font-size: 1.5em;
   font-family: sans-serif;

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import logo from "./logo.svg";
 // import './index.css'//
 
-import { HashRouter as Router, Route, Link, NavLink } from "react-router-dom";
+import { HashRouter as Router, Route, Link, NavLink,Redirect } from "react-router-dom";
 import SignUpForm from "./Login/pages/SignUpForm";
 import SignInForm from "./Login/pages/SignInForm";
 import SignUp from "./Login/pages/SignUpForm";
@@ -75,7 +75,7 @@ class App extends Component {
                   <Route path={`/Board:id/:subid`} component={Board}></Route>
                 </div>
               ) : route === "signin" ? (
-                <p />
+                <Redirect to="/sign-in"></Redirect>
               ) : (
                 window.location.reload()
               ) // <Signin onRouteChange={this.onRouteChange}/>
