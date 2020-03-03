@@ -78,7 +78,8 @@ import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt";
 import Tooltip from "@material-ui/core/Tooltip";
 //  var dragula = require('react-dragula');
 import Dragula from "react-dragula";
-
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import line from "./Dropdownassets/line.png"
 const zoomArr = [
   "50%",
   "75%",
@@ -90,6 +91,8 @@ const zoomArr = [
   "150%",
   "180%"
 ];
+const MAX_LENGTH = 40;
+const MAX_LENGTH_NOTE = 100;
 
 class Board extends Component {
   constructor(props) {
@@ -160,7 +163,9 @@ class Board extends Component {
       card_id: "",
       editorState: EditorState.createEmpty(),
       projectedit: false,
-      project_name: ""
+      project_name: "",
+      dropcard:false,
+      project_desc: ""
     };
     //close this.state
 
@@ -177,15 +182,8 @@ class Board extends Component {
     this.addUnderline = this.addUnderline.bind(this);
     this.addBold = this.addBold.bind(this);
     this.onCloseModal = this.onCloseModal.bind(this);
-    this.onEditProjectName = this.onEditProjectName.bind(this);
+   
   } //close constructor()
-
-  onEditProjectName = name => {
-    this.setState({
-      projectedit: true,
-      project_name: name
-    });
-  };
 
   onEditorStateChange = editorState => {
     this.setState(
@@ -225,6 +223,14 @@ class Board extends Component {
       console.log("url", this.props.match);
       const Project_id = this.props.match.params.id.split(":")[1];
       const Sub_project_id = this.props.match.params.subid;
+      let project_name = "";
+      let project_desc = "";
+      for (var i = 0; i < response.data.length; i++) {
+        if (response.data[i]._id === Project_id) {
+          project_name = response.data[i].name;
+          project_desc = response.data[i].desc;
+        }
+      }
 
       const response1 = await axios.get(
         `${API_URL}subproject/${Project_id}`,
@@ -255,6 +261,8 @@ class Board extends Component {
           Project_id,
           Sub_project_id,
           Project_data: response.data,
+          project_name,
+          project_desc,
           sub_project_data: response1.data,
           totallayer: response2.data,
           lanegrid_no: response2.data.length
@@ -265,6 +273,100 @@ class Board extends Component {
       );
     } catch (error) {
       console.log(error);
+    }
+  }
+  async handleClick(id) {
+    var editable = document.querySelectorAll("div[contentEditable]");
+    const tokenvalue = this.state.tokenvalue;
+
+    for (var i = 0, len = editable.length; i < len; i++) {
+      editable[i].setAttribute("data-orig", editable[i].innerHTML);
+
+      editable[i].onblur = async function() {
+        if (this.innerHTML == this.getAttribute("data-orig")) {
+          // no change
+        } else {
+          // change has happened, store new value
+          this.setAttribute("data-orig", this.innerHTML);
+          console.log(this.innerText);
+          console.log(id);
+          const data = {
+            subProjectId: id,
+            subProjectName: this.innerText,
+
+            mapType: "Customer"
+          };
+          console.log(data);
+          try {
+            const response = await axios.put(
+              `${API_URL}subproject/edit`,
+              data,
+              (axios.defaults.headers.common["x-access-token"] = tokenvalue),
+              {
+                headers: {
+                  "content-type": "application/x-www-form-urlencoded"
+                }
+              }
+            );
+            console.log(response);
+            if (response.status === 200) {
+              //alert(response.data.msg);
+              console.log("data", data);
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      };
+    }
+  }
+  async handleClick1(e) {
+    const projectid = this.state.Project_id;
+    const project_desc = this.state.project_desc;
+
+    // const { data1 } = this.props.location;
+    var editable = document.querySelectorAll("div[contentEditable]");
+    const tokenvalue = this.state.tokenvalue;
+
+    for (var i = 0, len = editable.length; i < len; i++) {
+      editable[i].setAttribute("data-orig", editable[i].innerHTML);
+
+      editable[i].onblur = async function() {
+        if (this.innerHTML == this.getAttribute("data-orig")) {
+          // no change
+        } else {
+          // change has happened, store new value
+          this.setAttribute("data-orig", this.innerHTML);
+          console.log(this.innerText);
+          console.log(projectid);
+          const data = {
+            projectid: projectid,
+            name: this.innerText,
+
+            desc: project_desc
+          };
+          console.log(data);
+          try {
+            const response = axios.put(
+              `${API_URL}project/edit`,
+              data,
+              (axios.defaults.headers.common["x-access-token"] = tokenvalue),
+              {
+                headers: {
+                  "content-type": "application/x-www-form-urlencoded"
+                }
+              }
+            );
+            console.log(response);
+            if (response.status === 200) {
+              //alert(response.data.msg);
+              console.log("data", data);
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      };
     }
   }
   onOpenModal = type => {
@@ -602,7 +704,7 @@ class Board extends Component {
     } else if (this.state.type == "text") {
       for (var i = 0; i < this.state.totallayer.length; i++) {
         if (this.state.totallayer[i]._id == this.state.lane_id) {
-          index = i
+          index = i;
         }
       }
 
@@ -1119,10 +1221,55 @@ class Board extends Component {
     const { open3 } = this.state;
     const { open4 } = this.state;
     const { open5 } = this.state;
+    const projectid = this.state.Project_id;
+    const project_desc = this.state.project_desc;
     // const { data } = this.props.location;
     const { editorState } = this.state;
     const { editorState1 } = this.state;
     // const { data1 } = this.props.location;
+    // var editable = document.querySelectorAll("div[contentEditable]");
+    // const tokenvalue = this.state.tokenvalue;
+
+    // for (var i = 0, len = editable.length; i < len; i++) {
+    //   editable[i].setAttribute("data-orig", editable[i].innerHTML);
+
+    //   editable[i].onblur = function() {
+    //     if (this.innerHTML == this.getAttribute("data-orig")) {
+    //       // no change
+    //     } else {
+    //       // change has happened, store new value
+    //       this.setAttribute("data-orig", this.innerHTML);
+    //       console.log(this.innerText);
+    //       console.log(projectid);
+    //       const data = {
+    //         projectid: projectid,
+    //         name: this.innerText,
+
+    //         desc: project_desc
+    //       };
+    //       console.log(data);
+    //       try {
+    //         const response = axios.put(
+    //           `${API_URL}project/edit`,
+    //           data,
+    //           (axios.defaults.headers.common["x-access-token"] = tokenvalue),
+    //           {
+    //             headers: {
+    //               "content-type": "application/x-www-form-urlencoded"
+    //             }
+    //           }
+    //         );
+    //         console.log(response);
+    //         if (response.status === 200) {
+    //           //alert(response.data.msg);
+    //           console.log("data", data);
+    //         }
+    //       } catch (err) {
+    //         console.log(err);
+    //       }
+    //     }
+    //   };
+    // }
 
     // function() {
     //   dragula([].slice.apply(document.querySelectorAll('.container2')));
@@ -1140,107 +1287,7 @@ class Board extends Component {
     }
     return (
       <div className="board">
-        {/* <div className="containernavbar1">
-          <Link to="/Home" style={{ textDecoration: "none" }}>
-            <p style={{ color: "black", fontSize: "2em", textAlign: "center" }}>
-              ETU LOGO
-            </p>
-          </Link>
-          <a
-            onClick={this.zoomin}
-            style={{ paddingLeft: "70%",fontSize: "1.5em", marginTop: "0.55%" }}
-          >
-            <Tooltip title={<span>Zoom In</span>}>
-   <ZoomInIcon ></ZoomInIcon>
-</Tooltip>
-            
-          </a>
-          <a
-            onClick={this.zoomout}
-            style={{ marginLeft: "2%",fontSize: "1.5em", marginTop: "0.55%" }}
-          >
-            <Tooltip title={<span>Zoom Out</span>}>
-            <ZoomOutIcon ></ZoomOutIcon ></Tooltip>
-          </a>
-          <a
-            onClick={() => this.openFullscreen(!this.state.bool)}
-            style={{ marginLeft: "2%",fontSize: "1.5em", marginTop: "0.55%" }}
-          >
-            {this.state.bool ? (
-               <Tooltip title={<span>Exit Full Screen</span>}>
-              <FullscreenExitIcon></FullscreenExitIcon></Tooltip>
-            ) : (
-              <Tooltip title={<span> Full Screen</span>}><FullscreenIcon /></Tooltip>
-            )}
-          </a>
-          <Link
-            to="/Help"
-            style={{
-              marginLeft: "2%",
-              fontSize: "1.5em",
-              marginTop: "0.55%",
-              color: "black",
-              textDecoration: "none"
-            }}
-          >
-            <Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip>
-          </Link>
-          <a class="submenu" style={{ marginLeft: "2%", marginTop: "0.55%" }}>
-            <a
-              class="dropbtn"
-              style={{
-                color: "black",
-                fontSize: "1.5em",
-                textDecoration: "none"
-              }}
-            >
-            &#9776;
-            </a>
-            <div class="dropdown-content1">
-
-              <a style={{ color: "black", textDecoration: "none" }}>
-              &#x2630; Map Items
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-              <ArchiveIcon/>  Archive Lanes and Cards
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-              <FileCopyOutlinedIcon/>  Make a Copy
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-            <SystemUpdateAltIcon/>  Export Map
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-               < UnarchiveIcon/>  Unarchive Map
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-              <DeleteIcon/>  Delete Map
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-              <MailOutlineIcon/>  Contact us
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-                <InsertDriveFileOutlinedIcon/>Terms & Condition
-              </a>
-              <a style={{ color: "black", textDecoration: "none" }}>
-              <ArchiveIcon/>  Archived Map
-              </a>
-              <Link
-                to="/Profile"
-                style={{ color: "black", textDecoration: "none" }}
-              >
-               <PersonOutlineOutlinedIcon/>  My Profile
-              </Link>
-              <a style={{ color: "black", textDecoration: "none" }}>
-                <CreditCardIcon/>Billing
-              </a>
-              <Link to="/" style={{ color: "black", textDecoration: "none" }}>
-                <ExitToAppIcon/>Logout
-              </Link>
-              
-            </div>
-          </a>
-        </div> */}
+       
         <nav class="navbar">
           <div class="brand-title">
             <Link
@@ -1332,15 +1379,18 @@ class Board extends Component {
           </div>
         </nav>
         <div className="projectnamenavbar">
-          <div>
-            {this.state.Project_data.map(item => {
+        <div contentEditable>
+            {/*this.state.Project_data.map(item => {
               console.log(item._id);
               console.log(this.state.Project_id);
               if (item._id === this.state.Project_id) {
                 this.state.project_name = item.name;
                 return <div>{item.name}</div>;
               }
-            })}
+            })*/}
+            <div onClick={e => this.handleClick1(e)}>
+              {this.state.project_name}
+            </div>
           </div>
           <div class="projectnamenavbar-links">
             <ul>
@@ -1662,9 +1712,12 @@ class Board extends Component {
               }
             })}
           </div>
-          <div className="predefinelane" style={{ marginTop: "0.5%" }}>
-            <UncontrolledButtonDropdown
-              style={{ marginLeft: 20, marginTop: 30 }}
+          <div className="predefinelane" style={{ marginTop: "0.5%",display:"flex" }}>
+            <AddCircleIcon style={{fontSize:"3em",marginLeft:30,color:"white"}} onClick={()=>this.setState({dropcard:!this.state.dropcard})}></AddCircleIcon>
+            <p style={{fontSize:"1.5em",marginTop:7,marginLeft:5}}>Add New Lane</p>
+            
+            {/* <UncontrolledButtonDropdown
+              style={{ marginLeft: 20, marginTop: 6 }}
             >
               <DropdownToggle caret>Add New Lane</DropdownToggle>
               <DropdownMenu>
@@ -1705,7 +1758,7 @@ class Board extends Component {
                   </li>
                 </DropdownItem>
               </DropdownMenu>
-            </UncontrolledButtonDropdown>
+            </UncontrolledButtonDropdown> */}
           </div>
 
           <Modal open={open} onClose={e => this.onCloseModal(e)} center>
@@ -1724,27 +1777,31 @@ class Board extends Component {
                       })
                     }
                   /> */}
-
+  <div style={{display:"flex"}}>
+  <div className="textlaneeditortools">
               <Editor
                 editorState={editorState}
                 wrapperClassName="demo-wrapper"
                 editorClassName="demo-editor"
+                handleBeforeInput={this._handleBeforeInput}
+                handlePastedText={this._handlePastedText}
                 onEditorStateChange={this.onEditorStateChange1}
-              />
+              /></div>
               {/* <textarea
                 className="apply-font Italic"
                 style={{ width: 500, height: 150, marginTop: 10 }}
                 name="text"
                 onChange={e => this.change(e)}
               ></textarea> */}
-              <br></br>
-              <button
+              <div className="textlanebutton" >
+              <button className="savebuttontext"
                 type="button"
-                style={{ fontSize: 20, marginLeft: 80 }}
+                style={{ fontSize: 20, marginLeft: 10,marginTop:200}}
                 onClick={e => this.onCloseModal(e)}
               >
                 Save
-              </button>
+              </button></div>
+              </div>
             </div>
           </Modal>
           <Modal open={open5} onClose={e => this.onCloseModal5(e)} center>
@@ -1752,23 +1809,27 @@ class Board extends Component {
               <div className="textlanenavbar">
                 <div className="textsize2 " style={{ padding: 10 }}>
                   Edit Lane
+                </div></div>
+                <div style={{display:"flex"}}>
+                
+                 <div className="textlaneeditortools"> <Editor
+                    editorState={editorState}
+                    wrapperClassName="demo-wrapper"
+                    editorClassName="demo-editor"
+                    handleBeforeInput={this._handleBeforeInput}
+                    handlePastedText={this._handlePastedText}
+                    onEditorStateChange={this.onEditorStateChange1}
+                  />
                 </div>
-<div style={{marginLeft:"2%"}}>
-                <Editor
-                  editorState={editorState}
-                  wrapperClassName="demo-wrapper"
-                  editorClassName="demo-editor"
-                  onEditorStateChange={this.onEditorStateChange1}
-                /></div>
-                <br></br>
-                <button
+                <div className="textlanebutton" >
+                <button className="savebuttontext"
                   type="button"
-                  style={{ fontSize: 20, marginLeft: 80 }}
+                  style={{ fontSize: 20, marginLeft: 10,marginTop:200}}
                   onClick={e => this.onCloseModal5(e)}
                 >
                   Save
-                </button>
-              </div>
+                </button></div></div>
+              
             </div>
           </Modal>
           <Modal open={open1} onClose={e => this.onCloseModal1(e)} center>
@@ -1778,23 +1839,26 @@ class Board extends Component {
                   Edit Card
                 </div>
               </div>
-
+              <div style={{display:"flex"}}>
+  <div className="textlaneeditortools">
               <Editor
                 editorState={editorState}
                 wrapperClassName="demo-wrapper"
                 editorClassName="demo-editor"
+                handleBeforeInput={this._handleBeforeInput1}
+                handlePastedText={this._handlePastedText1}
                 onEditorStateChange={this.onEditorStateChange}
               />
-
-              <br></br>
+</div>
+<div className="textlanebutton" >
               <button
-                type="button"
-                style={{ fontSize: 20, marginLeft: 80 }}
+                type="button" className="savebuttontext"
+                style={{ fontSize: 20, marginLeft: 10,marginTop:200}}
                 onClick={e => this.onCloseModal1(e)}
               >
                 Save
-              </button>
-            </div>
+              </button></div>
+            </div></div>
           </Modal>
           <Modal open={open3} onClose={e => this.onCloseModal3(e)} center>
             <div className="textlane">
@@ -1803,22 +1867,25 @@ class Board extends Component {
                   Edit Card
                 </div>
               </div>
-
+              <div style={{display:"flex"}}>
+  <div className="textlaneeditortools">
               <Editor
                 editorState={editorState}
                 wrapperClassName="demo-wrapper"
                 editorClassName="demo-editor"
+                handleBeforeInput={this._handleBeforeInput1}
+                handlePastedText={this._handlePastedText1}
                 onEditorStateChange={this.onEditorStateChange}
-              />
-              <br></br>
-              <button
+              /></div>
+              <div className="textlanebutton" >
+              <button  className="savebuttontext"
                 type="button"
-                style={{ fontSize: 20, marginLeft: 80 }}
+                style={{ fontSize: 20, marginLeft: 10,marginTop:200}}
                 onClick={e => this.onCloseModal3(e)}
               >
                 Save
               </button>
-            </div>
+            </div></div></div>
           </Modal>
           <Modal open={open2} onClose={this.onCloseModal2} center>
             <div className="namemodal">
@@ -2017,7 +2084,32 @@ class Board extends Component {
             </div>
           </Modal>
         </div>
-
+      {this.state.dropcard ?
+(<div className="lanetypebox">
+<div className="lanetypeboxnavbar" >Select Lane</div>
+<div style={{display:"flex"}}>
+  <div className="lanecolumncontainer">
+    <div className="lanetypecard" onClick={() => this.onOpenModal("card")}></div>
+   <p style={{marginLeft:20}}>Card Lane</p>
+   {/* <img src="./Dropdownassets/line-lane.png"/> */}
+   <line/>
+   <p style={{marginLeft:20}}>Line Lane</p>
+  </div>
+  <div className="lanecolumncontainer">
+  <div className="lanetypebubble"  onClick={() => this.onOpenModal("bubble")}></div>
+   <p style={{marginLeft:20}}>Bubble Lane</p>
+  </div>
+  <div className="lanecolumncontainer">
+  <div className="lanetypephase" onClick={() => this.onOpenModal("phase")}></div>
+  <p style={{marginLeft:20}}>Phase Lane</p> 
+  </div>
+  <div className="lanecolumncontainer">
+  <div className="lanetypetext" onClick={() => this.onOpenModal("text")}></div>
+  <p style={{marginLeft:20}}>Text Lane</p> 
+  </div>
+ 
+</div>
+</div>):""}
         <div className="container"></div>
         <div className="footer">
           <Tabs
@@ -2035,7 +2127,12 @@ class Board extends Component {
                       }}
                       selected="true"
                     >
-                      {item.subProjectName}
+                      <div
+                        contentEditable
+                        onClick={() => this.handleClick(item._id)}
+                      >
+                        {item.subProjectName}
+                      </div>
                     </Tab>
                   );
                 } else {
@@ -2045,7 +2142,7 @@ class Board extends Component {
                         this.onRoutechange(item._id, e);
                       }}
                     >
-                      {item.subProjectName}
+                      <div contentEditable>{item.subProjectName}</div>
                     </Tab>
                   );
                 }
@@ -2063,6 +2160,99 @@ class Board extends Component {
       </div>
     );
   }
+  _getLengthOfSelectedText = () => {
+    const currentSelection = this.state.editorState.getSelection();
+    const isCollapsed = currentSelection.isCollapsed();
+
+    let length = 0;
+
+    if (!isCollapsed) {
+      const currentContent = this.state.editorState.getCurrentContent();
+      const startKey = currentSelection.getStartKey();
+      const endKey = currentSelection.getEndKey();
+      const startBlock = currentContent.getBlockForKey(startKey);
+      const isStartAndEndBlockAreTheSame = startKey === endKey;
+      const startBlockTextLength = startBlock.getLength();
+      const startSelectedTextLength =
+        startBlockTextLength - currentSelection.getStartOffset();
+      const endSelectedTextLength = currentSelection.getEndOffset();
+      const keyAfterEnd = currentContent.getKeyAfter(endKey);
+      console.log(currentSelection);
+      if (isStartAndEndBlockAreTheSame) {
+        length +=
+          currentSelection.getEndOffset() - currentSelection.getStartOffset();
+      } else {
+        let currentKey = startKey;
+
+        while (currentKey && currentKey !== keyAfterEnd) {
+          if (currentKey === startKey) {
+            length += startSelectedTextLength + 1;
+          } else if (currentKey === endKey) {
+            length += endSelectedTextLength;
+          } else {
+            length += currentContent.getBlockForKey(currentKey).getLength() + 1;
+          }
+
+          currentKey = currentContent.getKeyAfter(currentKey);
+        }
+      }
+    }
+
+    return length;
+  };
+
+  _handleBeforeInput = () => {
+    const currentContent = this.state.editorState.getCurrentContent();
+    const currentContentLength = currentContent.getPlainText("").length;
+    const selectedTextLength = this._getLengthOfSelectedText();
+
+    if (currentContentLength - selectedTextLength > MAX_LENGTH - 1) {
+      console.log("you can type max 40 characters");
+
+      return "handled";
+    }
+  };
+
+  _handlePastedText = pastedText => {
+    const currentContent = this.state.editorState.getCurrentContent();
+    const currentContentLength = currentContent.getPlainText("").length;
+    const selectedTextLength = this._getLengthOfSelectedText();
+
+    if (
+      currentContentLength + pastedText.length - selectedTextLength >
+      MAX_LENGTH
+    ) {
+      console.log("you can type max 40 characters");
+
+      return "handled";
+    }
+  };
+  _handleBeforeInput1 = () => {
+    const currentContent = this.state.editorState.getCurrentContent();
+    const currentContentLength = currentContent.getPlainText("").length;
+    const selectedTextLength = this._getLengthOfSelectedText();
+
+    if (currentContentLength - selectedTextLength > MAX_LENGTH_NOTE - 1) {
+      console.log("you can type max 100 characters");
+
+      return "handled";
+    }
+  };
+
+  _handlePastedText1 = pastedText => {
+    const currentContent = this.state.editorState.getCurrentContent();
+    const currentContentLength = currentContent.getPlainText("").length;
+    const selectedTextLength = this._getLengthOfSelectedText();
+
+    if (
+      currentContentLength + pastedText.length - selectedTextLength >
+      MAX_LENGTH_NOTE
+    ) {
+      console.log("you can type max 100 characters");
+
+      return "handled";
+    }
+  };
 }
 
 export default Board;
