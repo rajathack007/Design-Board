@@ -275,7 +275,7 @@ padding-left: 1%;
 }
 .square{
   height: 100px;
-  width: 150px;
+  width: 200px;
 outline:2px solid lightseagreen;
   overflow: hidden;
   white-space: normal;
@@ -350,8 +350,10 @@ outline:2px solid lightseagreen;
 }
 
 .textlane{
-  height: 300px;
-  width: 500px;
+  height: 400px;
+  width: 520px;
+  
+  
  
 
 }
@@ -367,6 +369,8 @@ outline:2px solid lightseagreen;
   height: 250px;
   width:400px ;
   overflow: hidden;
+
+  
 }
 .textlanebutton{
   height: 250px;
@@ -388,6 +392,18 @@ outline:2px solid lightseagreen;
   font-size: 1em;
 
  
+}
+.horizontallinetext{
+  height: 3px;
+  width: 400px;
+  background-color: #DCDCDC;
+  margin-top: 4px;
+}
+.historylogcontainer{
+  height: 90px;
+  width: 400px;
+  overflow: auto;
+  
 }
 
 .sidebar{
@@ -643,7 +659,7 @@ box-shadow: 10px 10px 18px -1px rgba(0,0,0,0.27);
   height: 70px;
   
   margin: 10px;
-  outline: 2px solid black;
+  outline: 3px solid #DCDCDC;
 }
 
 

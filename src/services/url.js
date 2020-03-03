@@ -1,1 +1,1 @@
-export const API_URL = "https://designboard-edunomics.herokuapp.com/";
+export const API_URL = "https://designboard-edunomics.herokuapp.com/user/";

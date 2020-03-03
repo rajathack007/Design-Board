@@ -24,6 +24,7 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import parse from "html-react-parser";
 import Popup from "reactjs-popup";
+import Moment from "react-moment";
 
 import {
   UncontrolledButtonDropdown,
@@ -78,8 +79,11 @@ import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt";
 import Tooltip from "@material-ui/core/Tooltip";
 //  var dragula = require('react-dragula');
 import Dragula from "react-dragula";
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import line from "./Dropdownassets/line.png"
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+
+import Line from "./Line.png"
+import File from "./File.png"
+import Image from "./Image.png"
 const zoomArr = [
   "50%",
   "75%",
@@ -147,7 +151,7 @@ class Board extends Component {
       text2: "",
       type: "",
       tabs: [],
-      edit: "",
+      edit: [],
       id: 0,
       indexofArr: 4,
       bool: false,
@@ -164,25 +168,18 @@ class Board extends Component {
       editorState: EditorState.createEmpty(),
       projectedit: false,
       project_name: "",
-      dropcard:false,
+      dropcard: false,
       project_desc: ""
     };
     //close this.state
 
-    this.addCircle = this.addCircle.bind(this);
+   
     this.logout = this.logout.bind(this);
 
-    this.addSquare = this.addSquare.bind(this);
-    this.addRectangle = this.addRectangle.bind(this);
-    this.addLine = this.addLine.bind(this);
-    this.addBubble = this.addBubble.bind(this);
-    this.addPhase = this.addPhase.bind(this);
-    this.onDrop = this.onDrop.bind(this);
-    this.addItalic = this.addItalic.bind(this);
-    this.addUnderline = this.addUnderline.bind(this);
-    this.addBold = this.addBold.bind(this);
-    this.onCloseModal = this.onCloseModal.bind(this);
    
+    this.onDrop = this.onDrop.bind(this);
+   
+    this.onCloseModal = this.onCloseModal.bind(this);
   } //close constructor()
 
   onEditorStateChange = editorState => {
@@ -370,7 +367,12 @@ class Board extends Component {
     }
   }
   onOpenModal = type => {
-    this.setState({ open: true, type, editorState: EditorState.createEmpty() });
+    this.setState({
+      open: true,
+      type,
+      editorState: EditorState.createEmpty(),
+      dropcard: false
+    });
   };
   onOpenModal1 = (type, id) => {
     this.setState(
@@ -394,14 +396,14 @@ class Board extends Component {
     this.setState(
       {
         open5: true,
-        edit: this.state.totallayer[id1].laneName,
+        edit: this.state.totallayer[id1].history,
         layer_index: id1,
         lane_id,
         type,
         lanegrid_no
       },
       () => {
-        console.log("text", this.state.totallayer[id1].laneName);
+        console.log("text", this.state.totallayer[id1].history);
       }
     );
     const html = this.state.totallayer[id1].laneName;
@@ -422,7 +424,7 @@ class Board extends Component {
         {
           open3: true,
           type,
-          edit: this.state.totallayer[id1].nodes[id].cardHTML,
+          edit: this.state.totallayer[id1].nodes[id].history,
           layer_index: id1,
           node_index: id,
           lane_id,
@@ -445,7 +447,7 @@ class Board extends Component {
       this.setState({
         open3: true,
         type,
-        edit: this.state.totallayer[id1].nodes[id].bubbleHTML,
+        edit: this.state.totallayer[id1].nodes[id].history,
         layer_index: id1,
         node_index: id,
         lane_id,
@@ -464,7 +466,7 @@ class Board extends Component {
       this.setState({
         open3: true,
         type,
-        edit: this.state.totallayer[id1].nodes[id].phaseHTML,
+        edit: this.state.totallayer[id1].nodes[id].history,
         layer_index: id1,
         node_index: id,
         lane_id,
@@ -483,7 +485,7 @@ class Board extends Component {
       this.setState({
         open3: true,
         type,
-        edit: this.state.totallayer[id1].nodes[id].textHTML,
+        edit: this.state.totallayer[id1].nodes[id].history,
         layer_index: id1,
         node_index: id,
         lane_id,
@@ -523,7 +525,8 @@ class Board extends Component {
     let data = {
       laneType: this.state.type,
       laneName: this.state.text,
-      laneGridNo: this.state.lanegrid_no.toString()
+      laneGridNo: this.state.lanegrid_no.toString(),
+      date: Date(Date.now())
     };
     console.log("data", data);
     try {
@@ -582,6 +585,8 @@ class Board extends Component {
   async onCloseModal1(e) {
     this.setState({ open1: false });
     let index = "";
+    var today = new Date();
+
     if (this.state.type == "card") {
       for (var i = 0; i < this.state.totallayer.length; i++) {
         if (this.state.totallayer[i]._id == this.state.lane_id) {
@@ -591,6 +596,8 @@ class Board extends Component {
       }
 
       let data = {
+        laneType: this.state.type,
+        date: Date(Date.now()),
         cardHTML: this.state.text1,
         gridID: 0,
         cardStatus: "Start",
@@ -598,7 +605,7 @@ class Board extends Component {
       };
       try {
         const response = await axios.post(
-          `${API_URL}lane/card/add/${this.state.lane_id}`,
+          `${API_URL}lane/node/add/${this.state.lane_id}`,
           data,
           (axios.defaults.headers.common[
             "x-access-token"
@@ -630,6 +637,8 @@ class Board extends Component {
       }
 
       let data = {
+        laneType: this.state.type,
+        date: Date(Date.now()),
         bubbleHTML: this.state.text1,
         gridID: 0,
         bubbleStatus: "Start",
@@ -639,7 +648,7 @@ class Board extends Component {
       console.log("lane_id", this.state.lane_id);
       try {
         const response = await axios.post(
-          `${API_URL}lane/bubble/add/${this.state.lane_id}`,
+          `${API_URL}lane/node/add/${this.state.lane_id}`,
           data,
           (axios.defaults.headers.common[
             "x-access-token"
@@ -670,6 +679,8 @@ class Board extends Component {
       }
 
       let data = {
+        laneType: this.state.type,
+        date: Date(Date.now()),
         phaseHTML: this.state.text1,
         gridID: 0,
         phaseWidth: "",
@@ -678,7 +689,7 @@ class Board extends Component {
       };
       try {
         const response = await axios.post(
-          `${API_URL}lane/phase/add/${this.state.lane_id}`,
+          `${API_URL}lane/node/add/${this.state.lane_id}`,
           data,
           (axios.defaults.headers.common[
             "x-access-token"
@@ -709,6 +720,8 @@ class Board extends Component {
       }
 
       let data = {
+        laneType: this.state.type,
+        date: Date(Date.now()),
         textHTML: this.state.text1,
         gridID: 0,
         textStatus: "Start",
@@ -716,7 +729,7 @@ class Board extends Component {
       };
       try {
         const response = await axios.post(
-          `${API_URL}lane/text/add/${this.state.lane_id}`,
+          `${API_URL}lane/node/add/${this.state.lane_id}`,
           data,
           (axios.defaults.headers.common[
             "x-access-token"
@@ -752,20 +765,25 @@ class Board extends Component {
     let layer_index = this.state.layer_index;
     let node_index = this.state.node_index;
     let type = this.state.type;
+    let history = this.state.totallayer[layer_index].nodes[node_index].history;
     if (type == "card") {
-      const newItems = [...this.state.totallayer];
-      newItems[layer_index].nodes[node_index].cardHTML = this.state.text1;
-      this.setState({ open3: false, totallayer: newItems });
+      // const newItems = [...this.state.totallayer];
+      //newItems[layer_index].nodes[node_index].cardHTML = this.state.text1;
+
+      this.setState({ open3: false });
       let data = {
+        laneType: this.state.type,
+        date: Date(Date.now()),
         _id: this.state.card_id,
         cardHTML: this.state.text1,
         gridID: 0,
         cardStatus: "Start",
-        cardCategory: "Customer"
+        cardCategory: "Customer",
+        history: history
       };
       try {
         const response = await axios.put(
-          `${API_URL}lane/card/edit/${this.state.lane_id}`,
+          `${API_URL}lane/node/edit/${this.state.lane_id}`,
           data,
           (axios.defaults.headers.common[
             "x-access-token"
@@ -779,26 +797,33 @@ class Board extends Component {
         console.log(response);
         if (response.status === 200) {
           console.log("card edited");
+          const newItems = [...this.state.totallayer];
+          newItems[layer_index] = response.data;
+          this.setState({ totallayer: newItems });
         }
       } catch (err) {
         console.log(err);
-        alert("card couldn't be edited");
+        // alert("card couldn't be edited");
       }
     } else if (type == "bubble") {
-      const newItems = [...this.state.totallayer];
-      newItems[layer_index].nodes[node_index].bubbleHTML = this.state.text1;
-      this.setState({ open3: false, totallayer: newItems });
+      //const newItems = [...this.state.totallayer];
+      //newItems[layer_index].node[node_index].bubbleHTML = this.state.text1;
+
+      this.setState({ open3: false });
       let data = {
+        laneType: this.state.type,
+        date: Date(Date.now()),
         _id: this.state.card_id,
         bubbleHTML: this.state.text1,
         gridID: 0,
         bubbleStatus: "Start",
-        bubbleCategory: "Customer"
+        bubbleCategory: "Customer",
+        history: history
       };
       console.log("edited_data", data);
       try {
         const response = await axios.put(
-          `${API_URL}lane/bubble/edit/${this.state.lane_id}`,
+          `${API_URL}lane/node/edit/${this.state.lane_id}`,
           data,
           (axios.defaults.headers.common[
             "x-access-token"
@@ -812,26 +837,33 @@ class Board extends Component {
         console.log(response);
         if (response.status === 200) {
           console.log("bubble edited");
+          const newItems = [...this.state.totallayer];
+          newItems[layer_index] = response.data;
+          this.setState({ totallayer: newItems });
         }
       } catch (err) {
         console.log(err);
-        alert("bubble couldn't be edited");
+        //alert("bubble couldn't be edited");
       }
     } else if (type == "phase") {
-      const newItems = [...this.state.totallayer];
-      newItems[layer_index].nodes[node_index].phaseHTML = this.state.text1;
-      this.setState({ open3: false, totallayer: newItems });
+      //const newItems = [...this.state.totallayer];
+      //newItems[layer_index].nodes[node_index].phaseHTML = this.state.text1;
+
+      this.setState({ open3: false });
       let data = {
+        laneType: this.state.type,
+        date: Date(Date.now()),
         _id: this.state.card_id,
         phaseHTML: this.state.text1,
         gridID: 0,
         phaseStatus: "Start",
-        phaseCategory: "Customer"
+        phaseCategory: "Customer",
+        history: history
       };
       console.log("edited_data", data);
       try {
         const response = await axios.put(
-          `${API_URL}lane/phase/edit/${this.state.lane_id}`,
+          `${API_URL}lane/node/edit/${this.state.lane_id}`,
           data,
           (axios.defaults.headers.common[
             "x-access-token"
@@ -845,25 +877,29 @@ class Board extends Component {
         console.log(response);
         if (response.status === 200) {
           console.log("phase edited");
+          const newItems = [...this.state.totallayer];
+          newItems[layer_index] = response.data;
+          this.setState({ totallayer: newItems });
         }
       } catch (err) {
         console.log(err);
         alert("phase couldn't be edited");
       }
     } else if (type == "text") {
-      const newItems = [...this.state.totallayer];
-      newItems[layer_index].nodes[node_index].textHTML = this.state.text1;
-      this.setState({ open3: false, totallayer: newItems });
+      this.setState({ open3: false });
       let data = {
+        laneType: this.state.type,
+        date: Date(Date.now()),
         _id: this.state.card_id,
         textHTML: this.state.text1,
         gridID: 0,
         textStatus: "Start",
-        textCategory: "Customer"
+        textCategory: "Customer",
+        history: history
       };
       try {
         const response = await axios.put(
-          `${API_URL}lane/text/edit/${this.state.lane_id}`,
+          `${API_URL}lane/node/edit/${this.state.lane_id}`,
           data,
           (axios.defaults.headers.common[
             "x-access-token"
@@ -877,6 +913,9 @@ class Board extends Component {
         console.log(response);
         if (response.status === 200) {
           console.log("text edited");
+          const newItems = [...this.state.totallayer];
+          newItems[layer_index] = response.data;
+          this.setState({ totallayer: newItems });
         }
       } catch (err) {
         console.log(err);
@@ -888,11 +927,12 @@ class Board extends Component {
     this.setState({ open4: false });
   };
   async onCloseModal5(e) {
-    let layer_index = this.state.layer_index;
-    const newItems = [...this.state.totallayer];
-    newItems[layer_index].laneName = this.state.text;
-    this.setState({ open5: false, totallayer: newItems });
+    //let layer_index = this.state.layer_index;
+    //const newItems = [...this.state.totallayer];
+    //newItems[layer_index].laneName = this.state.text;
+    this.setState({ open5: false });
     let data = {
+      date: Date(Date.now()),
       _id: this.state.lane_id,
       laneName: this.state.text,
       laneGridNo: this.state.lanegrid_no,
@@ -914,6 +954,10 @@ class Board extends Component {
       );
       console.log(response);
       if (response.status === 200) {
+        let layer_index = this.state.layer_index;
+        const newItems = [...this.state.totallayer];
+        newItems[layer_index] = response.data;
+        this.setState({ totallayer: newItems, edit: response.data.history });
         console.log("lane edited");
       }
     } catch (err) {
@@ -1040,164 +1084,14 @@ class Board extends Component {
     });
   };
 
-  addCircle = () => {
-    const Circlelane = () => {
-      return (
-        <div
-          className="circle"
-          style={{
-            overflow: "hidden",
-            whiteSpace: "normal",
-            wordBreak: "break-word"
-          }}
-        ></div>
-      );
-    };
-    this.setState({
-      Circle: [...this.state.Circle, <Circlelane />]
-    });
-  };
+ 
   toggle() {
     this.setState({
       open: !this.state.open
     });
   }
 
-  addRectangle = () => {
-    const Rectanglelane = () => {
-      return this.state.totalcard.map((item, id) => {
-        return (
-          <ReactDraggable>
-            <div
-              className="rectangle"
-              style={{
-                overflow: "hidden",
-                whiteSpace: "normal",
-                wordBreak: "break-word"
-              }}
-            >
-              <div onClick={() => this.onOpenModal3("Cardlane", id)}>
-                {" "}
-                {parse(item.cardHTML)}
-              </div>
-            </div>
-          </ReactDraggable>
-        );
-      });
-    };
-    this.setState({
-      Rectangle: <Rectanglelane />
-    });
-  };
-  addBubble = () => {
-    const Bubblelane = () => {
-      return this.state.totalbubble.map((item, id) => {
-        return (
-          <ReactDraggable>
-            <div
-              className="bubble"
-              style={{
-                overflow: "hidden",
-                whiteSpace: "normal",
-                wordBreak: "break-word"
-              }}
-              onClick={() => this.onOpenModal3("Bubblelane", id)}
-            >
-              {parse(item)}
-            </div>
-          </ReactDraggable>
-        );
-      });
-    };
-    this.setState({
-      Bubble: <Bubblelane />
-    });
-  };
-  addPhase = () => {
-    const Phaselane = () => {
-      var layout = [{ i: "b", x: 1, y: 0, w: 3, h: 2 }];
-
-      return this.state.totalphase.map((item, id) => {
-        return (
-          <div
-            className="phase"
-            style={{
-              overflow: "hidden",
-              whiteSpace: "normal",
-              wordBreak: "break-word"
-            }}
-            draggable="false"
-          >
-            <span onClick={() => this.onOpenModal3("Phaselane", id)}>
-              {" "}
-              {parse(item)}
-            </span>
-          </div>
-        );
-      });
-    };
-    this.setState({
-      Phase: <Phaselane />
-    });
-  };
-  addSquare = () => {
-    const Textlane = () => {
-      return this.state.totaltext.map((item, id) => {
-        return (
-          <div
-            className="square"
-            style={{
-              overflow: "hidden",
-              whiteSpace: "normal",
-              wordBreak: "break-word"
-            }}
-            onClick={() => this.onOpenModal3("Textlane", id)}
-          >
-            {parse(item)}
-          </div>
-        );
-      });
-    };
-    this.setState({
-      Square: <Textlane />
-    });
-  };
-  addLine = () => {
-    const Linelane = () => {
-      return <div className="line"></div>;
-    };
-    this.setState({
-      Line: [...this.state.Line, <Linelane />]
-    });
-  };
-
-  addItalic = () => {
-    const Italicfont = () => {
-      return <div className="Italic"></div>;
-    };
-    this.setState({
-      Italic: [...this.state.Italic, <Italicfont />]
-    });
-  };
-  addUnderline = () => {
-    const Underlinefont = () => {
-      return <div className="Underline"></div>;
-    };
-    this.setState({
-      Underline: [...this.state.Underline, <Underlinefont />]
-    });
-  };
-  addBold = () => {
-    const Boldfont = () => {
-      return <div className="Bold"></div>;
-    };
-    this.setState({
-      Bold: [...this.state.Bold, <Boldfont />]
-    });
-  };
-  // function() {
-  //   dragula([].slice.apply(document.querySelectorAll('.maindiv')));
-  // };
+ 
   dragulaDecorator = componentBackingInstance => {
     if (componentBackingInstance) {
       let options = {};
@@ -1226,54 +1120,7 @@ class Board extends Component {
     // const { data } = this.props.location;
     const { editorState } = this.state;
     const { editorState1 } = this.state;
-    // const { data1 } = this.props.location;
-    // var editable = document.querySelectorAll("div[contentEditable]");
-    // const tokenvalue = this.state.tokenvalue;
-
-    // for (var i = 0, len = editable.length; i < len; i++) {
-    //   editable[i].setAttribute("data-orig", editable[i].innerHTML);
-
-    //   editable[i].onblur = function() {
-    //     if (this.innerHTML == this.getAttribute("data-orig")) {
-    //       // no change
-    //     } else {
-    //       // change has happened, store new value
-    //       this.setAttribute("data-orig", this.innerHTML);
-    //       console.log(this.innerText);
-    //       console.log(projectid);
-    //       const data = {
-    //         projectid: projectid,
-    //         name: this.innerText,
-
-    //         desc: project_desc
-    //       };
-    //       console.log(data);
-    //       try {
-    //         const response = axios.put(
-    //           `${API_URL}project/edit`,
-    //           data,
-    //           (axios.defaults.headers.common["x-access-token"] = tokenvalue),
-    //           {
-    //             headers: {
-    //               "content-type": "application/x-www-form-urlencoded"
-    //             }
-    //           }
-    //         );
-    //         console.log(response);
-    //         if (response.status === 200) {
-    //           //alert(response.data.msg);
-    //           console.log("data", data);
-    //         }
-    //       } catch (err) {
-    //         console.log(err);
-    //       }
-    //     }
-    //   };
-    // }
-
-    // function() {
-    //   dragula([].slice.apply(document.querySelectorAll('.container2')));
-    // })();
+   
     let wrapperStyle = {};
     if (this.state.showBound) {
       wrapperStyle = {
@@ -1287,7 +1134,6 @@ class Board extends Component {
     }
     return (
       <div className="board">
-       
         <nav class="navbar">
           <div class="brand-title">
             <Link
@@ -1379,7 +1225,7 @@ class Board extends Component {
           </div>
         </nav>
         <div className="projectnamenavbar">
-        <div contentEditable>
+          <div contentEditable>
             {/*this.state.Project_data.map(item => {
               console.log(item._id);
               console.log(this.state.Project_id);
@@ -1473,7 +1319,8 @@ class Board extends Component {
                                   )
                                 }
                               >
-                                {" "}
+                                {console.log("error", item)}
+
                                 {parse(item.cardHTML)}
                               </div>
                             </div>
@@ -1712,53 +1559,19 @@ class Board extends Component {
               }
             })}
           </div>
-          <div className="predefinelane" style={{ marginTop: "0.5%",display:"flex" }}>
-            <AddCircleIcon style={{fontSize:"3em",marginLeft:30,color:"white"}} onClick={()=>this.setState({dropcard:!this.state.dropcard})}></AddCircleIcon>
-            <p style={{fontSize:"1.5em",marginTop:7,marginLeft:5}}>Add New Lane</p>
-            
-            {/* <UncontrolledButtonDropdown
-              style={{ marginLeft: 20, marginTop: 6 }}
-            >
-              <DropdownToggle caret>Add New Lane</DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem>
-                  <li onClick={() => this.onOpenModal("card")}>
-                    &#9645; Add Card Lane
-                  </li>
-                </DropdownItem>
-                <DropdownItem>
-                  {" "}
-                  <li onClick={() => this.onOpenModal("bubble")}>
-                    &#128172; Add Bubble Lane
-                  </li>
-                </DropdownItem>
-                <DropdownItem>
-                  <li onClick={() => this.onOpenModal("phase")}>
-                    &#8680; Add Phase Lane
-                  </li>
-                </DropdownItem>
-                <DropdownItem>
-                  <li onClick={() => this.onOpenModal("line")}>
-                    📈 Add Line Lane
-                  </li>
-                </DropdownItem>
-                <DropdownItem>
-                  <li onClick={() => this.onOpenModal("image")}>
-                    &#128190; Add Image Lane
-                  </li>
-                </DropdownItem>
-                <DropdownItem>
-                  <li onClick={() => this.onOpenModal("file")}>
-                    &#128194; Add File Lane
-                  </li>
-                </DropdownItem>
-                <DropdownItem>
-                  <li onClick={() => this.onOpenModal("text")}>
-                    &#128221; Add Text Lane
-                  </li>
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledButtonDropdown> */}
+          <div
+            className="predefinelane"
+            style={{ marginTop: "0.5%", display: "flex" }}
+          >
+            <AddCircleIcon
+              style={{ fontSize: "3em", marginLeft: 30, color: "white" }}
+              onClick={() => this.setState({ dropcard: !this.state.dropcard })}
+            ></AddCircleIcon>
+            <p style={{ fontSize: "1.5em", marginTop: 7, marginLeft: 5 }}>
+              Add New Lane
+            </p>
+
+         
           </div>
 
           <Modal open={open} onClose={e => this.onCloseModal(e)} center>
@@ -1778,6 +1591,8 @@ class Board extends Component {
                     }
                   /> */}
   <div style={{display:"flex"}}>
+    <div>
+      
   <div className="textlaneeditortools">
               <Editor
                 editorState={editorState}
@@ -1786,7 +1601,12 @@ class Board extends Component {
                 handleBeforeInput={this._handleBeforeInput}
                 handlePastedText={this._handlePastedText}
                 onEditorStateChange={this.onEditorStateChange1}
-              /></div>
+              />
+              
+              </div>
+              <div className="horizontallinetext"></div>
+              <div className="historylogcontainer"></div></div>
+            
               {/* <textarea
                 className="apply-font Italic"
                 style={{ width: 500, height: 150, marginTop: 10 }}
@@ -1809,10 +1629,13 @@ class Board extends Component {
               <div className="textlanenavbar">
                 <div className="textsize2 " style={{ padding: 10 }}>
                   Edit Lane
-                </div></div>
-                <div style={{display:"flex"}}>
-                
-                 <div className="textlaneeditortools"> <Editor
+                </div>
+              </div>
+              <div style={{ display: "flex" }}>
+                <div>
+                <div className="textlaneeditortools">
+                  {" "}
+                  <Editor
                     editorState={editorState}
                     wrapperClassName="demo-wrapper"
                     editorClassName="demo-editor"
@@ -1821,15 +1644,40 @@ class Board extends Component {
                     onEditorStateChange={this.onEditorStateChange1}
                   />
                 </div>
-                <div className="textlanebutton" >
-                <button className="savebuttontext"
-                  type="button"
-                  style={{ fontSize: 20, marginLeft: 10,marginTop:200}}
-                  onClick={e => this.onCloseModal5(e)}
-                >
-                  Save
-                </button></div></div>
-              
+                <div className="horizontallinetext"></div>
+              <div className="historylogcontainer">
+              <div>
+                    {this.state.edit.map(item => {
+                      return (
+                        <div>
+                          {item.action} {parse(item.html)}{" "}
+                          {item.date.split(" ")[0] +
+                            " " +
+                            item.date.split(" ")[1] +
+                            " " +
+                            item.date.split(" ")[2] +
+                            " " +
+                            item.date.split(" ")[3] +
+                            " " +
+                            item.date.split(" ")[4]}
+                        </div>
+                      );
+                    })}
+                  </div>
+                
+                </div></div>
+                <div className="textlanebutton">
+                 
+                  <button
+                    className="savebuttontext"
+                    type="button"
+                    style={{ fontSize: 20, marginLeft: 10, marginTop: 200 }}
+                    onClick={e => this.onCloseModal5(e)}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
             </div>
           </Modal>
           <Modal open={open1} onClose={e => this.onCloseModal1(e)} center>
@@ -1839,26 +1687,32 @@ class Board extends Component {
                   Edit Card
                 </div>
               </div>
-              <div style={{display:"flex"}}>
-  <div className="textlaneeditortools">
-              <Editor
-                editorState={editorState}
-                wrapperClassName="demo-wrapper"
-                editorClassName="demo-editor"
-                handleBeforeInput={this._handleBeforeInput1}
-                handlePastedText={this._handlePastedText1}
-                onEditorStateChange={this.onEditorStateChange}
-              />
-</div>
-<div className="textlanebutton" >
-              <button
-                type="button" className="savebuttontext"
-                style={{ fontSize: 20, marginLeft: 10,marginTop:200}}
-                onClick={e => this.onCloseModal1(e)}
-              >
-                Save
-              </button></div>
-            </div></div>
+              <div style={{ display: "flex" }}>
+                <div>
+                <div className="textlaneeditortools">
+                  <Editor
+                    editorState={editorState}
+                    wrapperClassName="demo-wrapper"
+                    editorClassName="demo-editor"
+                    handleBeforeInput={this._handleBeforeInput1}
+                    handlePastedText={this._handlePastedText1}
+                    onEditorStateChange={this.onEditorStateChange}
+                  />
+                </div>
+                <div className="horizontallinetext"></div>
+              <div className="historylogcontainer"></div></div>
+                <div className="textlanebutton">
+                  <button
+                    type="button"
+                    className="savebuttontext"
+                    style={{ fontSize: 20, marginLeft: 10, marginTop: 200 }}
+                    onClick={e => this.onCloseModal1(e)}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
           </Modal>
           <Modal open={open3} onClose={e => this.onCloseModal3(e)} center>
             <div className="textlane">
@@ -1867,25 +1721,53 @@ class Board extends Component {
                   Edit Card
                 </div>
               </div>
-              <div style={{display:"flex"}}>
-  <div className="textlaneeditortools">
-              <Editor
-                editorState={editorState}
-                wrapperClassName="demo-wrapper"
-                editorClassName="demo-editor"
-                handleBeforeInput={this._handleBeforeInput1}
-                handlePastedText={this._handlePastedText1}
-                onEditorStateChange={this.onEditorStateChange}
-              /></div>
-              <div className="textlanebutton" >
-              <button  className="savebuttontext"
-                type="button"
-                style={{ fontSize: 20, marginLeft: 10,marginTop:200}}
-                onClick={e => this.onCloseModal3(e)}
-              >
-                Save
-              </button>
-            </div></div></div>
+              <div style={{ display: "flex" }}>
+                <div>
+                <div className="textlaneeditortools">
+                  <Editor
+                    editorState={editorState}
+                    wrapperClassName="demo-wrapper"
+                    editorClassName="demo-editor"
+                    handleBeforeInput={this._handleBeforeInput1}
+                    handlePastedText={this._handlePastedText1}
+                    onEditorStateChange={this.onEditorStateChange}
+                  />
+                </div>
+                <div className="horizontallinetext"></div>
+              <div className="historylogcontainer">
+              <div>
+                    {this.state.edit.map(item => {
+                      return (
+                        <div>
+                          {item.action} {parse(item.html)}{" "}
+                          {item.date.split(" ")[0] +
+                            " " +
+                            item.date.split(" ")[1] +
+                            " " +
+                            item.date.split(" ")[2] +
+                            " " +
+                            item.date.split(" ")[3] +
+                            " " +
+                            item.date.split(" ")[4]}
+                        </div>
+                      );
+                    })}
+                  </div>
+                
+                </div></div>
+                <div className="textlanebutton">
+                 
+                  <button
+                    className="savebuttontext"
+                    type="button"
+                    style={{ fontSize: 20, marginLeft: 10, marginTop: 200 }}
+                    onClick={e => this.onCloseModal3(e)}
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
           </Modal>
           <Modal open={open2} onClose={this.onCloseModal2} center>
             <div className="namemodal">
@@ -2091,17 +1973,24 @@ class Board extends Component {
   <div className="lanecolumncontainer">
     <div className="lanetypecard" onClick={() => this.onOpenModal("card")}></div>
    <p style={{marginLeft:20}}>Card Lane</p>
-   {/* <img src="./Dropdownassets/line-lane.png"/> */}
-   <line/>
-   <p style={{marginLeft:20}}>Line Lane</p>
+   
+   <div className="lanetypetext" onClick={() => this.onOpenModal("line")}>
+   <img src={Line}  style={{height:60,width:80,marginLeft:10}}></img></div>
+   <p style={{marginLeft:20,marginTop:10}}>Line Lane</p>
   </div>
   <div className="lanecolumncontainer">
   <div className="lanetypebubble"  onClick={() => this.onOpenModal("bubble")}></div>
    <p style={{marginLeft:20}}>Bubble Lane</p>
+   <div className="lanetypetext" onClick={() => this.onOpenModal("image")}>
+   <img src={Image}  style={{height:60,width:80,marginLeft:10,marginTop:5}}></img></div>
+   <p style={{marginLeft:20,marginTop:10}}>Image Lane</p>
   </div>
   <div className="lanecolumncontainer">
   <div className="lanetypephase" onClick={() => this.onOpenModal("phase")}></div>
   <p style={{marginLeft:20}}>Phase Lane</p> 
+  <div className="lanetypetext" onClick={() => this.onOpenModal("file")}>
+   <img src={File}  style={{height:60,width:80,marginLeft:10,marginTop:5}}></img></div>
+   <p style={{marginLeft:20,marginTop:10}}>File Lane</p>
   </div>
   <div className="lanecolumncontainer">
   <div className="lanetypetext" onClick={() => this.onOpenModal("text")}></div>
@@ -2109,8 +1998,8 @@ class Board extends Component {
   </div>
  
 </div>
-</div>):""}
-        <div className="container"></div>
+</div>):("")}
+<div className="container"></div>
         <div className="footer">
           <Tabs
             selectedIndex={this.state.tabIndex}

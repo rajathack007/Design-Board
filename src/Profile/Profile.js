@@ -18,7 +18,8 @@ class Profile extends Component {
       hasAgreed: false,
       open: false,
       newpassword: "",
-      confirmpassword: ""
+      confirmpassword: "",
+      data: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -37,14 +38,35 @@ class Profile extends Component {
       [e.target.name]: e.target.value
     });
   }
+  async componentDidMount() {
+    const tokenvalue = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        `${API_URL}`,
+        (axios.defaults.headers.common["x-access-token"] = tokenvalue),
+        {
+          headers: {
+            "content-type": "application/x-www-form-urlencoded"
+          }
+        }
+      );
+      console.log("profile", response);
+      if (response.status == 200) {
+        this.setState({ data: response.data });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   async handleSubmit(e) {
     const tokenvalue = localStorage.getItem("token");
     let data = {
       oldPassword: this.state.password,
-      newpassword: this.state.newpassword
+      newPassword: this.state.newpassword
     };
     e.preventDefault();
+    console.log("submit_data", data);
     if (this.state.newpassword === this.state.confirmpassword) {
       try {
         const response = await axios.post(
@@ -53,7 +75,7 @@ class Profile extends Component {
           (axios.defaults.headers.common["x-access-token"] = tokenvalue)
         );
         console.log(response);
-        if (response.data.success) {
+        if (response.status == 200) {
           alert(response.data.msg);
           console.log("Password changed");
         }
@@ -63,34 +85,78 @@ class Profile extends Component {
       }
     } else alert("Password doesn't match");
   }
+
   render() {
     const { data4 } = this.props.location;
     const { data2 } = this.props.location;
     const { open } = this.state;
     return (
       <div className="body">
-       
-       <nav class="navbar">
-        <div class="brand-title"><Link to="/Home" style={{color:"white",textDecoration:"none"}}> ETU LOGO</Link></div>
-        
-        <div class="navbar-links">
-          <ul>
-          <li> <Link to="/UserMap" style={{color:"white",textDecoration:"none"}}>Dashboard</Link></li>
-            <li> <Link to="/Help" style={{color:"white",textDecoration:"none"}}><Tooltip title={<span>Help</span>}><HelpIcon/></Tooltip></Link></li>
-           <li>
-           <a class="submenu" style={{marginLeft:"2%",marginTop:"0.65%"}}>
-    
-    <a  class="dropbtn" style={{paddingTop:"0.65%",color:"white",textDecoration:"none"}} >Profile </a>
-    <div class="dropdown-content">
-    <Link to={{pathname:"/Profile",data2:data2,data4:data4}}  style={{color:"black",textDecoration:"none"}}>My Profile</Link> 
-    <Link onClick={this.logout}  style={{color:"black",textDecoration:"none"}}>Logout</Link>
-      
-     </div></a>
-           </li>
-          </ul>
-        </div>
-      </nav>
-      <div style={{ marginTop: "1%" }}>
+        <nav class="navbar">
+          <div class="brand-title">
+            <Link to="/Home" style={{ color: "white", textDecoration: "none" }}>
+              {" "}
+              ETU LOGO
+            </Link>
+          </div>
+
+          <div class="navbar-links">
+            <ul>
+              <li>
+                {" "}
+                <Link
+                  to="/UserMap"
+                  style={{ color: "white", textDecoration: "none" }}
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                {" "}
+                <Link
+                  to="/Help"
+                  style={{ color: "white", textDecoration: "none" }}
+                >
+                  <Tooltip title={<span>Help</span>}>
+                    <HelpIcon />
+                  </Tooltip>
+                </Link>
+              </li>
+              <li>
+                <a
+                  class="submenu"
+                  style={{ marginLeft: "2%", marginTop: "0.65%" }}
+                >
+                  <a
+                    class="dropbtn"
+                    style={{
+                      paddingTop: "0.65%",
+                      color: "white",
+                      textDecoration: "none"
+                    }}
+                  >
+                    Profile{" "}
+                  </a>
+                  <div class="dropdown-content">
+                    <Link
+                      to={{ pathname: "/Profile", data2: data2, data4: data4 }}
+                      style={{ color: "black", textDecoration: "none" }}
+                    >
+                      My Profile
+                    </Link>
+                    <Link
+                      onClick={this.logout}
+                      style={{ color: "black", textDecoration: "none" }}
+                    >
+                      Logout
+                    </Link>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <div style={{ marginTop: "1%" }}>
           <h3 style={{ textAlign: "center", marginTop: "2%" }}>Profile</h3>
           <form className="FormFields">
             <div>
@@ -102,7 +168,7 @@ class Profile extends Component {
                 id="name"
                 placeholder=" Username"
                 name="name"
-                value={(this.state.name, data4)}
+                value={this.state.data.username}
                 onChange={this.handleChange}
                 disabled
               />
@@ -118,17 +184,17 @@ class Profile extends Component {
                 className="FormField__Input"
                 placeholder=" Your Email"
                 name="email"
-                value={data2}
+                value={this.state.data.email}
                 onChange={this.handleChange}
                 disabled
               />
             </div>
             <div>
               <center>
-                {" "}
+                {/** 
                 <button className="profilebutton" onClick={this.onOpenModal}>
                   Edit Profile
-                </button>{" "}
+                </button>**/}
               </center>
             </div>
           </form>
@@ -145,7 +211,6 @@ class Profile extends Component {
                 id="password"
                 placeholder=" Old Password"
                 name="password"
-                value={this.state.password}
                 onChange={this.handleChange}
               />
             </div>
@@ -160,7 +225,6 @@ class Profile extends Component {
                 className="FormField__Input"
                 placeholder=" New Password"
                 name="newpassword"
-                value={this.state.newpassword}
                 onChange={this.handleChange}
               />
             </div>
@@ -174,7 +238,6 @@ class Profile extends Component {
                 className="FormField__Input"
                 placeholder=" Confirm Password"
                 name="confirmpassword"
-                value={this.state.confirmpassword}
                 onChange={this.handleChange}
               />
             </div>
