@@ -38,6 +38,7 @@ class Profile extends Component {
       [e.target.name]: e.target.value
     });
   }
+  
   async componentDidMount() {
     const tokenvalue = localStorage.getItem("token");
     try {
@@ -94,7 +95,7 @@ class Profile extends Component {
       <div className="body">
         <nav class="navbar">
           <div class="brand-title">
-            <Link to="/Home" style={{ color: "white", textDecoration: "none" }}>
+            <Link to="/UserMap" style={{ color: "white", textDecoration: "none" }}>
               {" "}
               ETU LOGO
             </Link>
@@ -122,37 +123,7 @@ class Profile extends Component {
                   </Tooltip>
                 </Link>
               </li>
-              <li>
-                <a
-                  class="submenu"
-                  style={{ marginLeft: "2%", marginTop: "0.65%" }}
-                >
-                  <a
-                    class="dropbtn"
-                    style={{
-                      paddingTop: "0.65%",
-                      color: "white",
-                      textDecoration: "none"
-                    }}
-                  >
-                    Profile{" "}
-                  </a>
-                  <div class="dropdown-content">
-                    <Link
-                      to={{ pathname: "/Profile", data2: data2, data4: data4 }}
-                      style={{ color: "black", textDecoration: "none" }}
-                    >
-                      My Profile
-                    </Link>
-                    <Link
-                      onClick={this.logout}
-                      style={{ color: "black", textDecoration: "none" }}
-                    >
-                      Logout
-                    </Link>
-                  </div>
-                </a>
-              </li>
+            
             </ul>
           </div>
         </nav>

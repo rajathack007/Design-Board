@@ -91,7 +91,7 @@ class MapType extends Component {
       <div className="container5">
         <nav class="navbar">
           <div class="brand-title">
-            <Link to="/Home" style={{ color: "white", textDecoration: "none" }}>
+            <Link to="/UserMap" style={{ color: "white", textDecoration: "none" }}>
               {" "}
               ETU LOGO
             </Link>
