@@ -16,7 +16,7 @@ class Bubblelane extends Component {
           {/* <div className="layer1" >
                   <p style={{fontSize:"1.25em",marginTop:"1%"}}>Bubble Lane</p>
                 </div> */}
-              <div className="container2" >
+              <div className="container2"  >
              
                 
                 <div style={{display:"inline-flex"}}>

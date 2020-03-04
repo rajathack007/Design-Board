@@ -25,7 +25,7 @@ import htmlToDraft from "html-to-draftjs";
 import parse from "html-react-parser";
 import Popup from "reactjs-popup";
 import Moment from "react-moment";
-
+import Files from "react-butterfiles";
 import {
   UncontrolledButtonDropdown,
   DropdownMenu,
@@ -80,7 +80,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 //  var dragula = require('react-dragula');
 import Dragula from "react-dragula";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-
+import reactCSS from 'reactcss'
+import { SketchPicker } from 'react-color'
+import Layer from "./Layer.png"
 import Line from "./Line.png"
 import File from "./File.png"
 import Image from "./Image.png"
@@ -119,12 +121,13 @@ class Board extends Component {
       Line: [],
       Bubble: [],
       Phase: [],
-      color: {
-        r: "241",
-        g: "112",
-        b: "19",
-        a: "1"
-      },
+      displayColorPicker: false,
+    color: {
+      r: '32',
+      g: '178',
+      b: '170',
+      a: '0.8',
+    },
       background: "#ff0000",
       activeFontFamily: "Font",
       Italic: [],
@@ -181,6 +184,17 @@ class Board extends Component {
    
     this.onCloseModal = this.onCloseModal.bind(this);
   } //close constructor()
+  handleClick0 = () => {
+    this.setState({ displayColorPicker: !this.state.displayColorPicker })
+  };
+
+  handleClose0 = () => {
+    this.setState({ displayColorPicker: false })
+  };
+
+  handleChange0 = (color) => {
+    this.setState({ color: color.rgb })
+  };
 
   onEditorStateChange = editorState => {
     this.setState(
@@ -1109,6 +1123,35 @@ class Board extends Component {
   }
 
   render() {
+    const styles = reactCSS({
+      'default': {
+        color: {
+          width: '36px',
+          height: '14px',
+          borderRadius: '2px',
+          background: `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`,
+        },
+        swatch: {
+          padding: '5px',
+          background: '#fff',
+          borderRadius: '1px',
+          boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
+          display: 'inline-block',
+          cursor: 'pointer',
+        },
+        popover: {
+          position: 'absolute',
+          zIndex: '2',
+        },
+        cover: {
+          position: 'fixed',
+          top: '0px',
+          right: '0px',
+          bottom: '0px',
+          left: '0px',
+        },
+      },
+    });
     const { open } = this.state;
     const { open1 } = this.state;
     const { open2 } = this.state;
@@ -1305,7 +1348,8 @@ class Board extends Component {
                               style={{
                                 overflow: "hidden",
                                 whiteSpace: "normal",
-                                wordBreak: "break-word"
+                                wordBreak: "break-word",
+                                background:`${styles.color.background}`
                               }}
                             >
                               <div
@@ -1355,7 +1399,7 @@ class Board extends Component {
               } else if (item.laneType == "bubble") {
                 return (
                   <ExpandCollapse previewHeight="50px" expanded="true">
-                    <Bubblelane>
+                    <Bubblelane >
                       <div
                         onClick={() =>
                           this.onOpenModal5(
@@ -1363,9 +1407,13 @@ class Board extends Component {
                             lane_id,
                             "bubble",
                             item.laneGridNo
+                            
                           )
+                         
                         }
+                       
                       >
+                        
                         {parse(item.laneName)}
                       </div>
                       {item.nodes.map((item, id) => {
@@ -1377,8 +1425,10 @@ class Board extends Component {
                               style={{
                                 overflow: "hidden",
                                 whiteSpace: "normal",
-                                wordBreak: "break-word"
+                                wordBreak: "break-word",
+                                background:`${styles.color.background}`
                               }}
+                              
                               onClick={() =>
                                 this.onOpenModal3(
                                   "bubble",
@@ -1433,7 +1483,8 @@ class Board extends Component {
                             style={{
                               overflow: "hidden",
                               whiteSpace: "normal",
-                              wordBreak: "break-word"
+                              wordBreak: "break-word",
+                              background:`${styles.color.background}`
                             }}
                             draggable="false"
                           >
@@ -1487,7 +1538,8 @@ class Board extends Component {
                             style={{
                               overflow: "hidden",
                               whiteSpace: "normal",
-                              wordBreak: "break-word"
+                              wordBreak: "break-word",
+                              background:`${styles.color.background}`
                             }}
                             onClick={() =>
                               this.onOpenModal3(
@@ -1522,11 +1574,12 @@ class Board extends Component {
                       >
                         {parse(item.laneName)}
                       </div>
+                      <div style={{marginTop:30}}>
                       <UploadImages
                         multiple
                         onChange={this.onChange}
-                        style={{ height: 100 }}
-                      />
+                        
+                      /></div>
                     </Imagelane>
                   </ExpandCollapse>
                 );
@@ -1540,9 +1593,10 @@ class Board extends Component {
                         {parse(item.laneName)}
                       </div>
                       <div className="file">
-                        <FilePond />
+                        <FilePond allowMultiple={true} />
                       </div>
                     </Filelane>
+                    
                   </ExpandCollapse>
                 );
               } else if (item.laneType == "line") {
@@ -1577,7 +1631,7 @@ class Board extends Component {
           <Modal open={open} onClose={e => this.onCloseModal(e)} center>
             <div className="textlane">
               <div className="textlanenavbar">
-                <div className="textsize2 " style={{ padding: 10 }}>
+                <div className="textsize2 "style={{ padding: 8,marginLeft:10 }}>
                   Edit Lane
                 </div>
               </div>
@@ -1614,6 +1668,16 @@ class Board extends Component {
                 onChange={e => this.change(e)}
               ></textarea> */}
               <div className="textlanebutton" >
+              <div  style={{  marginLeft: 40,marginTop:20}}>
+        <div style={ styles.swatch } onClick={ this.handleClick0 }>
+          <div style={ styles.color } />
+        </div>
+        { this.state.displayColorPicker ? <div style={ styles.popover }>
+          <div style={ styles.cover } onClick={ this.handleClose0 }/>
+          <SketchPicker color={ this.state.color } onChange={ this.handleChange0 } />
+        </div> : null }
+
+      </div>
               <button className="savebuttontext"
                 type="button"
                 style={{ fontSize: 20, marginLeft: 10,marginTop:200}}
@@ -1627,7 +1691,7 @@ class Board extends Component {
           <Modal open={open5} onClose={e => this.onCloseModal5(e)} center>
             <div className="textlane">
               <div className="textlanenavbar">
-                <div className="textsize2 " style={{ padding: 10 }}>
+                <div className="textsize2 " style={{ padding: 8,marginLeft:10 }}>
                   Edit Lane
                 </div>
               </div>
@@ -1667,7 +1731,16 @@ class Board extends Component {
                 
                 </div></div>
                 <div className="textlanebutton">
-                 
+                <div style={{  marginLeft: 40,marginTop:20}}>
+        <div style={ styles.swatch } onClick={ this.handleClick0 }>
+          <div style={ styles.color } />
+        </div>
+        { this.state.displayColorPicker ? <div style={ styles.popover }>
+          <div style={ styles.cover } onClick={ this.handleClose0 }/>
+          <SketchPicker color={ this.state.color } onChange={ this.handleChange0 } />
+        </div> : null }
+
+      </div>
                   <button
                     className="savebuttontext"
                     type="button"
@@ -1683,7 +1756,7 @@ class Board extends Component {
           <Modal open={open1} onClose={e => this.onCloseModal1(e)} center>
             <div className="textlane">
               <div className="textlanenavbar">
-                <div className="textsize2 " style={{ padding: 10 }}>
+                <div className="textsize2 " style={{ padding: 8,marginLeft:10 }}>
                   Edit Card
                 </div>
               </div>
@@ -1702,6 +1775,16 @@ class Board extends Component {
                 <div className="horizontallinetext"></div>
               <div className="historylogcontainer"></div></div>
                 <div className="textlanebutton">
+                <div style={{  marginLeft: 40,marginTop:20}}>
+        <div style={ styles.swatch } onClick={ this.handleClick0 }>
+          <div style={ styles.color } />{console.log(styles.color.background)}
+        </div>
+        { this.state.displayColorPicker ? <div style={ styles.popover }>
+          <div style={ styles.cover } onClick={ this.handleClose0 }/>
+          <SketchPicker color={ this.state.color } onChange={ this.handleChange0 } />
+        </div> : null }
+
+      </div>
                   <button
                     type="button"
                     className="savebuttontext"
@@ -1717,7 +1800,7 @@ class Board extends Component {
           <Modal open={open3} onClose={e => this.onCloseModal3(e)} center>
             <div className="textlane">
               <div className="textlanenavbar">
-                <div className="textsize2 " style={{ padding: 10 }}>
+                <div className="textsize2 " style={{ padding: 8,marginLeft:10 }}>
                   Edit Card
                 </div>
               </div>
@@ -1756,7 +1839,16 @@ class Board extends Component {
                 
                 </div></div>
                 <div className="textlanebutton">
-                 
+                <div style={{  marginLeft: 40,marginTop:20}}>
+        <div style={ styles.swatch } onClick={ this.handleClick0 }>
+          <div style={ styles.color } />
+        </div>
+        { this.state.displayColorPicker ? <div style={ styles.popover }>
+          <div style={ styles.cover } onClick={ this.handleClose0 }/>
+          <SketchPicker color={ this.state.color } onChange={ this.handleChange0 } />
+        </div> : null }
+
+      </div>
                   <button
                     className="savebuttontext"
                     type="button"
@@ -1774,7 +1866,7 @@ class Board extends Component {
               <div className="namemodalnavbar">
                 <div
                   className="textsize2 "
-                  style={{ paddingTop: 5, paddingLeft: 10 }}
+                  style={{ paddingTop: 4, paddingLeft: 10 }}
                 >
                   Project Name
                 </div>
@@ -1971,34 +2063,50 @@ class Board extends Component {
 <div className="lanetypeboxnavbar" >Select Lane</div>
 <div style={{display:"flex"}}>
   <div className="lanecolumncontainer">
-    <div className="lanetypecard" onClick={() => this.onOpenModal("card")}></div>
+  <Tooltip title={<span>Select this lane to capture and map the customer activities, steps, interaction and moments of truth.</span>}>
+       <div className="lanetypecard" onClick={() => this.onOpenModal("card")}></div>           
+                </Tooltip>
+    
    <p style={{marginLeft:20}}>Card Lane</p>
-   
-   <div className="lanetypetext" onClick={() => this.onOpenModal("line")}>
-   <img src={Line}  style={{height:60,width:80,marginLeft:10}}></img></div>
+   <Tooltip title={<span>Select this lane to capture the emotional state of a customer or user which represents their level of satisfaction at each step or interaction on a five-point Likert scale where 0 is neutral, +2 is very satisfied and -2 is very unsatisfied.</span>}>
+  <div> <div className="lanetypetext" onClick={() => this.onOpenModal("line")}>
+   <img src={Line}  style={{height:60,width:80,marginLeft:10}}></img></div></div></Tooltip>
    <p style={{marginLeft:20,marginTop:10}}>Line Lane</p>
   </div>
   <div className="lanecolumncontainer">
-  <div className="lanetypebubble"  onClick={() => this.onOpenModal("bubble")}></div>
+  <Tooltip title={<span>Select this lane to map the goals, problems, ideas, opportunities and other comments.</span>}>
+  <div className="lanetypebubble"  onClick={() => this.onOpenModal("bubble")}></div></Tooltip>
    <p style={{marginLeft:20}}>Bubble Lane</p>
-   <div className="lanetypetext" onClick={() => this.onOpenModal("image")}>
-   <img src={Image}  style={{height:60,width:80,marginLeft:10,marginTop:5}}></img></div>
+   <Tooltip title={<span>Select this lane to storyboard your journey map by adding visuals through icons, photos, and screenshots etc.</span>}>
+   <div><div className="lanetypetext" onClick={() => this.onOpenModal("image")}>
+   <img src={Image}  style={{height:60,width:80,marginLeft:10,marginTop:5}}></img></div></div></Tooltip>
    <p style={{marginLeft:20,marginTop:10}}>Image Lane</p>
   </div>
   <div className="lanecolumncontainer">
-  <div className="lanetypephase" onClick={() => this.onOpenModal("phase")}></div>
+  <Tooltip title={<span>Select this lane to map stages of a customer journey or user experience to define the basic structure. As an example, stages or phases could be before, during and after or pre, during or post etc.</span>}>
+  <div className="lanetypephase" onClick={() => this.onOpenModal("phase")}></div></Tooltip>
   <p style={{marginLeft:20}}>Phase Lane</p> 
-  <div className="lanetypetext" onClick={() => this.onOpenModal("file")}>
-   <img src={File}  style={{height:60,width:80,marginLeft:10,marginTop:5}}></img></div>
+  <Tooltip title={<span>Select this lane to attach documents and other assets related to a step or interaction to provide more context and information.</span>}>
+ <div> <div className="lanetypetext" onClick={() => this.onOpenModal("file")}>
+   <img src={File}  style={{height:60,width:80,marginLeft:10,marginTop:5}}></img></div></div></Tooltip>
    <p style={{marginLeft:20,marginTop:10}}>File Lane</p>
   </div>
   <div className="lanecolumncontainer">
-  <div className="lanetypetext" onClick={() => this.onOpenModal("text")}></div>
+  <Tooltip title={<span>Select this lane to capture needs, attitude, behavior, resources and other inputs.</span>}>
+  <div className="lanetypetext" onClick={() => this.onOpenModal("text")}></div></Tooltip>
   <p style={{marginLeft:20}}>Text Lane</p> 
+  <Tooltip title={<span>Select this lane to represent all other related lanes to a group, for example, empathy-engagement-engagement or customer-frontstage-backstage etc.</span>}>
+  <div> <div className="lanetypetext">
+   <img src={Layer}  style={{height:60,width:80,marginLeft:10,marginTop:5}}></img></div></div></Tooltip>
+  <p style={{marginLeft:20}}>Layer Lane</p> 
   </div>
  
 </div>
+
 </div>):("")}
+
+
+      
 <div className="container"></div>
         <div className="footer">
           <Tabs
