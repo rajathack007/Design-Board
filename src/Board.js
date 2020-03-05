@@ -80,12 +80,12 @@ import Tooltip from "@material-ui/core/Tooltip";
 //  var dragula = require('react-dragula');
 import Dragula from "react-dragula";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import reactCSS from 'reactcss'
-import { SketchPicker } from 'react-color'
-import Layer from "./Layer.png"
-import Line from "./Line.png"
-import File from "./File.png"
-import Image from "./Image.png"
+import reactCSS from "reactcss";
+import { SketchPicker } from "react-color";
+import Layer from "./Layer.png";
+import Line from "./Line.png";
+import File from "./File.png";
+import Image from "./Image.png";
 const zoomArr = [
   "50%",
   "75%",
@@ -122,12 +122,12 @@ class Board extends Component {
       Bubble: [],
       Phase: [],
       displayColorPicker: false,
-    color: {
-      r: '32',
-      g: '178',
-      b: '170',
-      a: '0.8',
-    },
+      color: {
+        r: "32",
+        g: "178",
+        b: "170",
+        a: "0.8"
+      },
       background: "#ff0000",
       activeFontFamily: "Font",
       Italic: [],
@@ -176,24 +176,24 @@ class Board extends Component {
     };
     //close this.state
 
-   
     this.logout = this.logout.bind(this);
 
-   
     this.onDrop = this.onDrop.bind(this);
-   
+
     this.onCloseModal = this.onCloseModal.bind(this);
   } //close constructor()
   handleClick0 = () => {
-    this.setState({ displayColorPicker: !this.state.displayColorPicker })
+    this.setState({ displayColorPicker: !this.state.displayColorPicker });
   };
 
   handleClose0 = () => {
-    this.setState({ displayColorPicker: false })
+    this.setState({ displayColorPicker: false });
   };
 
-  handleChange0 = (color) => {
-    this.setState({ color: color.rgb })
+  handleChange0 = color => {
+    this.setState({ color: color.rgb }, () => {
+      console.log("color", color.rgb);
+    });
   };
 
   onEditorStateChange = editorState => {
@@ -236,10 +236,10 @@ class Board extends Component {
       const Sub_project_id = this.props.match.params.subid;
       let project_name = "";
       let project_desc = "";
-      for (var i = 0; i < response.data.length; i++) {
-        if (response.data[i]._id === Project_id) {
-          project_name = response.data[i].name;
-          project_desc = response.data[i].desc;
+      for (var i = 0; i < response.data.projects.length; i++) {
+        if (response.data.projects[i]._id === Project_id) {
+          project_name = response.data.projects[i].name;
+          project_desc = response.data.projects[i].desc;
         }
       }
 
@@ -442,7 +442,8 @@ class Board extends Component {
           layer_index: id1,
           node_index: id,
           lane_id,
-          card_id
+          card_id,
+          color: this.state.totallayer[id1].nodes[id].color
         },
         () => {
           console.log("text", this.state.totallayer[id1].nodes[id].cardHTML);
@@ -465,7 +466,8 @@ class Board extends Component {
         layer_index: id1,
         node_index: id,
         lane_id,
-        card_id
+        card_id,
+        color: this.state.totallayer[id1].nodes[id].color
       });
       const html = this.state.totallayer[id1].nodes[id].bubbleHTML;
       const contentBlock = htmlToDraft(html);
@@ -484,7 +486,8 @@ class Board extends Component {
         layer_index: id1,
         node_index: id,
         lane_id,
-        card_id
+        card_id,
+        color: this.state.totallayer[id1].nodes[id].color
       });
       const html = this.state.totallayer[id1].nodes[id].phaseHTML;
       const contentBlock = htmlToDraft(html);
@@ -503,7 +506,8 @@ class Board extends Component {
         layer_index: id1,
         node_index: id,
         lane_id,
-        card_id
+        card_id,
+        color: this.state.totallayer[id1].nodes[id].color
       });
       const html = this.state.totallayer[id1].nodes[id].textHTML;
       const contentBlock = htmlToDraft(html);
@@ -615,7 +619,8 @@ class Board extends Component {
         cardHTML: this.state.text1,
         gridID: 0,
         cardStatus: "Start",
-        cardCategory: "Customer"
+        cardCategory: "Customer",
+        color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
       };
       try {
         const response = await axios.post(
@@ -656,7 +661,8 @@ class Board extends Component {
         bubbleHTML: this.state.text1,
         gridID: 0,
         bubbleStatus: "Start",
-        bubbleCategory: "Customer"
+        bubbleCategory: "Customer",
+        color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
       };
       console.log("submit_data", data);
       console.log("lane_id", this.state.lane_id);
@@ -699,7 +705,8 @@ class Board extends Component {
         gridID: 0,
         phaseWidth: "",
         phaseStatus: "Start",
-        phaseCategory: "Customer"
+        phaseCategory: "Customer",
+        color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
       };
       try {
         const response = await axios.post(
@@ -739,7 +746,8 @@ class Board extends Component {
         textHTML: this.state.text1,
         gridID: 0,
         textStatus: "Start",
-        textCategory: "Customer"
+        textCategory: "Customer",
+        color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
       };
       try {
         const response = await axios.post(
@@ -793,7 +801,8 @@ class Board extends Component {
         gridID: 0,
         cardStatus: "Start",
         cardCategory: "Customer",
-        history: history
+        history: history,
+        color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
       };
       try {
         const response = await axios.put(
@@ -832,7 +841,8 @@ class Board extends Component {
         gridID: 0,
         bubbleStatus: "Start",
         bubbleCategory: "Customer",
-        history: history
+        history: history,
+        color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
       };
       console.log("edited_data", data);
       try {
@@ -872,7 +882,8 @@ class Board extends Component {
         gridID: 0,
         phaseStatus: "Start",
         phaseCategory: "Customer",
-        history: history
+        history: history,
+        color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
       };
       console.log("edited_data", data);
       try {
@@ -909,7 +920,8 @@ class Board extends Component {
         gridID: 0,
         textStatus: "Start",
         textCategory: "Customer",
-        history: history
+        history: history,
+        color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
       };
       try {
         const response = await axios.put(
@@ -1098,14 +1110,12 @@ class Board extends Component {
     });
   };
 
- 
   toggle() {
     this.setState({
       open: !this.state.open
     });
   }
 
- 
   dragulaDecorator = componentBackingInstance => {
     if (componentBackingInstance) {
       let options = {};
@@ -1124,33 +1134,33 @@ class Board extends Component {
 
   render() {
     const styles = reactCSS({
-      'default': {
+      default: {
         color: {
-          width: '36px',
-          height: '14px',
-          borderRadius: '2px',
-          background: `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`,
+          width: "36px",
+          height: "14px",
+          borderRadius: "2px",
+          background: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
         },
         swatch: {
-          padding: '5px',
-          background: '#fff',
-          borderRadius: '1px',
-          boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
-          display: 'inline-block',
-          cursor: 'pointer',
+          padding: "5px",
+          background: "#fff",
+          borderRadius: "1px",
+          boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
+          display: "inline-block",
+          cursor: "pointer"
         },
         popover: {
-          position: 'absolute',
-          zIndex: '2',
+          position: "absolute",
+          zIndex: "2"
         },
         cover: {
-          position: 'fixed',
-          top: '0px',
-          right: '0px',
-          bottom: '0px',
-          left: '0px',
-        },
-      },
+          position: "fixed",
+          top: "0px",
+          right: "0px",
+          bottom: "0px",
+          left: "0px"
+        }
+      }
     });
     const { open } = this.state;
     const { open1 } = this.state;
@@ -1163,7 +1173,7 @@ class Board extends Component {
     // const { data } = this.props.location;
     const { editorState } = this.state;
     const { editorState1 } = this.state;
-   
+
     let wrapperStyle = {};
     if (this.state.showBound) {
       wrapperStyle = {
@@ -1181,7 +1191,7 @@ class Board extends Component {
           <div class="brand-title">
             <Link
               to="/UserMap"
-              style={{ color: "white", textDecoration: "none" }}
+              style={{ color: "white", textDecoration: "none",marginTop:10}}
             >
               {" "}
               ETU LOGO
@@ -1349,7 +1359,7 @@ class Board extends Component {
                                 overflow: "hidden",
                                 whiteSpace: "normal",
                                 wordBreak: "break-word",
-                                background:`${styles.color.background}`
+                                background: `${item.color}`
                               }}
                             >
                               <div
@@ -1399,7 +1409,7 @@ class Board extends Component {
               } else if (item.laneType == "bubble") {
                 return (
                   <ExpandCollapse previewHeight="50px" expanded="true">
-                    <Bubblelane >
+                    <Bubblelane>
                       <div
                         onClick={() =>
                           this.onOpenModal5(
@@ -1407,13 +1417,9 @@ class Board extends Component {
                             lane_id,
                             "bubble",
                             item.laneGridNo
-                            
                           )
-                         
                         }
-                       
                       >
-                        
                         {parse(item.laneName)}
                       </div>
                       {item.nodes.map((item, id) => {
@@ -1426,9 +1432,8 @@ class Board extends Component {
                                 overflow: "hidden",
                                 whiteSpace: "normal",
                                 wordBreak: "break-word",
-                                background:`${styles.color.background}`
+                                background: `${item.color}`
                               }}
-                              
                               onClick={() =>
                                 this.onOpenModal3(
                                   "bubble",
@@ -1484,7 +1489,7 @@ class Board extends Component {
                               overflow: "hidden",
                               whiteSpace: "normal",
                               wordBreak: "break-word",
-                              background:`${styles.color.background}`
+                              background: `${item.color}`
                             }}
                             draggable="false"
                           >
@@ -1539,7 +1544,7 @@ class Board extends Component {
                               overflow: "hidden",
                               whiteSpace: "normal",
                               wordBreak: "break-word",
-                              background:`${styles.color.background}`
+                              background: `${item.color}`
                             }}
                             onClick={() =>
                               this.onOpenModal3(
@@ -1574,12 +1579,9 @@ class Board extends Component {
                       >
                         {parse(item.laneName)}
                       </div>
-                      <div style={{marginTop:30}}>
-                      <UploadImages
-                        multiple
-                        onChange={this.onChange}
-                        
-                      /></div>
+                      <div style={{ marginTop: 30 }}>
+                        <UploadImages multiple onChange={this.onChange} />
+                      </div>
                     </Imagelane>
                   </ExpandCollapse>
                 );
@@ -1592,11 +1594,10 @@ class Board extends Component {
                       >
                         {parse(item.laneName)}
                       </div>
-                      <div className="file">
+                      <div className="file" style={{overflow:"auto",marginTop:-15,height:150}}>
                         <FilePond allowMultiple={true} />
                       </div>
                     </Filelane>
-                    
                   </ExpandCollapse>
                 );
               } else if (item.laneType == "line") {
@@ -1624,14 +1625,15 @@ class Board extends Component {
             <p style={{ fontSize: "1.5em", marginTop: 7, marginLeft: 5 }}>
               Add New Lane
             </p>
-
-         
           </div>
 
           <Modal open={open} onClose={e => this.onCloseModal(e)} center>
             <div className="textlane">
               <div className="textlanenavbar">
-                <div className="textsize2 "style={{ padding: 8,marginLeft:10 }}>
+                <div
+                  className="textsize2 "
+                  style={{ padding: 8, marginLeft: 10 }}
+                >
                   Edit Lane
                 </div>
               </div>
@@ -1644,103 +1646,115 @@ class Board extends Component {
                       })
                     }
                   /> */}
-  <div style={{display:"flex"}}>
-    <div>
-      
-  <div className="textlaneeditortools">
-              <Editor
-                editorState={editorState}
-                wrapperClassName="demo-wrapper"
-                editorClassName="demo-editor"
-                handleBeforeInput={this._handleBeforeInput}
-                handlePastedText={this._handlePastedText}
-                onEditorStateChange={this.onEditorStateChange1}
-              />
-              
-              </div>
-              <div className="horizontallinetext"></div>
-              <div className="historylogcontainer"></div></div>
-            
-              {/* <textarea
+              <div style={{ display: "flex" }}>
+                <div>
+                  <div className="textlaneeditortools">
+                    <Editor
+                      editorState={editorState}
+                      wrapperClassName="demo-wrapper"
+                      editorClassName="demo-editor"
+                      handleBeforeInput={this._handleBeforeInput}
+                      handlePastedText={this._handlePastedText}
+                      onEditorStateChange={this.onEditorStateChange1}
+                    />
+                  </div>
+                  <div className="horizontallinetext"></div>
+                  <div className="historylogcontainer"></div>
+                </div>
+
+                {/* <textarea
                 className="apply-font Italic"
                 style={{ width: 500, height: 150, marginTop: 10 }}
                 name="text"
                 onChange={e => this.change(e)}
               ></textarea> */}
-              <div className="textlanebutton" >
-              <div  style={{  marginLeft: 40,marginTop:20}}>
-        <div style={ styles.swatch } onClick={ this.handleClick0 }>
-          <div style={ styles.color } />
-        </div>
-        { this.state.displayColorPicker ? <div style={ styles.popover }>
-          <div style={ styles.cover } onClick={ this.handleClose0 }/>
-          <SketchPicker color={ this.state.color } onChange={ this.handleChange0 } />
-        </div> : null }
-
-      </div>
-              <button className="savebuttontext"
-                type="button"
-                style={{ fontSize: 20, marginLeft: 10,marginTop:200}}
-                onClick={e => this.onCloseModal(e)}
-              >
-                Save
-              </button></div>
+                <div className="textlanebutton">
+                  <div style={{ marginLeft: 40, marginTop: 20 }}>
+                    <div style={styles.swatch} onClick={this.handleClick0}>
+                      <div style={styles.color} />
+                    </div>
+                    {this.state.displayColorPicker ? (
+                      <div style={styles.popover}>
+                        <div style={styles.cover} onClick={this.handleClose0} />
+                        <SketchPicker
+                          color={this.state.color}
+                          onChange={this.handleChange0}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+                  <button
+                    className="savebuttontext"
+                    type="button"
+                    style={{ fontSize: 20, marginLeft: 10, marginTop: 200 }}
+                    onClick={e => this.onCloseModal(e)}
+                  >
+                    Save
+                  </button>
+                </div>
               </div>
             </div>
           </Modal>
           <Modal open={open5} onClose={e => this.onCloseModal5(e)} center>
             <div className="textlane">
               <div className="textlanenavbar">
-                <div className="textsize2 " style={{ padding: 8,marginLeft:10 }}>
+                <div
+                  className="textsize2 "
+                  style={{ padding: 8, marginLeft: 10 }}
+                >
                   Edit Lane
                 </div>
               </div>
               <div style={{ display: "flex" }}>
                 <div>
-                <div className="textlaneeditortools">
-                  {" "}
-                  <Editor
-                    editorState={editorState}
-                    wrapperClassName="demo-wrapper"
-                    editorClassName="demo-editor"
-                    handleBeforeInput={this._handleBeforeInput}
-                    handlePastedText={this._handlePastedText}
-                    onEditorStateChange={this.onEditorStateChange1}
-                  />
-                </div>
-                <div className="horizontallinetext"></div>
-              <div className="historylogcontainer">
-              <div>
-                    {this.state.edit.map(item => {
-                      return (
-                        <div>
-                          {item.action} {parse(item.html)}{" "}
-                          {item.date.split(" ")[0] +
-                            " " +
-                            item.date.split(" ")[1] +
-                            " " +
-                            item.date.split(" ")[2] +
-                            " " +
-                            item.date.split(" ")[3] +
-                            " " +
-                            item.date.split(" ")[4]}
-                        </div>
-                      );
-                    })}
+                  <div className="textlaneeditortools">
+                    {" "}
+                    <Editor
+                      editorState={editorState}
+                      wrapperClassName="demo-wrapper"
+                      editorClassName="demo-editor"
+                      handleBeforeInput={this._handleBeforeInput}
+                      handlePastedText={this._handlePastedText}
+                      onEditorStateChange={this.onEditorStateChange1}
+                    />
                   </div>
-                
-                </div></div>
+                  <div className="horizontallinetext"></div>
+                  <div className="historylogcontainer">
+                    <div>
+                      {this.state.edit.map(item => {
+                        return (
+                          <div>
+                            {item.action} {parse(item.html)}{" "}
+                            {item.date.split(" ")[0] +
+                              " " +
+                              item.date.split(" ")[1] +
+                              " " +
+                              item.date.split(" ")[2] +
+                              " " +
+                              item.date.split(" ")[3] +
+                              " " +
+                              item.date.split(" ")[4]}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
                 <div className="textlanebutton">
-                <div style={{  marginLeft: 40,marginTop:20}}>
-        <div style={ styles.swatch } onClick={ this.handleClick0 }>
-          <div style={ styles.color } />
-        </div>
-        { this.state.displayColorPicker ? <div style={ styles.popover }>
-          <div style={ styles.cover } onClick={ this.handleClose0 }/>
-          <SketchPicker color={ this.state.color } onChange={ this.handleChange0 } />
-        </div> : null }
-
-      </div>
+                  <div style={{ marginLeft: 40, marginTop: 20 }}>
+                    <div style={styles.swatch} onClick={this.handleClick0}>
+                      <div style={styles.color} />
+                    </div>
+                    {this.state.displayColorPicker ? (
+                      <div style={styles.popover}>
+                        <div style={styles.cover} onClick={this.handleClose0} />
+                        <SketchPicker
+                          color={this.state.color}
+                          onChange={this.handleChange0}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
                   <button
                     className="savebuttontext"
                     type="button"
@@ -1756,35 +1770,44 @@ class Board extends Component {
           <Modal open={open1} onClose={e => this.onCloseModal1(e)} center>
             <div className="textlane">
               <div className="textlanenavbar">
-                <div className="textsize2 " style={{ padding: 8,marginLeft:10 }}>
+                <div
+                  className="textsize2 "
+                  style={{ padding: 8, marginLeft: 10 }}
+                >
                   Edit Card
                 </div>
               </div>
               <div style={{ display: "flex" }}>
                 <div>
-                <div className="textlaneeditortools">
-                  <Editor
-                    editorState={editorState}
-                    wrapperClassName="demo-wrapper"
-                    editorClassName="demo-editor"
-                    handleBeforeInput={this._handleBeforeInput1}
-                    handlePastedText={this._handlePastedText1}
-                    onEditorStateChange={this.onEditorStateChange}
-                  />
+                  <div className="textlaneeditortools">
+                    <Editor
+                      editorState={editorState}
+                      wrapperClassName="demo-wrapper"
+                      editorClassName="demo-editor"
+                      handleBeforeInput={this._handleBeforeInput1}
+                      handlePastedText={this._handlePastedText1}
+                      onEditorStateChange={this.onEditorStateChange}
+                    />
+                  </div>
+                  <div className="horizontallinetext"></div>
+                  <div className="historylogcontainer"></div>
                 </div>
-                <div className="horizontallinetext"></div>
-              <div className="historylogcontainer"></div></div>
                 <div className="textlanebutton">
-                <div style={{  marginLeft: 40,marginTop:20}}>
-        <div style={ styles.swatch } onClick={ this.handleClick0 }>
-          <div style={ styles.color } />{console.log(styles.color.background)}
-        </div>
-        { this.state.displayColorPicker ? <div style={ styles.popover }>
-          <div style={ styles.cover } onClick={ this.handleClose0 }/>
-          <SketchPicker color={ this.state.color } onChange={ this.handleChange0 } />
-        </div> : null }
-
-      </div>
+                  <div style={{ marginLeft: 40, marginTop: 20 }}>
+                    <div style={styles.swatch} onClick={this.handleClick0}>
+                      <div style={styles.color} />
+                      {/*console.log(item.color)*/}
+                    </div>
+                    {this.state.displayColorPicker ? (
+                      <div style={styles.popover}>
+                        <div style={styles.cover} onClick={this.handleClose0} />
+                        <SketchPicker
+                          color={this.state.color}
+                          onChange={this.handleChange0}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
                   <button
                     type="button"
                     className="savebuttontext"
@@ -1800,55 +1823,62 @@ class Board extends Component {
           <Modal open={open3} onClose={e => this.onCloseModal3(e)} center>
             <div className="textlane">
               <div className="textlanenavbar">
-                <div className="textsize2 " style={{ padding: 8,marginLeft:10 }}>
+                <div
+                  className="textsize2 "
+                  style={{ padding: 8, marginLeft: 10 }}
+                >
                   Edit Card
                 </div>
               </div>
               <div style={{ display: "flex" }}>
                 <div>
-                <div className="textlaneeditortools">
-                  <Editor
-                    editorState={editorState}
-                    wrapperClassName="demo-wrapper"
-                    editorClassName="demo-editor"
-                    handleBeforeInput={this._handleBeforeInput1}
-                    handlePastedText={this._handlePastedText1}
-                    onEditorStateChange={this.onEditorStateChange}
-                  />
-                </div>
-                <div className="horizontallinetext"></div>
-              <div className="historylogcontainer">
-              <div>
-                    {this.state.edit.map(item => {
-                      return (
-                        <div>
-                          {item.action} {parse(item.html)}{" "}
-                          {item.date.split(" ")[0] +
-                            " " +
-                            item.date.split(" ")[1] +
-                            " " +
-                            item.date.split(" ")[2] +
-                            " " +
-                            item.date.split(" ")[3] +
-                            " " +
-                            item.date.split(" ")[4]}
-                        </div>
-                      );
-                    })}
+                  <div className="textlaneeditortools">
+                    <Editor
+                      editorState={editorState}
+                      wrapperClassName="demo-wrapper"
+                      editorClassName="demo-editor"
+                      handleBeforeInput={this._handleBeforeInput1}
+                      handlePastedText={this._handlePastedText1}
+                      onEditorStateChange={this.onEditorStateChange}
+                    />
                   </div>
-                
-                </div></div>
+                  <div className="horizontallinetext"></div>
+                  <div className="historylogcontainer">
+                    <div>
+                      {this.state.edit.map(item => {
+                        return (
+                          <div>
+                            {item.action} {parse(item.html)}{" "}
+                            {item.date.split(" ")[0] +
+                              " " +
+                              item.date.split(" ")[1] +
+                              " " +
+                              item.date.split(" ")[2] +
+                              " " +
+                              item.date.split(" ")[3] +
+                              " " +
+                              item.date.split(" ")[4]}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
                 <div className="textlanebutton">
-                <div style={{  marginLeft: 40,marginTop:20}}>
-        <div style={ styles.swatch } onClick={ this.handleClick0 }>
-          <div style={ styles.color } />
-        </div>
-        { this.state.displayColorPicker ? <div style={ styles.popover }>
-          <div style={ styles.cover } onClick={ this.handleClose0 }/>
-          <SketchPicker color={ this.state.color } onChange={ this.handleChange0 } />
-        </div> : null }
-
-      </div>
+                <div style={{ marginLeft: 40, marginTop: 20 }}>
+                    <div style={styles.swatch} onClick={this.handleClick0} background="red">
+                      <div style={styles.color} />
+                    </div>
+                    {this.state.displayColorPicker ? (
+                      <div style={styles.popover}>
+                        <div style={styles.cover} onClick={this.handleClose0} />
+                        <SketchPicker
+                          color={this.state.color}
+                          onChange={this.handleChange0}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
                   <button
                     className="savebuttontext"
                     type="button"
@@ -2058,56 +2088,188 @@ class Board extends Component {
             </div>
           </Modal>
         </div>
-      {this.state.dropcard ?
-(<div className="lanetypebox">
-<div className="lanetypeboxnavbar" >Select Lane</div>
-<div style={{display:"flex"}}>
-  <div className="lanecolumncontainer">
-  <Tooltip title={<span>Select this lane to capture and map the customer activities, steps, interaction and moments of truth.</span>}>
-       <div className="lanetypecard" onClick={() => this.onOpenModal("card")}></div>           
+        {this.state.dropcard ? (
+          <div className="lanetypebox">
+            <div className="lanetypeboxnavbar">Select Lane</div>
+            <div style={{ display: "flex" }}>
+              <div className="lanecolumncontainer">
+                <Tooltip
+                  title={
+                    <span>
+                      Select this lane to capture and map the customer
+                      activities, steps, interaction and moments of truth.
+                    </span>
+                  }
+                >
+                  <div
+                    className="lanetypecard"
+                    onClick={() => this.onOpenModal("card")}
+                  ></div>
                 </Tooltip>
-    
-   <p style={{marginLeft:20}}>Card Lane</p>
-   <Tooltip title={<span>Select this lane to capture the emotional state of a customer or user which represents their level of satisfaction at each step or interaction on a five-point Likert scale where 0 is neutral, +2 is very satisfied and -2 is very unsatisfied.</span>}>
-  <div> <div className="lanetypetext" onClick={() => this.onOpenModal("line")}>
-   <img src={Line}  style={{height:60,width:80,marginLeft:10}}></img></div></div></Tooltip>
-   <p style={{marginLeft:20,marginTop:10}}>Line Lane</p>
-  </div>
-  <div className="lanecolumncontainer">
-  <Tooltip title={<span>Select this lane to map the goals, problems, ideas, opportunities and other comments.</span>}>
-  <div className="lanetypebubble"  onClick={() => this.onOpenModal("bubble")}></div></Tooltip>
-   <p style={{marginLeft:20}}>Bubble Lane</p>
-   <Tooltip title={<span>Select this lane to storyboard your journey map by adding visuals through icons, photos, and screenshots etc.</span>}>
-   <div><div className="lanetypetext" onClick={() => this.onOpenModal("image")}>
-   <img src={Image}  style={{height:60,width:80,marginLeft:10,marginTop:5}}></img></div></div></Tooltip>
-   <p style={{marginLeft:20,marginTop:10}}>Image Lane</p>
-  </div>
-  <div className="lanecolumncontainer">
-  <Tooltip title={<span>Select this lane to map stages of a customer journey or user experience to define the basic structure. As an example, stages or phases could be before, during and after or pre, during or post etc.</span>}>
-  <div className="lanetypephase" onClick={() => this.onOpenModal("phase")}></div></Tooltip>
-  <p style={{marginLeft:20}}>Phase Lane</p> 
-  <Tooltip title={<span>Select this lane to attach documents and other assets related to a step or interaction to provide more context and information.</span>}>
- <div> <div className="lanetypetext" onClick={() => this.onOpenModal("file")}>
-   <img src={File}  style={{height:60,width:80,marginLeft:10,marginTop:5}}></img></div></div></Tooltip>
-   <p style={{marginLeft:20,marginTop:10}}>File Lane</p>
-  </div>
-  <div className="lanecolumncontainer">
-  <Tooltip title={<span>Select this lane to capture needs, attitude, behavior, resources and other inputs.</span>}>
-  <div className="lanetypetext" onClick={() => this.onOpenModal("text")}></div></Tooltip>
-  <p style={{marginLeft:20}}>Text Lane</p> 
-  <Tooltip title={<span>Select this lane to represent all other related lanes to a group, for example, empathy-engagement-engagement or customer-frontstage-backstage etc.</span>}>
-  <div> <div className="lanetypetext">
-   <img src={Layer}  style={{height:60,width:80,marginLeft:10,marginTop:5}}></img></div></div></Tooltip>
-  <p style={{marginLeft:20}}>Layer Lane</p> 
-  </div>
- 
-</div>
 
-</div>):("")}
+                <p style={{ marginLeft: 20 }}>Card Lane</p>
+                <Tooltip
+                  title={
+                    <span>
+                      Select this lane to capture the emotional state of a
+                      customer or user which represents their level of
+                      satisfaction at each step or interaction on a five-point
+                      Likert scale where 0 is neutral, +2 is very satisfied and
+                      -2 is very unsatisfied.
+                    </span>
+                  }
+                >
+                  <div>
+                    {" "}
+                    <div
+                      className="lanetypetext"
+                      onClick={() => this.onOpenModal("line")}
+                    >
+                      <img
+                        src={Line}
+                        style={{ height: 60, width: 80, marginLeft: 10 }}
+                      ></img>
+                    </div>
+                  </div>
+                </Tooltip>
+                <p style={{ marginLeft: 20, marginTop: 10 }}>Line Lane</p>
+              </div>
+              <div className="lanecolumncontainer">
+                <Tooltip
+                  title={
+                    <span>
+                      Select this lane to map the goals, problems, ideas,
+                      opportunities and other comments.
+                    </span>
+                  }
+                >
+                  <div
+                    className="lanetypebubble"
+                    onClick={() => this.onOpenModal("bubble")}
+                  ></div>
+                </Tooltip>
+                <p style={{ marginLeft: 20 }}>Bubble Lane</p>
+                <Tooltip
+                  title={
+                    <span>
+                      Select this lane to storyboard your journey map by adding
+                      visuals through icons, photos, and screenshots etc.
+                    </span>
+                  }
+                >
+                  <div>
+                    <div
+                      className="lanetypetext"
+                      onClick={() => this.onOpenModal("image")}
+                    >
+                      <img
+                        src={Image}
+                        style={{
+                          height: 60,
+                          width: 80,
+                          marginLeft: 10,
+                          marginTop: 5
+                        }}
+                      ></img>
+                    </div>
+                  </div>
+                </Tooltip>
+                <p style={{ marginLeft: 20, marginTop: 10 }}>Image Lane</p>
+              </div>
+              <div className="lanecolumncontainer">
+                <Tooltip
+                  title={
+                    <span>
+                      Select this lane to map stages of a customer journey or
+                      user experience to define the basic structure. As an
+                      example, stages or phases could be before, during and
+                      after or pre, during or post etc.
+                    </span>
+                  }
+                >
+                  <div
+                    className="lanetypephase"
+                    onClick={() => this.onOpenModal("phase")}
+                  ></div>
+                </Tooltip>
+                <p style={{ marginLeft: 20 }}>Phase Lane</p>
+                <Tooltip
+                  title={
+                    <span>
+                      Select this lane to attach documents and other assets
+                      related to a step or interaction to provide more context
+                      and information.
+                    </span>
+                  }
+                >
+                  <div>
+                    {" "}
+                    <div
+                      className="lanetypetext"
+                      onClick={() => this.onOpenModal("file")}
+                    >
+                      <img
+                        src={File}
+                        style={{
+                          height: 60,
+                          width: 80,
+                          marginLeft: 10,
+                          marginTop: 5
+                        }}
+                      ></img>
+                    </div>
+                  </div>
+                </Tooltip>
+                <p style={{ marginLeft: 20, marginTop: 10 }}>File Lane</p>
+              </div>
+              <div className="lanecolumncontainer">
+                <Tooltip
+                  title={
+                    <span>
+                      Select this lane to capture needs, attitude, behavior,
+                      resources and other inputs.
+                    </span>
+                  }
+                >
+                  <div
+                    className="lanetypetext"
+                    onClick={() => this.onOpenModal("text")}
+                  ></div>
+                </Tooltip>
+                <p style={{ marginLeft: 20 }}>Text Lane</p>
+                <Tooltip
+                  title={
+                    <span>
+                      Select this lane to represent all other related lanes to a
+                      group, for example, empathy-engagement-engagement or
+                      customer-frontstage-backstage etc.
+                    </span>
+                  }
+                >
+                  <div>
+                    {" "}
+                    <div className="lanetypetext">
+                      <img
+                        src={Layer}
+                        style={{
+                          height: 60,
+                          width: 80,
+                          marginLeft: 10,
+                          marginTop: 5
+                        }}
+                      ></img>
+                    </div>
+                  </div>
+                </Tooltip>
+                <p style={{ marginLeft: 20 }}>Layer Lane</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
 
-
-      
-<div className="container"></div>
+        <div className="container"></div>
         <div className="footer">
           <Tabs
             selectedIndex={this.state.tabIndex}

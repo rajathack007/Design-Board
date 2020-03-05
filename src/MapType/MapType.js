@@ -37,7 +37,7 @@ class MapType extends Component {
         {
           tokenvalue: localStorage.getItem("token"),
           Project_id: this.props.match.params.id.split(":")[1],
-          data: response.data
+          data: response.data.projects
         },
         () => {
           console.log(this.state.data);
@@ -70,7 +70,7 @@ class MapType extends Component {
       console.log(response);
       const subprojectid = response.data._id;
       if (response.status === 200) {
-        this.props.history.push(
+        this.props.history.replace(
           `/Board:${this.state.Project_id}/${subprojectid}`
         );
       }
@@ -164,11 +164,11 @@ class MapType extends Component {
                 <div className="mapbutton1">+</div>
               </Link>
             </div>
-            <div className="designthinking1">
+            <div className="personamap">
               <p className="textsize1" align="center">
-                Design Thinking Map
+                Persona Map
               </p>
-              <div className="mapbutton1">+</div>
+              <div className="mapbutton1" style={{marginTop:53}}>+</div>
             </div>
 
             <div>

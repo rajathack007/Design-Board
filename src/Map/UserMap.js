@@ -44,7 +44,7 @@ class UserMap extends Component {
         }
       );
       if (response.status === 200) {
-        this.setState({ data: response.data }, () => {
+        this.setState({ data: response.data.projects }, () => {
           console.log("data", response.data);
         });
       }
