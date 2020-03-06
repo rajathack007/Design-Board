@@ -86,6 +86,9 @@ import Layer from "./Layer.png";
 import Line from "./Line.png";
 import File from "./File.png";
 import Image from "./Image.png";
+
+import Rodal from 'rodal';
+import 'rodal/lib/rodal.css';
 const zoomArr = [
   "50%",
   "75%",
@@ -141,6 +144,7 @@ class Board extends Component {
       open2: false,
       open3: false,
       open4: false,
+      open8:false,
       visible: false,
       show: false,
       pictures: [],
@@ -172,7 +176,8 @@ class Board extends Component {
       projectedit: false,
       project_name: "",
       dropcard: false,
-      project_desc: ""
+      project_desc: "",
+    
     };
     //close this.state
 
@@ -182,6 +187,14 @@ class Board extends Component {
 
     this.onCloseModal = this.onCloseModal.bind(this);
   } //close constructor()
+  show() {
+    this.setState({ visible: true });
+  }
+ 
+  hide() {
+    this.setState({ visible: false });
+  }
+ 
   handleClick0 = () => {
     this.setState({ displayColorPicker: !this.state.displayColorPicker });
   };
@@ -1168,6 +1181,7 @@ class Board extends Component {
     const { open3 } = this.state;
     const { open4 } = this.state;
     const { open5 } = this.state;
+   
     const projectid = this.state.Project_id;
     const project_desc = this.state.project_desc;
     // const { data } = this.props.location;
@@ -1191,7 +1205,7 @@ class Board extends Component {
           <div class="brand-title">
             <Link
               to="/UserMap"
-              style={{ color: "white", textDecoration: "none",marginTop:10}}
+              style={{ color: "white", textDecoration: "none"}}
             >
               {" "}
               ETU LOGO
@@ -1329,15 +1343,25 @@ class Board extends Component {
               if (item.laneType == "card") {
                 return (
                   <ExpandCollapse previewHeight="50px" expanded="true">
+                    <div 
+                      // style={{
+                        
+                      //   background: `${styles.color.background}`
+                      // }}
+                      >
                     <Cardlane>
                       <div
+                      
                         onClick={() =>
+                          
                           this.onOpenModal5(
                             id1,
                             lane_id,
                             item.laneType,
-                            item.laneGridNo
+                            item.laneGridNo,
+                            
                           )
+                          
                         }
                       >
                         {parse(item.laneName)}
@@ -1359,7 +1383,8 @@ class Board extends Component {
                                 overflow: "hidden",
                                 whiteSpace: "normal",
                                 wordBreak: "break-word",
-                                background: `${item.color}`
+                                background: `${item.color}`,
+                                
                               }}
                             >
                               <div
@@ -1369,13 +1394,14 @@ class Board extends Component {
                                     id1,
                                     id,
                                     lane_id,
-                                    card_id
+                                    card_id,
+                                    
                                   )
                                 }
                               >
                                 {console.log("error", item)}
 
-                                {parse(item.cardHTML)}
+                               <p  s>{parse(item.cardHTML)}</p> 
                               </div>
                             </div>
                           </ReactDraggable>
@@ -1403,7 +1429,7 @@ class Board extends Component {
                       {/* <div className="hovercard" >
                
                     </div> */}
-                    </Cardlane>
+                    </Cardlane></div>
                   </ExpandCollapse>
                 );
               } else if (item.laneType == "bubble") {
@@ -2123,7 +2149,7 @@ class Board extends Component {
                     {" "}
                     <div
                       className="lanetypetext"
-                      onClick={() => this.onOpenModal("line")}
+                      
                     >
                       <img
                         src={Line}
@@ -2160,7 +2186,7 @@ class Board extends Component {
                   <div>
                     <div
                       className="lanetypetext"
-                      onClick={() => this.onOpenModal("image")}
+                      
                     >
                       <img
                         src={Image}
@@ -2206,7 +2232,7 @@ class Board extends Component {
                     {" "}
                     <div
                       className="lanetypetext"
-                      onClick={() => this.onOpenModal("file")}
+                      
                     >
                       <img
                         src={File}
@@ -2268,7 +2294,8 @@ class Board extends Component {
         ) : (
           ""
         )}
-
+      
+      
         <div className="container"></div>
         <div className="footer">
           <Tabs

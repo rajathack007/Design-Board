@@ -126,6 +126,9 @@ body {
   white-space: nowrap;
   outline: 10px solid gray;
   margin-top: 10px;
+  border-left-style: solid ;
+  border-width: 0.7em;
+  border-left-color: lightseagreen;
  
   
 }
@@ -279,10 +282,10 @@ outline:2px dashed #DCDCDC;
   overflow: hidden;
   white-space: normal;
   display: inline-flex;
-  padding: 5px;
+  padding: 10px;
   margin-left: 40px;
   margin-top: 7px;
-  
+  box-shadow: 5px 5px 10px;
 }
 .square1{
   height: 150px;
@@ -291,7 +294,7 @@ outline:2px dashed #DCDCDC;
   overflow: hidden;
   white-space: normal;
   display: inline-flex;
-  padding: 5px;
+  padding: 10px;
   margin: 50px;
   
   
@@ -302,12 +305,15 @@ outline:2px dashed #DCDCDC;
   background-color:lightseagreen;
   overflow: hidden;
   white-space: normal;
-  padding: 5px;
+  padding: 10px;
   
    display: inline-flex; 
   margin-left: 40px;
   margin-top: 7px;
   position: relative;
+  border-radius: 5px;
+ 
+  box-shadow: 5px 5px 10px;
   
 }
 .line{
@@ -328,15 +334,15 @@ outline:2px dashed #DCDCDC;
   margin-left: 40px;
   margin-top: 7px;
   display: inline-flex;
-  padding: 5px;
-  
+  padding: 10px;
+  box-shadow: 5px 5px 10px;
 }
 
 .phase{
   border-radius: 0px 30px 30px 0px;
   background:lightseagreen;
   resize: horizontal;
-  padding: 5px;
+  padding: 10px;
   overflow: hidden;
   white-space: normal;
   width: 200px;
@@ -346,7 +352,7 @@ outline:2px dashed #DCDCDC;
   display: inline-flex;
   border-left: 55px;
   position: relative;
-  
+  box-shadow: 5px 5px 10px;
 }
 
 .textlane{
@@ -411,9 +417,7 @@ outline:2px dashed #DCDCDC;
   width: 250px;
   background-color: white;
   overflow-wrap: break-word;
-  border-right-style: solid ;
-  border-width: 0.5em;
-  border-right-color: lightslategray;
+  box-shadow: 1px 5px 10px 5px #aaa;
   left: 0;
   
   
@@ -477,9 +481,10 @@ background-color:gray;
 
 
 
+
 }
 .predefinelane:hover {
-  outline: 1px solid rgb(0, 0, 0);
+  outline: 3px solid lightseagreen;
   /* border-left: 10px solid lightskyblue; */
 }
 .dropdownlane{
