@@ -35,7 +35,7 @@ import {
 } from "reactstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Button } from "react-bootstrap";
+import { Button, ThemeProvider } from "react-bootstrap";
 import { Card } from "react-bootstrap";
 
 import { Link, NavLink } from "react-router-dom";
@@ -88,8 +88,8 @@ import Line from "./Line.png";
 import File from "./File.png";
 import Image from "./Image.png";
 
-import Rodal from 'rodal';
-import 'rodal/lib/rodal.css';
+import Rodal from "rodal";
+import "rodal/lib/rodal.css";
 const zoomArr = [
   "50%",
   "75%",
@@ -145,16 +145,12 @@ class Board extends Component {
       open2: false,
       open3: false,
       open4: false,
-      open8:false,
+      open8: false,
       visible: false,
       show: false,
       pictures: [],
       text: "",
       totallayer: [],
-      totalcard: [],
-      totalbubble: [],
-      totalphase: [],
-      totaltext: [],
       text1: "",
       text2: "",
       type: "",
@@ -178,7 +174,10 @@ class Board extends Component {
       project_name: "",
       dropcard: false,
       project_desc: "",
-    
+      card_limit: [0, 1, 2, 3, 4],
+      card_grid_no: "",
+      lane_color: "",
+      images: []
     };
     //close this.state
 
@@ -191,11 +190,11 @@ class Board extends Component {
   show() {
     this.setState({ visible: true });
   }
- 
+
   hide() {
     this.setState({ visible: false });
   }
- 
+
   handleClick0 = () => {
     this.setState({ displayColorPicker: !this.state.displayColorPicker });
   };
@@ -280,6 +279,18 @@ class Board extends Component {
       );
       console.log("lane_data", response2);
 
+      for (var i = 0; i < response2.data.length; i++) {
+        if (response2.data[i].nodes.length > this.state.card_limit.length - 1) {
+          for (
+            var j = this.state.card_limit.length;
+            j <= response2.data[i].nodes.length;
+            j++
+          ) {
+            this.state.card_limit.push(j);
+          }
+          this.setState({ card_limit: this.state.card_limit });
+        }
+      }
       this.setState(
         {
           tokenvalue: localStorage.getItem("token"),
@@ -402,13 +413,14 @@ class Board extends Component {
       dropcard: false
     });
   };
-  onOpenModal1 = (type, id) => {
+  onOpenModal1 = (type, id, index) => {
     this.setState(
       {
         open1: true,
         type,
         lane_id: id,
-        editorState: EditorState.createEmpty()
+        editorState: EditorState.createEmpty(),
+        card_grid_no: index
       },
       () => {
         console.log("id", this.state.lane_id, id);
@@ -445,7 +457,7 @@ class Board extends Component {
     }
   };
 
-  onOpenModal3 = (type, id1, id, lane_id, card_id) => {
+  onOpenModal3 = (type, id1, id, lane_id, card_id, card_grid_no) => {
     console.log("id", id);
     if (type == "card") {
       this.setState(
@@ -457,6 +469,7 @@ class Board extends Component {
           node_index: id,
           lane_id,
           card_id,
+          card_grid_no,
           color: this.state.totallayer[id1].nodes[id].color
         },
         () => {
@@ -481,6 +494,7 @@ class Board extends Component {
         node_index: id,
         lane_id,
         card_id,
+        card_grid_no,
         color: this.state.totallayer[id1].nodes[id].color
       });
       const html = this.state.totallayer[id1].nodes[id].bubbleHTML;
@@ -501,6 +515,7 @@ class Board extends Component {
         node_index: id,
         lane_id,
         card_id,
+        card_grid_no,
         color: this.state.totallayer[id1].nodes[id].color
       });
       const html = this.state.totallayer[id1].nodes[id].phaseHTML;
@@ -521,6 +536,7 @@ class Board extends Component {
         node_index: id,
         lane_id,
         card_id,
+        card_grid_no,
         color: this.state.totallayer[id1].nodes[id].color
       });
       const html = this.state.totallayer[id1].nodes[id].textHTML;
@@ -578,7 +594,10 @@ class Board extends Component {
       if (response.status === 200) {
         console.log("lane added");
         this.state.totallayer.push(response.data);
-        this.setState({ totallayer: this.state.totallayer });
+        this.setState({
+          totallayer: this.state.totallayer,
+          lane_color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
+        });
       }
     } catch (err) {
       console.log(err);
@@ -631,11 +650,12 @@ class Board extends Component {
         laneType: this.state.type,
         date: Date(Date.now()),
         cardHTML: this.state.text1,
-        gridID: 0,
+        gridID: this.state.card_grid_no.toString(),
         cardStatus: "Start",
         cardCategory: "Customer",
         color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
       };
+      console.log("submit", data);
       try {
         const response = await axios.post(
           `${API_URL}lane/node/add/${this.state.lane_id}`,
@@ -652,10 +672,15 @@ class Board extends Component {
         console.log(response);
         if (response.status === 200) {
           console.log("card added");
-          this.state.totallayer[index].nodes.push(
-            response.data.nodes[response.data.nodes.length - 1]
-          );
-          this.setState({ totallayer: this.state.totallayer });
+          const newItems = [...this.state.totallayer];
+          newItems[index] = response.data;
+          if (this.state.card_grid_no == this.state.card_limit.length - 1) {
+            this.state.card_limit.push(this.state.card_limit.length);
+          }
+          this.setState({
+            totallayer: newItems,
+            card_limit: this.state.card_limit
+          });
         }
       } catch (err) {
         console.log(err);
@@ -673,7 +698,7 @@ class Board extends Component {
         laneType: this.state.type,
         date: Date(Date.now()),
         bubbleHTML: this.state.text1,
-        gridID: 0,
+        gridID: this.state.card_grid_no.toString(),
         bubbleStatus: "Start",
         bubbleCategory: "Customer",
         color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
@@ -716,7 +741,7 @@ class Board extends Component {
         laneType: this.state.type,
         date: Date(Date.now()),
         phaseHTML: this.state.text1,
-        gridID: 0,
+        gridID: this.state.card_grid_no.toString(),
         phaseWidth: "",
         phaseStatus: "Start",
         phaseCategory: "Customer",
@@ -758,7 +783,7 @@ class Board extends Component {
         laneType: this.state.type,
         date: Date(Date.now()),
         textHTML: this.state.text1,
-        gridID: 0,
+        gridID: this.state.card_grid_no.toString(),
         textStatus: "Start",
         textCategory: "Customer",
         color: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`
@@ -812,7 +837,7 @@ class Board extends Component {
         date: Date(Date.now()),
         _id: this.state.card_id,
         cardHTML: this.state.text1,
-        gridID: 0,
+        gridID: this.state.card_grid_no.toString(),
         cardStatus: "Start",
         cardCategory: "Customer",
         history: history,
@@ -852,7 +877,7 @@ class Board extends Component {
         date: Date(Date.now()),
         _id: this.state.card_id,
         bubbleHTML: this.state.text1,
-        gridID: 0,
+        gridID: this.state.card_grid_no.toString(),
         bubbleStatus: "Start",
         bubbleCategory: "Customer",
         history: history,
@@ -893,7 +918,7 @@ class Board extends Component {
         date: Date(Date.now()),
         _id: this.state.card_id,
         phaseHTML: this.state.text1,
-        gridID: 0,
+        gridID: this.state.card_grid_no.toString(),
         phaseStatus: "Start",
         phaseCategory: "Customer",
         history: history,
@@ -931,7 +956,7 @@ class Board extends Component {
         date: Date(Date.now()),
         _id: this.state.card_id,
         textHTML: this.state.text1,
-        gridID: 0,
+        gridID: this.state.card_grid_no.toString(),
         textStatus: "Start",
         textCategory: "Customer",
         history: history,
@@ -1103,7 +1128,8 @@ class Board extends Component {
     });
   }
   onChange = images => {
-    console.log(images);
+    this.state.images.push(images);
+    this.setState({ images: this.state.images });
   };
   showModal = () => {
     this.setState({ show: true });
@@ -1176,13 +1202,24 @@ class Board extends Component {
         }
       }
     });
+    const openFile = file => {
+      var input = file.target;
+
+      var reader = new FileReader();
+      reader.onload = function() {
+        var dataURL = reader.result;
+        var output = document.getElementById("output");
+        output.src = dataURL;
+      };
+      reader.readAsDataURL(input.files[0]);
+    };
     const { open } = this.state;
     const { open1 } = this.state;
     const { open2 } = this.state;
     const { open3 } = this.state;
     const { open4 } = this.state;
     const { open5 } = this.state;
-   
+
     const projectid = this.state.Project_id;
     const project_desc = this.state.project_desc;
     // const { data } = this.props.location;
@@ -1206,7 +1243,7 @@ class Board extends Component {
           <div class="brand-title">
             <Link
               to="/UserMap"
-              style={{ color: "white", textDecoration: "none"}}
+              style={{ color: "white", textDecoration: "none" }}
             >
               {" "}
               ETU LOGO
@@ -1338,99 +1375,175 @@ class Board extends Component {
 
         <div class="maindiv">
           {/* {this.state.layer1} */}
-          <div className="wholecontainer">
+          <div
+            className="wholecontainer"
+            style={{
+              overflow: "auto"
+            }}
+          >
             {this.state.totallayer.map((item, id1) => {
               let lane_id = item._id;
+              let hover = false;
+              let fromi = 0;
+              let nodeslength = item.nodes.length;
               if (item.laneType == "card") {
                 return (
                   <ExpandCollapse previewHeight="50px" expanded="true">
-                    <div 
-                     
-                      >
-                    <Cardlane>
-                      <div
-                      
-                        onClick={() =>
-                          
-                          this.onOpenModal5(
-                            id1,
-                            lane_id,
-                            item.laneType,
-                            item.laneGridNo,
-                            
-                          )
-                          
-                        }
-                      >
-                        {parse(item.laneName)}
-                      </div>
-                      {/* <button
+                    <div>
+                      <Cardlane>
+                        <div
+                          onClick={() =>
+                            this.onOpenModal5(
+                              id1,
+                              lane_id,
+                              item.laneType,
+                              item.laneGridNo
+                            )
+                          }
+                        >
+                          {parse(item.laneName)}
+                        </div>
+                        {/* <button
                       className="button1"
                       onClick={() => this.onOpenModal1("Cardlane")}
                     >
                       +
                     </button> */}
+                        <div
+                          style={{
+                            position: "relative",
+                            display: "inline-flex"
+                          }}
+                        >
+                          {item.nodes.length > 0
+                            ? item.nodes.map((item, id) => {
+                                let card_id = item._id;
+                                let flag = true;
+                                return this.state.card_limit
+                                  .slice(fromi, this.state.card_limit.length)
+                                  .map((i, index) => {
+                                    if (flag) {
+                                      if (i == item.gridID) {
+                                        console.log("no.", index);
+                                        fromi = i + 1;
+                                        flag = false;
+                                        if (id == nodeslength - 1) {
+                                          hover = true;
+                                        }
+                                        return (
+                                          <div
+                                            className="rectangle"
+                                            style={{
+                                              overflow: "hidden",
+                                              whiteSpace: "normal",
+                                              wordBreak: "break-word",
+                                              background: `${item.color}`,
+                                              opacity: 1
+                                            }}
+                                          >
+                                            <div
+                                              onClick={() =>
+                                                this.onOpenModal3(
+                                                  "card",
+                                                  id1,
+                                                  id,
+                                                  lane_id,
+                                                  card_id,
+                                                  i
+                                                )
+                                              }
+                                            >
+                                              {console.log("error", item)}
 
-                      {item.nodes.map((item, id) => {
-                        let card_id = item._id;
-                        return (
-                          <ReactDraggable>
-                            <div
-                              className="rectangle"
-                              
-                              style={{
-                                overflow: "hidden",
-                                whiteSpace: "normal",
-                                wordBreak: "break-word",
-                                background: `${item.color}`
-                                
-                                
-                              }}
-                              
-                            >
-                              <div
-                                onClick={() =>
-                                  this.onOpenModal3(
-                                    "card",
-                                    id1,
-                                    id,
-                                    lane_id,
-                                    card_id,
-                                    
-                                  )
-                                }
-                              >
-                                {console.log("error", item)}
-
-                               <p  s>{parse(item.cardHTML)}</p> 
-                              </div>
-                            </div>
-                          </ReactDraggable>
-                        );
-                      })}
-                      <div
-                        class="hoverWrapper"
-                        style={{ position: "absolute", display: "inline-flex" }}
-                      >
-                        <div id="hoverShow1">
-                          {" "}
-                          <div
-                            onClick={() => this.onOpenModal1("card", item._id)}
-                            style={{
-                              marginLeft: "33%",
-                              fontSize: "5em",
-                              color: "black",
-                              marginTop: "-10%"
-                            }}
-                          >
-                            <p>+</p>
-                          </div>
-                        </div>
-                      </div>
-                      {/* <div className="hovercard" >
+                                              <p>{parse(item.cardHTML)}</p>
+                                            </div>
+                                          </div>
+                                        );
+                                      } else {
+                                        return (
+                                          <div className="hoverrectshape">
+                                            <div id="hoverShow1">
+                                              <div
+                                                onClick={() =>
+                                                  this.onOpenModal1(
+                                                    "card",
+                                                    lane_id,
+                                                    i
+                                                  )
+                                                }
+                                                style={{
+                                                  marginLeft: "33%",
+                                                  fontSize: "5em",
+                                                  color: "black",
+                                                  marginTop: "-10%"
+                                                }}
+                                              >
+                                                {" "}
+                                                <p>+</p>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        );
+                                      }
+                                    } else if (hover) {
+                                      return (
+                                        <div className="hoverrectshape">
+                                          <div id="hoverShow1">
+                                            <div
+                                              onClick={() =>
+                                                this.onOpenModal1(
+                                                  "card",
+                                                  lane_id,
+                                                  i
+                                                )
+                                              }
+                                              style={{
+                                                marginLeft: "33%",
+                                                fontSize: "5em",
+                                                color: "black",
+                                                marginTop: "-10%"
+                                              }}
+                                            >
+                                              {" "}
+                                              <p>+</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      );
+                                    }
+                                  });
+                              })
+                            : this.state.card_limit.map((e, index) => {
+                                return (
+                                  <div className="hoverrectshape">
+                                    <div id="hoverShow1">
+                                      <div
+                                        onClick={() =>
+                                          this.onOpenModal1(
+                                            "card",
+                                            item._id,
+                                            index
+                                          )
+                                        }
+                                        style={{
+                                          marginLeft: "33%",
+                                          fontSize: "5em",
+                                          color: "black",
+                                          marginTop: "-10%"
+                                        }}
+                                      >
+                                        <p>+</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                          {/* <div className="hovercard" >
                
                     </div> */}
-                    </Cardlane></div>
+                        </div>
+                      </Cardlane>
+                    </div>
                   </ExpandCollapse>
                 );
               } else if (item.laneType == "bubble") {
@@ -1449,39 +1562,135 @@ class Board extends Component {
                       >
                         {parse(item.laneName)}
                       </div>
-                      {item.nodes.map((item, id) => {
-                        let card_id = item._id;
-                        return (
-                          <ReactDraggable>
-                            <div
-                              className="bubble"
-                              style={{
-                                overflow: "hidden",
-                                whiteSpace: "normal",
-                                wordBreak: "break-word",
-                                background: `${item.color}`
-                              }}
-                              onClick={() =>
-                                this.onOpenModal3(
-                                  "bubble",
-                                  id1,
-                                  id,
-                                  lane_id,
-                                  card_id
-                                )
-                              }
-                            >
-                              {parse(item.bubbleHTML)}
-                            </div>
-                          </ReactDraggable>
-                        );
-                      })}
-                      <button
-                        className="button1"
-                        onClick={() => this.onOpenModal1("bubble", item._id)}
+                      <div
+                        style={{
+                          position: "relative",
+                          display: "inline-flex"
+                        }}
                       >
-                        +
-                      </button>
+                        {item.nodes.length > 0
+                          ? item.nodes.map((item, id) => {
+                              let card_id = item._id;
+                              let flag = true;
+                              return this.state.card_limit
+                                .slice(fromi, this.state.card_limit.length)
+                                .map((i, index) => {
+                                  if (flag) {
+                                    if (i == item.gridID) {
+                                      console.log("no.", index);
+                                      fromi = i + 1;
+                                      flag = false;
+                                      if (id == nodeslength - 1) {
+                                        hover = true;
+                                      }
+                                      return (
+                                        <div
+                                          className="bubble"
+                                          style={{
+                                            overflow: "hidden",
+                                            whiteSpace: "normal",
+                                            wordBreak: "break-word",
+                                            background: `${item.color}`
+                                          }}
+                                        >
+                                          <div
+                                            onClick={() =>
+                                              this.onOpenModal3(
+                                                "bubble",
+                                                id1,
+                                                id,
+                                                lane_id,
+                                                card_id,
+                                                i
+                                              )
+                                            }
+                                          >
+                                            {console.log("error", item)}
+
+                                            <p>{parse(item.bubbleHTML)}</p>
+                                          </div>
+                                        </div>
+                                      );
+                                    } else {
+                                      return (
+                                        <div className="hoverrectshape">
+                                          <div id="hoverShow1">
+                                            <div
+                                              onClick={() =>
+                                                this.onOpenModal1(
+                                                  "bubble",
+                                                  lane_id,
+                                                  i
+                                                )
+                                              }
+                                              style={{
+                                                marginLeft: "33%",
+                                                fontSize: "5em",
+                                                color: "black",
+                                                marginTop: "-10%"
+                                              }}
+                                            >
+                                              {" "}
+                                              <p>+</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      );
+                                    }
+                                  } else if (hover) {
+                                    return (
+                                      <div className="hoverrectshape">
+                                        <div id="hoverShow1">
+                                          <div
+                                            onClick={() =>
+                                              this.onOpenModal1(
+                                                "bubble",
+                                                lane_id,
+                                                i
+                                              )
+                                            }
+                                            style={{
+                                              marginLeft: "33%",
+                                              fontSize: "5em",
+                                              color: "black",
+                                              marginTop: "-10%"
+                                            }}
+                                          >
+                                            {" "}
+                                            <p>+</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+                                });
+                            })
+                          : this.state.card_limit.map((e, index) => {
+                              return (
+                                <div className="hoverrectshape">
+                                  <div id="hoverShow1">
+                                    <div
+                                      onClick={() =>
+                                        this.onOpenModal1(
+                                          "bubble",
+                                          item._id,
+                                          index
+                                        )
+                                      }
+                                      style={{
+                                        marginLeft: "33%",
+                                        fontSize: "5em",
+                                        color: "black",
+                                        marginTop: "-10%"
+                                      }}
+                                    >
+                                      <p>+</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                      </div>
                     </Bubblelane>
                   </ExpandCollapse>
                 );
@@ -1501,42 +1710,135 @@ class Board extends Component {
                       >
                         {parse(item.laneName)}
                       </div>
-                      <button
-                        className="button1"
-                        onClick={() => this.onOpenModal1("phase", item._id)}
+                      <div
+                        style={{
+                          position: "relative",
+                          display: "inline-flex"
+                        }}
                       >
-                        +
-                      </button>
-                      {item.nodes.map((item, id) => {
-                        let card_id = item._id;
-                        return (
-                          <div
-                            className="phase"
-                            style={{
-                              overflow: "hidden",
-                              whiteSpace: "normal",
-                              wordBreak: "break-word",
-                              background: `${item.color}`
-                            }}
-                            draggable="false"
-                          >
-                            <span
-                              onClick={() =>
-                                this.onOpenModal3(
-                                  "phase",
-                                  id1,
-                                  id,
-                                  lane_id,
-                                  card_id
-                                )
-                              }
-                            >
-                              {" "}
-                              {parse(item.phaseHTML)}
-                            </span>
-                          </div>
-                        );
-                      })}
+                        {item.nodes.length > 0
+                          ? item.nodes.map((item, id) => {
+                              let card_id = item._id;
+                              let flag = true;
+                              return this.state.card_limit
+                                .slice(fromi, this.state.card_limit.length)
+                                .map((i, index) => {
+                                  if (flag) {
+                                    if (i == item.gridID) {
+                                      console.log("no.", index);
+                                      fromi = i + 1;
+                                      flag = false;
+                                      if (id == nodeslength - 1) {
+                                        hover = true;
+                                      }
+                                      return (
+                                        <div
+                                          className="phase"
+                                          style={{
+                                            overflow: "hidden",
+                                            whiteSpace: "normal",
+                                            wordBreak: "break-word",
+                                            background: `${item.color}`
+                                          }}
+                                        >
+                                          <div
+                                            onClick={() =>
+                                              this.onOpenModal3(
+                                                "phase",
+                                                id1,
+                                                id,
+                                                lane_id,
+                                                card_id,
+                                                i
+                                              )
+                                            }
+                                          >
+                                            {console.log("error", item)}
+
+                                            <p>{parse(item.phaseHTML)}</p>
+                                          </div>
+                                        </div>
+                                      );
+                                    } else {
+                                      return (
+                                        <div className="hoverrectshape">
+                                          <div id="hoverShow1">
+                                            <div
+                                              onClick={() =>
+                                                this.onOpenModal1(
+                                                  "phase",
+                                                  lane_id,
+                                                  i
+                                                )
+                                              }
+                                              style={{
+                                                marginLeft: "33%",
+                                                fontSize: "5em",
+                                                color: "black",
+                                                marginTop: "-10%"
+                                              }}
+                                            >
+                                              {" "}
+                                              <p>+</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      );
+                                    }
+                                  } else if (hover) {
+                                    return (
+                                      <div className="hoverrectshape">
+                                        <div id="hoverShow1">
+                                          <div
+                                            onClick={() =>
+                                              this.onOpenModal1(
+                                                "phase",
+                                                lane_id,
+                                                i
+                                              )
+                                            }
+                                            style={{
+                                              marginLeft: "33%",
+                                              fontSize: "5em",
+                                              color: "black",
+                                              marginTop: "-10%"
+                                            }}
+                                          >
+                                            {" "}
+                                            <p>+</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+                                });
+                            })
+                          : this.state.card_limit.map((e, index) => {
+                              return (
+                                <div className="hoverrectshape">
+                                  <div id="hoverShow1">
+                                    <div
+                                      onClick={() =>
+                                        this.onOpenModal1(
+                                          "phase",
+                                          item._id,
+                                          index
+                                        )
+                                      }
+                                      style={{
+                                        marginLeft: "33%",
+                                        fontSize: "5em",
+                                        color: "black",
+                                        marginTop: "-10%"
+                                      }}
+                                    >
+                                      <p>+</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                      </div>
                     </Phaselane>
                   </ExpandCollapse>
                 );
@@ -1556,37 +1858,133 @@ class Board extends Component {
                       >
                         {parse(item.laneName)}
                       </div>
-                      <button
-                        className="button1"
-                        onClick={() => this.onOpenModal1("text", item._id)}
+                      <div
+                        style={{
+                          position: "relative",
+                          display: "inline-flex"
+                        }}
                       >
-                        +
-                      </button>
-                      {item.nodes.map((item, id) => {
-                        let card_id = item._id;
-                        return (
-                          <div
-                            className="square"
-                            style={{
-                              overflow: "hidden",
-                              whiteSpace: "normal",
-                              wordBreak: "break-word",
-                              background: `${item.color}`
-                            }}
-                            onClick={() =>
-                              this.onOpenModal3(
-                                "text",
-                                id1,
-                                id,
-                                lane_id,
-                                card_id
-                              )
-                            }
-                          >
-                            {parse(item.textHTML)}
-                          </div>
-                        );
-                      })}
+                        {item.nodes.length > 0
+                          ? item.nodes.map((item, id) => {
+                              let card_id = item._id;
+                              let flag = true;
+                              return this.state.card_limit
+                                .slice(fromi, this.state.card_limit.length)
+                                .map((i, index) => {
+                                  if (flag) {
+                                    if (i == item.gridID) {
+                                      console.log("no.", index);
+                                      fromi = i + 1;
+                                      flag = false;
+                                      if (id == nodeslength - 1) {
+                                        hover = true;
+                                      }
+                                      return (
+                                        <div
+                                          className="square"
+                                          style={{
+                                            overflow: "hidden",
+                                            whiteSpace: "normal",
+                                            wordBreak: "break-word",
+                                            background: `${item.color}`
+                                          }}
+                                        >
+                                          <div
+                                            onClick={() =>
+                                              this.onOpenModal3(
+                                                "text",
+                                                id1,
+                                                id,
+                                                lane_id,
+                                                card_id,
+                                                i
+                                              )
+                                            }
+                                          >
+                                            <p>{parse(item.textHTML)}</p>
+                                          </div>
+                                        </div>
+                                      );
+                                    } else {
+                                      return (
+                                        <div className="hoverrectshape">
+                                          <div id="hoverShow1">
+                                            <div
+                                              onClick={() =>
+                                                this.onOpenModal1(
+                                                  "text",
+                                                  lane_id,
+                                                  i
+                                                )
+                                              }
+                                              style={{
+                                                marginLeft: "33%",
+                                                fontSize: "5em",
+                                                color: "black",
+                                                marginTop: "-10%"
+                                              }}
+                                            >
+                                              {" "}
+                                              <p>+</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      );
+                                    }
+                                  } else if (hover) {
+                                    return (
+                                      <div className="hoverrectshape">
+                                        <div id="hoverShow1">
+                                          <div
+                                            onClick={() =>
+                                              this.onOpenModal1(
+                                                "text",
+                                                lane_id,
+                                                i
+                                              )
+                                            }
+                                            style={{
+                                              marginLeft: "33%",
+                                              fontSize: "5em",
+                                              color: "black",
+                                              marginTop: "-10%"
+                                            }}
+                                          >
+                                            {" "}
+                                            <p>+</p>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    );
+                                  }
+                                });
+                            })
+                          : this.state.card_limit.map((e, index) => {
+                              return (
+                                <div className="hoverrectshape">
+                                  <div id="hoverShow1">
+                                    <div
+                                      onClick={() =>
+                                        this.onOpenModal1(
+                                          "text",
+                                          item._id,
+                                          index
+                                        )
+                                      }
+                                      style={{
+                                        marginLeft: "33%",
+                                        fontSize: "5em",
+                                        color: "black",
+                                        marginTop: "-10%"
+                                      }}
+                                    >
+                                      <p>+</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                      </div>
                     </Textlane>
                   </ExpandCollapse>
                 );
@@ -1606,8 +2004,8 @@ class Board extends Component {
                       >
                         {parse(item.laneName)}
                       </div>
-                      <div style={{ marginTop: 30 }}>
-                        <UploadImages multiple onChange={this.onChange} />
+                      <div className="imagelaneshape">
+                       <ImageCard/>
                       </div>
                     </Imagelane>
                   </ExpandCollapse>
@@ -1621,7 +2019,14 @@ class Board extends Component {
                       >
                         {parse(item.laneName)}
                       </div>
-                      <div className="file" style={{overflow:"auto",marginTop:-15,height:150}}>
+                      <div
+                        className="file"
+                        style={{
+                          overflow: "auto",
+                          marginTop: -15,
+                          height: 150
+                        }}
+                      >
                         <FilePond allowMultiple={true} />
                       </div>
                     </Filelane>
@@ -1643,7 +2048,7 @@ class Board extends Component {
           </div>
           <div
             className="predefinelane"
-            style={{  marginTop:2,display: "flex" }}
+            style={{ marginTop: 2, display: "flex" }}
           >
             <AddCircleIcon
               style={{ fontSize: "3em", marginLeft: 30, color: "white" }}
@@ -1742,7 +2147,7 @@ class Board extends Component {
                       editorClassName="demo-editor"
                       handleBeforeInput={this._handleBeforeInput}
                       handlePastedText={this._handlePastedText}
-                      onEditorStateChange={this.onEditorStateChange1}
+                      onEditorStateChange={() => this.onEditorStateChange1}
                     />
                   </div>
                   <div className="horizontallinetext"></div>
@@ -1892,8 +2297,12 @@ class Board extends Component {
                   </div>
                 </div>
                 <div className="textlanebutton">
-                <div style={{ marginLeft: 40, marginTop: 20 }}>
-                    <div style={styles.swatch} onClick={this.handleClick0} background="red">
+                  <div style={{ marginLeft: 40, marginTop: 20 }}>
+                    <div
+                      style={styles.swatch}
+                      onClick={this.handleClick0}
+                      background="red"
+                    >
                       <div style={styles.color} />
                     </div>
                     {this.state.displayColorPicker ? (
@@ -2148,10 +2557,7 @@ class Board extends Component {
                 >
                   <div>
                     {" "}
-                    <div
-                      className="lanetypetext"
-                      onClick={() => this.onOpenModal("line")}
-                    >
+                    <div onClick={() => this.onOpenModal("line")}className="lanetypetext">
                       <img
                         src={Line}
                         style={{ height: 60, width: 80, marginLeft: 10 }}
@@ -2231,10 +2637,7 @@ class Board extends Component {
                 >
                   <div>
                     {" "}
-                    <div
-                      className="lanetypetext"
-                      onClick={() => this.onOpenModal("file")}
-                    >
+                    <div onClick={() => this.onOpenModal("file")}className="lanetypetext">
                       <img
                         src={File}
                         style={{
@@ -2295,8 +2698,7 @@ class Board extends Component {
         ) : (
           ""
         )}
-      <Imagecard/>
-      
+
         <div className="container"></div>
         <div className="footer">
           <Tabs

@@ -46,7 +46,7 @@ const ImgUpload =({
      <form onSubmit={onSubmit}>
        
          {children}
-       <button type="submit" className="save">Save </button>
+      
      </form>
    </div>
  

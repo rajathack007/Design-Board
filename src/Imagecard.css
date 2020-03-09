@@ -12,6 +12,7 @@
     overflow: hidden;
     
     margin-top: -10px;
+    margin-left: -10px;
   }
   .img-upload:before{
     content: "\f093";
