@@ -132,7 +132,7 @@ class SignUpForm extends Component {
             </div>
           </form>
         </div>
-        <div className="signfooter1" style={{ marginBottom: 10 }}>
+        {/* <div className="signfooter1" style={{ marginBottom: 10 }}>
           <footer>
             Powered By{" "}
             <a href="http://www.edunomics.in" target="_blank">
@@ -140,7 +140,7 @@ class SignUpForm extends Component {
               <strong>Edunomics</strong>
             </a>
           </footer>
-        </div>
+        </div> */}
       </div>
     );
   }

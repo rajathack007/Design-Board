@@ -274,7 +274,7 @@ class Profile extends Component {
           </Modal>
         </div>
 
-        <div className="profilefooter" style={{ marginBottom: 10 }}>
+        {/* <div className="profilefooter" style={{ marginBottom: 10 }}>
           <footer>
             Powered By{" "}
             <a href="http://www.edunomics.in" target="_blank">
@@ -282,7 +282,7 @@ class Profile extends Component {
               <strong>Edunomics</strong>
             </a>
           </footer>
-        </div>
+        </div> */}
       </div>
     );
   }

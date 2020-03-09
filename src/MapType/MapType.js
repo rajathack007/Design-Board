@@ -335,99 +335,13 @@ class MapType extends Component {
                     </Card>
                   </div>
 
-                  {/* <div className="template" style={{marginTop:25}}>
-
-            <Link to={{pathname:"/Board",data:data}} style={{textDecoration:"none",color:"black"}} > <Card className="text-center" style={{background:'#A4D3FF'}}>
-  <Card.Header style={{margin:10}}>Create a Blank Map</Card.Header>
-  <Card.Body>
-    <Card.Title>Blank Map</Card.Title>
-    <Card.Text>
-      Create your own structure yourself from scratch.
-    </Card.Text>
-  </Card.Body>
-</Card></Link><br></br><br></br>
-<Card className="text-center" style={{background:'#A4D3FF'}}>
-  <Card.Header style={{margin:10}}>Create a Tutorial Map</Card.Header>
-  <Card.Body>
-    <Card.Title>Tutorial Map</Card.Title>
-    <Card.Text>
-      Create Structure with most basic functionality.
-    </Card.Text>
-  </Card.Body>
-</Card><br></br><br></br>
-<Card className="text-center" style={{background:'#A4D3FF'}}>
-  <Card.Header style={{margin:10}}>Create a  Vacation Travel</Card.Header>
-  <Card.Body>
-    <Card.Title>Vacation Travel</Card.Title>
-    <Card.Text>
-     Customer Journey Map starting point for pleasure service that are planned in advance such as Hotels,Restaurants,Museums.
-    </Card.Text>
-  </Card.Body>
-</Card><br></br><br></br>
-<Card className="text-center" style={{background:'#A4D3FF'}}>
-  <Card.Header style={{margin:10}}>Create a Elderly Need for Care</Card.Header>
-  <Card.Body>
-    <Card.Title>Elderly Need for Care</Card.Title>
-    <Card.Text>
-      Customer Journey Map for life changing medical treatment and care services.
-    </Card.Text>
-  </Card.Body>
-</Card><br></br><br></br>
-<Card className="text-center" style={{background:'#A4D3FF'}}>
-  <Card.Header style={{margin:10}}>Create a Food Ordering and Delivery</Card.Header>
-  <Card.Body>
-    <Card.Title>Food Ordering and Delivery</Card.Title>
-    <Card.Text>
-      A journey map template for the food and drink ordering and delivery experience.
-    </Card.Text>
-  </Card.Body>
-</Card><br></br><br></br>
-<Card className="text-center" style={{background:'#A4D3FF'}}>
-  <Card.Header style={{margin:10}}>Create a Service Blueprint Template</Card.Header>
-  <Card.Body>
-    <Card.Title>Service Blueprint Template</Card.Title>
-    <Card.Text>
-     Motivate people to improve regardless of touchpint.
-    </Card.Text>
-  </Card.Body>
-</Card>
-<br></br><br></br>
-<Card className="text-center" style={{background:'#A4D3FF'}}>
-  <Card.Header style={{margin:10}}>Create a Customer Journey Map for Ideation</Card.Header>
-  <Card.Body>
-    <Card.Title>Customer Journey Map for Ideation</Card.Title>
-    <Card.Text>
-      Customer Journey Map work focused on discovering potential opportunities and generate customer relevant ideas.
-    </Card.Text>
-  </Card.Body>
-</Card>
-<br></br><br></br>
-<Card className="text-center" style={{background:'#A4D3FF'}}>
-  <Card.Header style={{margin:10}}>Create a Retail Online/Offline Template</Card.Header>
-  <Card.Body>
-    <Card.Title>Retail Online/Offline Template</Card.Title>
-    <Card.Text>
-      Journey Map to improve Online/Offline, multi/omnichannel customer journey.
-    </Card.Text>
-  </Card.Body>
-</Card>
-<br></br><br></br>
-<Card className="text-center" style={{background:'#A4D3FF'}}>
-  <Card.Header style={{margin:10}}>Create a PSD Blueprint Template</Card.Header>
-  <Card.Body>
-    <Card.Title>PSD Blueprint Template</Card.Title>
-    <Card.Text>
-      In collabaration with Practical Service Design.
-    </Card.Text>
-  </Card.Body>
-</Card>
-          </div> */}
+                 
                 </div>
               </Modal>
             </div>
           </div>
         </div>
-        <div className="mapfooter" style={{ marginBottom: 10 }}>
+        {/* <div className="mapfooter" style={{ marginBottom: 10 }}>
           <footer>
             Powered By{" "}
             <a href="http://www.edunomics.in" target="_blank">
@@ -435,7 +349,7 @@ class MapType extends Component {
               <strong>Edunomics</strong>
             </a>
           </footer>
-        </div>
+        </div> */}
       </div>
     );
   }

@@ -116,7 +116,7 @@ class SignInForm extends Component {
             </center>
           </form>
         </div>
-        <div className="signfooter" style={{ marginBottom: 10 }}>
+        {/* <div className="signfooter" style={{ marginBottom: 10 }}>
           <footer>
             Powered By{" "}
             <a href="http://www.edunomics.in" target="_blank">
@@ -124,7 +124,7 @@ class SignInForm extends Component {
               <strong>Edunomics</strong>
             </a>
           </footer>
-        </div>
+        </div> */}
       </div>
     );
   }

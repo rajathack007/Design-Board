@@ -11,11 +11,8 @@ import Board from "./Board";
 import UserMap from "./Map/UserMap";
 import MapType from "./MapType/MapType";
 import Home from "./Home/Home";
-import Pricing from "./Home/Pricing";
-import Terms from "./Home/Terms";
-import PrivacyPolicy from "./Home/PrivacyPolicy";
-import Footer from "./Footer/Footer";
-import Header from "./Header/Header";
+
+
 import Forgotpassword from "./Login/pages/Forgotpassword";
 import Help from "./Help/Help";
 import Profile from "./Profile/Profile";
@@ -54,9 +51,7 @@ class App extends Component {
 
             <div>
               <Route path="/Home" component={Home}></Route>
-              <Route path="/Pricing" component={Pricing}></Route>
-              <Route path="/Terms" component={Terms}></Route>
-              <Route path="/PrivacyPolicy" component={PrivacyPolicy}></Route>
+             
               <Route path="/Help" component={Help}></Route>
               <Route path="/sign-in" component={SignInForm}></Route>
               <Route path="/Forgotpassword" component={Forgotpassword}></Route>

@@ -261,7 +261,7 @@ class UserMap extends Component {
             })}
           </div>
           </div>
-        <div className="projectfooter" style={{ marginBottom: 10 }}>
+        {/* <div className="projectfooter" style={{ marginBottom: 10 }}>
           <footer>
             Powered By{" "}
             <a href="http://www.edunomics.in" target="_blank">
@@ -269,7 +269,7 @@ class UserMap extends Component {
               <strong>Edunomics</strong>
             </a>
           </footer>
-        </div>
+        </div> */}
       </div>
     );
   }

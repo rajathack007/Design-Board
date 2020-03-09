@@ -58,11 +58,11 @@ class Forgotpassword extends Component {
 
 
             </div>
-            <div className="forgotfooter" style={{marginBottom:10}}>
+            {/* <div className="forgotfooter" style={{marginBottom:10}}>
           <footer>
                     Powered By <a href="http://www.edunomics.in" target="_blank"> <strong>Edunomics</strong></a>
                 </footer>
-          </div>
+          </div> */}
 </div>
         )
     }}

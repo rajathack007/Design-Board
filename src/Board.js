@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import ReactDOM from "react-dom";
 import "./index.css"; //
 import "./App.css"; //
+import ImageCard from "./ImageCard"
 import ColorPicker from "react-color-picker"; //
 import FontPicker from "font-picker-react"; //
 import Stickies from "./stickies/Stickies";
@@ -1344,10 +1345,7 @@ class Board extends Component {
                 return (
                   <ExpandCollapse previewHeight="50px" expanded="true">
                     <div 
-                      // style={{
-                        
-                      //   background: `${styles.color.background}`
-                      // }}
+                     
                       >
                     <Cardlane>
                       <div
@@ -1379,13 +1377,16 @@ class Board extends Component {
                           <ReactDraggable>
                             <div
                               className="rectangle"
+                              
                               style={{
                                 overflow: "hidden",
                                 whiteSpace: "normal",
                                 wordBreak: "break-word",
-                                background: `${item.color}`,
+                                background: `${item.color}`
+                                
                                 
                               }}
+                              
                             >
                               <div
                                 onClick={() =>
@@ -1642,7 +1643,7 @@ class Board extends Component {
           </div>
           <div
             className="predefinelane"
-            style={{ marginTop: "0.5%", display: "flex" }}
+            style={{  marginTop:2,display: "flex" }}
           >
             <AddCircleIcon
               style={{ fontSize: "3em", marginLeft: 30, color: "white" }}
@@ -2149,7 +2150,7 @@ class Board extends Component {
                     {" "}
                     <div
                       className="lanetypetext"
-                      
+                      onClick={() => this.onOpenModal("line")}
                     >
                       <img
                         src={Line}
@@ -2186,7 +2187,7 @@ class Board extends Component {
                   <div>
                     <div
                       className="lanetypetext"
-                      
+                      onClick={() => this.onOpenModal("image")}
                     >
                       <img
                         src={Image}
@@ -2232,7 +2233,7 @@ class Board extends Component {
                     {" "}
                     <div
                       className="lanetypetext"
-                      
+                      onClick={() => this.onOpenModal("file")}
                     >
                       <img
                         src={File}
@@ -2294,7 +2295,7 @@ class Board extends Component {
         ) : (
           ""
         )}
-      
+      <Imagecard/>
       
         <div className="container"></div>
         <div className="footer">
